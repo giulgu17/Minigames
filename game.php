@@ -25,24 +25,31 @@
         if ($connessione->connect_error) {
             die("Connessione fallita: " . $connessione->connect_error);
         }
-        //TODO: controllo se è in corso una partita o se crearne una nuova
-        //Nuova partita: giocatore1 non esistente, quindi creo una nuova partita e inserisco giocatore1
 
-        $query = "SELECT * FROM partite WHERE giocatore1 = '".$_POST["nickname"]."'";
+        $query = "SELECT id FROM partite WHERE stato = 'in attesa'";
         $stmt = $connessione->prepare($query);
         $stmt->execute();
-        $stmt->bind_result($idclasse);
+        $stmt->bind_result($gameId);
         $stmt->fetch();
-        if(){
-            $query = "UPDATE partite SET giocatore2 = '".$_POST["nickname"]."'";
+        $stmt->close();
+
+        //Controllo c'è una persona in attesa
+        if($gameId != null) {
+            $query = "UPDATE partite SET p2 = '".$_POST["nickname"]."' WHERE id = ".$gameId;
+            $stmt = $connessione->prepare($query);
+            $stmt->execute();
+            $stmt->close();
+
+            $query = "UPDATE partite SET stato = 'in corso'";
         } else {
-            $query = "INSERT INTO partite (giocatore1) VALUES ('".$_POST["nickname"]."')";
+            $query = "INSERT INTO partite (id, p1, p2, stato, vincitore, cas1, cas2, cas3, cas4, cas5, cas6, cas7, cas8, cas9)
+            VALUES (NULL, '".$_POST["nickname"]."', NULL, 'in attesa', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
         }
         $stmt = $connessione->prepare($query);
         $stmt->execute();
         $stmt->close();
         
-
+        
     ?>
 </body>
 </html>

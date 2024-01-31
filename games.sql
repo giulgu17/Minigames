@@ -1,9 +1,11 @@
 CREATE DATABASE Tris;
 USE Tris;
+
 CREATE TABLE Partite(
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    giocatore1 VARCHAR(30),
-    giocatore2 VARCHAR(30),
+    id int PRIMARY KEY /*AUTO_INCREMENT*/,
+    p1 VARCHAR(30),
+    p2 VARCHAR(30),
+    stato VARCHAR(30),
     vincitore VARCHAR(30),
     cas1 VARCHAR(1),
     cas2 VARCHAR(1),
@@ -16,4 +18,7 @@ CREATE TABLE Partite(
     cas9 VARCHAR(1)
 );
 
-DROP TABLE Partita;
+INSERT INTO partite (id, p1, p2, stato, vincitore, cas1, cas2, cas3, cas4, cas5, cas6, cas7, cas8, cas9)
+    VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+DROP TABLE partite
