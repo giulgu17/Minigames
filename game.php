@@ -19,5 +19,13 @@
             <div id="9" class="box"></div>
         </div>
     </section>
+    <?php       
+        $connessione = new mysqli("localhost", "root", "", "tris");
+        if ($connessione->connect_error) {
+            die("Connessione fallita: " . $connessione->connect_error);
+        }
+
+        $query = "INSERT INTO partite"
+    ?>
 </body>
 </html>
