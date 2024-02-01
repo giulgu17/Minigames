@@ -7,16 +7,21 @@
     <title>Tris</title>
 </head>
 <body>
+    <div id="info">
+        <div id="giocatore1">Giocatore1: </div>
+        <div id="giocatore2">Giocatore2: </div><br>
+        <div id="stato"></div>
+    </div>
     <section id="tris">
-        <div id="1" class="box"></div>
-        <div id="2" class="box"></div>
-        <div id="3" class="box"></div>
-        <div id="4" class="box"></div>
-        <div id="5" class="box"></div>
-        <div id="6" class="box"></div>
-        <div id="7" class="box"></div>
-        <div id="8" class="box"></div>
-        <div id="9" class="box"></div>
+        <div id="1" class="box" onClick="piazza()"></div>
+        <div id="2" class="box" onClick="piazza()"></div>
+        <div id="3" class="box" onClick="piazza()"></div>
+        <div id="4" class="box" onClick="piazza()"></div>
+        <div id="5" class="box" onClick="piazza()"></div>
+        <div id="6" class="box" onClick="piazza()"></div>
+        <div id="7" class="box" onClick="piazza()"></div>
+        <div id="8" class="box" onClick="piazza()"></div>
+        <div id="9" class="box" onClick="piazza()"></div>
     </div>
 
     <?php       
@@ -47,8 +52,19 @@
         $stmt = $connessione->prepare($query);
         $stmt->execute();
         $stmt->close();
-        
-        
     ?>
+
+    <script>
+        function info(){
+            //TODO: Fetch informazioni dal database
+            var giocatore1 = "<?php echo $_POST["nickname"]; ?>";
+            var giocatore2 = "";
+        }
+
+        function piazza(){
+            //TODO: Se giocatore1 ha cliccato = "X". Se giocatore 2 = "O".
+            //TODO: invia dati al database in un qualche modo
+        }
+    </script>
 </body>
 </html>
