@@ -1,0 +1,21 @@
+#tris{
+    height: 510px;
+    width: 510px;
+    background-color: red;
+
+    margin: auto;
+    margin-top: 35px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    flex-wrap: wrap;
+    border: 3px solid rgb(0, 0, 0);
+}
+
+.box{
+    height: 160px;
+    width: 160px;
+    background-color: orange;
+    padding: 2px;
+    text-align: center;
+    border: 3px solid rgb(0, 0, 0);
+}
