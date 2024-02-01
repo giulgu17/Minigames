@@ -97,6 +97,7 @@
             $stmt->close();
 
             //Controllo del turno
+            //TODO:
             if($stato == "turno_p1") {
                 $stato = "turno_p2";
             } else {
