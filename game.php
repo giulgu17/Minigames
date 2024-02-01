@@ -62,8 +62,12 @@
         }
 
         function piazza(){
-            //TODO: Se giocatore1 ha cliccato = "X". Se giocatore 2 = "O".
+            //TODO: Se giocatore1 ha cliccato = "X". Se giocatore 2 = "O". Questo lo si può controllare da chi ha il turno.
+            //Il problema è fare in modo che chi non ha il turno NON possa cliccare. Lo dovrò gestire dal lato client.
+            //Se il giocatore locale == giocatore1 e il turno è di giocatore 1 allora ottiene gli eventListener.
+            //Al click, togliere gli eventListener
             //TODO: invia dati al database in un qualche modo
+
         }
     </script>
 </body>
