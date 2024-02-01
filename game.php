@@ -66,7 +66,7 @@
             //Il problema è fare in modo che chi non ha il turno NON possa cliccare. Lo dovrò gestire dal lato client.
             //Se il giocatore locale == giocatore1 e il turno è di giocatore 1 allora ottiene gli eventListener.
             //Al click, togliere gli eventListener
-            //TODO: invia dati al database in un qualche modo
+            //TODO: invia dati al database facendo un fetch ad un file php dedicato a leggere i dati ricevuti e a scriverli nel database
 
         }
     </script>
