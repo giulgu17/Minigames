@@ -9,7 +9,7 @@
 <body>
     <h1>Tris</h1>
     <form action="game.php" method="post" id="home">
-        <input type="input" id="inputnick" name="nickname" placeholder="Nickname"><br>
+        <input type="input" id="inputnick" name="nickname" placeholder="Nickname" required><br>
         <input type="submit" id="buttonnick" value="Entra">
     </form>
 </body>
