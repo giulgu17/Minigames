@@ -24,7 +24,7 @@
     background-color: red;
 
     margin: auto;
-    margin-top: 35px;
+    margin-top: 45px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     flex-wrap: wrap;
