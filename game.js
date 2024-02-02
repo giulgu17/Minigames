@@ -60,7 +60,10 @@ function place(){
         turno = false;
         removeEventListeners();
 
-        
+        box = this;
+        console.log(box.id);
+        box.style.backgroundImage = "url('images/O.png')";
+
     }
     else{
         console.error("EH, VOLEVI");
