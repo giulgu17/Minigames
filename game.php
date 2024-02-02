@@ -74,6 +74,7 @@
             $nickname = $_POST["nickname"];
             $stato = $_POST["stato"];
 
+            //prendo i nick
             $query = "SELECT p1 FROM partite WHERE id = ".$gameId;
             $stmt = $connessione->prepare($query);
             $stmt->execute();
@@ -87,27 +88,28 @@
             $stmt->fetch();
             $stmt->close();
 
+            //e invio tutto al javascript
             echo("<input type='hidden' id='gameId' value='".$gameId."'>
                 <input type='hidden' id='giocatore1' value='".$giocatore1."'>
                 <input type='hidden' id='giocatore2' value='".$giocatore2."'>
-                <input type='hidden' id='giocatoreClient' value='".$nickname."'>
+                <input type='hidden' id='nickname' value='".$nickname."'>
                 <input type='hidden' name='stato' id='stato' value='turno_p1'>
             ");
             echo("<script src='game.js'></script>");
 
-            //
+            //Prendo lo stato del gioco
             $query = "UPDATE partite SET stato = '". $stato ."' WHERE id = ".$gameId;
             $stmt = $connessione->prepare($query);
             $stmt->execute();
             $stmt->close();
 
-            //Controllo del turno
-            //TODO:
+            //Switch turno
             if($stato == "turno_p1") {
                 $stato = "turno_p2";
-            } else {
+            } else if ($stato == "turno_p2") {
                 $stato = "turno_p1";
             }
+
 
 
         }
