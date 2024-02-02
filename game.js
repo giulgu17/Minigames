@@ -1,15 +1,59 @@
-function getInfo(){
-    //TODO: Fetch informazioni dal database
-    fetch("info.php",{method: "POST", body: document.getElementById("gameId").value})
-        .then(res => {
-            res.json()
-        })
-        .then(data => {
-            document.getElementById("giocatore1").innerHTML = "Giocatore1: " + data.p1;
-            document.getElementById("giocatore2").innerHTML = "Giocatore2: " + data.p2;
-            document.getElementById("stato").innerHTML = "Stato: " + data.stato;
-        })
+var turno;
+var giocatoreClient = document.getElementById("giocatoreClient").value;
+var giocatore1 = document.getElementById("giocatore1").value;
+var giocatore2 = document.getElementById("giocatore2").value;
 
+function update(){
+    //Controlliamo il turno
+    var giocatoreClient = document.getElementById("giocatoreClient").value;
+    let turnoStato = document.getElementById("stato").value;
+    console.log(turnoStato);
+    if(turnoStato=="turno_p1"){
+        turno=1;
+    }
+    else if (turnoStato=="turno_p2"){
+        turno=2;
+    }
+    else{
+        console.error("Errore inaspettato: stato del turno non riconosciuto");
+    }
+
+    //Controlliamo il giocatore e aggiungiamo o rimuoviamo gli evenetListener a seconda di chi è il turno
+    if(giocatoreClient==giocatore1){
+        if(turno==1){
+            addEventListeners();
+        }
+        else{
+            removeEventListeners();
+        }
+    }
+    else if(giocatoreClient==giocatore2){
+        if(turno==2){
+            addEventListeners();
+        }
+        else{
+            removeEventListeners();
+        }
+    }
+    else{
+        console.error("Errore inaspettato: giocatore non riconosciuto");
+    }
+}
+
+function addEventListeners(){
+    for(let i=0; i<caselle.length; i++){
+        let casella = document.getElementsById(i)
+        casella.addEventListener("click", place());
+        casella.style = "cursor: pointer"
+    }
+}
+
+function removeEventListeners(){
+    let caselle = document.getElementsByClassName("casella");
+    for(let i=0; i<caselle.length; i++){
+        caselle[i].removeEventListener("click", place());
+        caselle[i].style = "cursor: not-allowed"
+    }
 }
 
 function place(){
@@ -18,11 +62,9 @@ function place(){
     //Se il giocatore locale == giocatore1 e il turno è di giocatore 1 allora ottiene gli eventListener.
     //Al click, togliere gli eventListener
     //TODO: invia dati al database facendo un fetch ad un file php dedicato a leggere i dati ricevuti e a scriverli nel database
+    
 
+    
 }
 
-function test(){
-    console.log("test")
-}
-
-document.addEventListener("DOMContentLoaded", test());
+document.addEventListener("DOMContentLoaded", update());

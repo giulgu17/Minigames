@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="style.css">
     <title>Tris</title>
 </head>
 <body>
     <div id="info">
-        <div id="giocatore1">Giocatore1: </div>
-        <div id="giocatore2">Giocatore2: </div><br>
-        <div id="stato"></div>
+        <div id="igiocatore1">Giocatore1: </div>
+        <div id="igiocatore2">Giocatore2: </div><br>
+        <div id="istato"></div>
     </div>
     <section id="tris">
-        <div id="1" class="box" onClick="place()"></div>
-        <div id="2" class="box" onClick="place()"></div>
-        <div id="3" class="box" onClick="place()"></div>
-        <div id="4" class="box" onClick="place()"></div>
-        <div id="5" class="box" onClick="place()"></div>
-        <div id="6" class="box" onClick="place()"></div>
-        <div id="7" class="box" onClick="place()"></div>
-        <div id="8" class="box" onClick="place()"></div>
-        <div id="9" class="box" onClick="place()"></div>
+        <div id="1" class="box"></div>
+        <div id="2" class="box"></div>
+        <div id="3" class="box"></div>
+        <div id="4" class="box"></div>
+        <div id="5" class="box"></div>
+        <div id="6" class="box"></div>
+        <div id="7" class="box"></div>
+        <div id="8" class="box"></div>
+        <div id="9" class="box"></div>
     </div>
 
     <?php       
@@ -55,25 +55,10 @@
 
 
                 //Inizio partita
-                $query = "SELECT p1 FROM partite WHERE id = ".$gameId;
-                $stmt = $connessione->prepare($query);
-                $stmt->execute();
-                $stmt->bind_result($giocatore1);
-                $stmt->fetch();
-                $stmt->close();
-                $query = "SELECT p2 FROM partite WHERE id = ".$gameId;
-                $stmt = $connessione->prepare($query);
-                $stmt->execute();
-                $stmt->bind_result($giocatore2);
-                $stmt->fetch();
-                $stmt->close();
-
                 //Creo il form iniziale per passare i dati
                 echo("<form action='game.php' method='post' id='start'>
                     <input type='hidden' name='gameId' value='".$gameId."'>
-                    <input type='hidden' name='giocatore1' value'".$giocatore1."'>
-                    <input type='hidden' name='giocatore2' value'".$giocatore2."'>
-                    <input type='hidden' name='giocatoreClient' value='".$_POST['nickname']."'>
+                    <input type='hidden' name='nickname' value='".$_POST['nickname']."'>
                     <input type='hidden' name='stato' value='turno_p1'>
                 </form>
                 <script>
@@ -85,13 +70,33 @@
             }
         } else {
             //Partita in corso
-            echo("<script src='game.js'></script>");
             $gameId = $_POST["gameId"];
-            $giocatore1 = $_POST["giocatore1"];
-            $giocatore2 = $_POST["giocatore2"];
+            $nickname = $_POST["nickname"];
             $stato = $_POST["stato"];
 
-            $query = "UPDATE partite SET stato = ". $stato ."WHERE id = ".$gameId;
+            $query = "SELECT p1 FROM partite WHERE id = ".$gameId;
+            $stmt = $connessione->prepare($query);
+            $stmt->execute();
+            $stmt->bind_result($giocatore1);
+            $stmt->fetch();
+            $stmt->close();
+            $query = "SELECT p2 FROM partite WHERE id = ".$gameId;
+            $stmt = $connessione->prepare($query);
+            $stmt->execute();
+            $stmt->bind_result($giocatore2);
+            $stmt->fetch();
+            $stmt->close();
+
+            echo("<input type='hidden' id='gameId' value='".$gameId."'>
+                <input type='hidden' id='giocatore1' value='".$giocatore1."'>
+                <input type='hidden' id='giocatore2' value='".$giocatore2."'>
+                <input type='hidden' id='giocatoreClient' value='".$nickname."'>
+                <input type='hidden' name='stato' id='stato' value='turno_p1'>
+            ");
+            echo("<script src='game.js'></script>");
+
+            //
+            $query = "UPDATE partite SET stato = '". $stato ."' WHERE id = ".$gameId;
             $stmt = $connessione->prepare($query);
             $stmt->execute();
             $stmt->close();
@@ -103,6 +108,8 @@
             } else {
                 $stato = "turno_p1";
             }
+
+
         }
     ?>
 </body>
