@@ -21,7 +21,7 @@
 #tris{
     height: 480px;
     width: 480px;
-    background-color: red;
+    background-color: white;
 
     margin: auto;
     margin-top: 45px;
@@ -35,9 +35,10 @@
     height: 150px;
     width: 150px;
     background-color: orange;
-    padding: 2px;
     text-align: center;
-    border: 3px solid rgb(0, 0, 0);
+    border: 5px solid rgb(0, 0, 0);
+    align-items: center;
+    text-align: center;
 }
 
 

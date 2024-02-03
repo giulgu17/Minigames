@@ -1,15 +1,11 @@
 var turno, giocatoreClient;
+var griglia = [[],[],[]]
+var gameId = document.getElementById("gameId").value;
 var nickname = document.getElementById("nickname").value;
 var giocatore1 = document.getElementById("giocatore1").value;
 var giocatore2 = document.getElementById("giocatore2").value;
 
-function update(){
-    //Controlliamo il turno
-    var nickname = document.getElementById("nickname").value;
-    let turnoStato = document.getElementById("stato").value;
-    console.log(turnoStato);
-
-    //Controllo chi è il giocatore
+function start(){
     if(nickname==giocatore1){
         giocatoreClient = 1;
     } else if(nickname==giocatore2){
@@ -17,6 +13,17 @@ function update(){
     } else {
         console.log("Ao chi cazzo sei tu")
     }
+
+    update();
+}
+
+function update(){
+    //Controlliamo il turno
+    let turnoStato = document.getElementById("stato").value;
+    console.log(turnoStato);
+
+    //Controllo chi è il giocatore
+    
 
     //Controlliamo se il client ha il turno o no
     if(turnoStato=="turno_p1" && giocatoreClient == 1 || turnoStato=="turno_p2" && giocatoreClient == 2){
@@ -60,14 +67,37 @@ function place(){
         turno = false;
         removeEventListeners();
 
-        box = this;
+        let box = this;
         console.log(box.id);
-        box.style.backgroundImage = "url('images/O.png')";
+        if(giocatoreClient == 1){
+            box.style.backgroundImage = "url('images/X.png')";
 
+        } else {
+            box.style.backgroundImage = "url('images/O.png')";
+
+        }
+
+        //mandiamo i dati in post a input.php per inserirli nel database
+        var mossa = {id: gameId, box: box.id, giocatore: giocatoreClient};
+        fetch("input.php", {
+            method: "POST",
+            header: {"Content-type": "application/json; charset=UTF-8"},
+            body: JSON.stringify(mossa)
+        })
+        .then(response => response.text())
+        .then(data => {
+            window.location.replace("input.php");
+            console.log('Risposta dal server:', data);
+        })
+        .catch(error => {
+            console.error('Errore durante la richiesta:', error);
+        });
+
+        update();
     }
     else{
         console.error("EH, VOLEVI");
     }
 }
 
-document.addEventListener("DOMContentLoaded", update);
+document.addEventListener("DOMContentLoaded", start);
