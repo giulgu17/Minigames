@@ -2,6 +2,7 @@
 if(isset($_POST)){
     $data = file_get_contents("php://input");
     $data2 = json_decode($data, true);
+    print_r($data2);
     echo($data2["gameId"]);
 }
 
@@ -25,3 +26,4 @@ query = "UPDATE partite SET box".$box." = '".$tessera."' WHERE id = ".$gameId;
 $stmt = $connessione->prepare($query);
 $stmt->execute();
 $stmt->close();
+*/

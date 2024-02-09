@@ -79,6 +79,7 @@ function place(){
 
         //mandiamo i dati in post a input.php per inserirli nel database
         var mossa = {id: gameId, box: box.id, giocatore: giocatoreClient};
+        console.log(mossa);
         fetch("input.php", {
             method: "POST",
             header: {"Content-type": "application/json; charset=UTF-8"},
@@ -86,8 +87,8 @@ function place(){
         })
         .then(response => response.text())
         .then(data => {
-            window.location.replace("input.php");
             console.log('Risposta dal server:', data);
+            window.location.replace("input.php");
         })
         .catch(error => {
             console.error('Errore durante la richiesta:', error);
