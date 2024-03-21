@@ -1,8 +1,52 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+#home {
+    background-color: aqua;
+    border: 2px solid black;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    align-items: center;
+    text-align: center;
 }
 
-a {
-  color: #00B7FF;
+#inputnick {
+    margin-top: 40px;
+}
+
+#buttonnick {
+    margin-top: 50px;
+}
+
+
+
+#tris {
+    height: 480px;
+    width: 480px;
+    background-color: white;
+
+    margin: auto;
+    margin-top: 45px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    flex-wrap: wrap;
+    border: 3px solid rgb(0, 0, 0);
+}
+
+.box {
+    height: 150px;
+    width: 150px;
+    background-color: orange;
+    text-align: center;
+    border: 5px solid rgb(0, 0, 0);
+    align-items: center;
+    text-align: center;
+}
+
+
+#info {
+    height: 100px;
+    width: 200px;
+    background-color: orange;
+    position: absolute;
+    margin-left: 50px;
+    border: 3px solid rgb(0, 0, 0);
 }
