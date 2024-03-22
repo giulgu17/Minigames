@@ -8,14 +8,16 @@ connectedClients = 0;
 socketServer.on("connection", ws => {
     connectedClients++;
     ws.id = connectedClients;
-
+    socketServer.clients.forEach(function(client) {
+        if(ws.id == client.id){
+            client.send(JSON.stringify({ type: "idClient", id: ws.id }))
+        }
+    })
 
     ws.on("message", data => {
-        dato = JSON.parse(data);
+        msg = JSON.parse(data);
         socketServer.clients.forEach(function (client) {
-            if (client.id != dato.id) {
-                client.send(JSON.stringify(dato));
-            }
+            client.send(JSON.stringify(msg));
         })
     });
     ws.on("close", () => {
@@ -25,6 +27,7 @@ socketServer.on("connection", ws => {
         console.error("Some weird ass error occurred")
     }
 });
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
