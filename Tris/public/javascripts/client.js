@@ -5,6 +5,7 @@ var text = document.getElementById("text");
 function ready() {
     var hostname = window.location.hostname;
     ws = new WebSocket("ws://"+hostname+":8080");
+    
     ws.addEventListener('message', function (event) {
         var msg1 = JSON.parse(event.data);
         console.log('Message from server ', msg1.id);

@@ -24,13 +24,15 @@ socketServer.on("connection", ws => {
         console.log("A client has disconnected");
     });
     ws.onerror = function () {
-        console.error("Some weird ass error occurred")
+        console.error("Some weird ass error occurred");
     }
 });
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
+    //TODO: Decidere se utilizzare più URL o uno unico
+    //Se fare uno unico: forse utilizzare i messaggi con i websocket per fare i redirect?
 });
 
 module.exports = router;
