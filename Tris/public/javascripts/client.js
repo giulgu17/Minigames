@@ -1,4 +1,4 @@
-var ws, clientID, displayName, otherID, lastSender;
+var ws, clientID, nickname, otherID, lastSender;
 var chat = document.getElementById("chat");
 var text = document.getElementById("text");
 
@@ -11,6 +11,7 @@ function ready() {
         console.log('Message from server ', msg1.id);
         
         switch(msg1.type){
+            //Chat message
             case "message":
                 if(lastSender != msg1.id){
                     chat.innerHTML += "<br><b>" + msg1.nome + "</b><br>";
@@ -21,26 +22,37 @@ function ready() {
                 break;
             case "idClient":
                 clientID = msg1.id;
-                displayName = "Customer";
-                console.log("Il tuo id è: " + clientID);
+                console.log("Your id is " + clientID);
+                break;
+            case "game":
+                otherID = msg1.otherId;
+                console.log("You are playing against " + otherID);
                 break;
         }
     });
     ws.addEventListener("open", () => {
-        console.log("Waiting for an opponent...");
+        console.log("Connected to the server");
     });
 }
 
+//Player joins the queue
 function join(){
-    displayName = document.getElementById("inputnick").value;
+    nickname = document.getElementById("inputnick").value;
+    var msg = {
+        type: "join",
+        id: clientID,
+        nick: nickname
+    };
+    ws.send(JSON.stringify(msg));
 }
 
+//Player sends a chat message
 function sendChatMessage() {
     var msg = {
         type: "chat",
         text: document.getElementById("text").value,
         id: clientID,
-        displayName: displayName,
+        nickname: nickname,
     };
     console.log("Messagge: " + msg.text);
     ws.send(JSON.stringify(msg));
