@@ -1,4 +1,4 @@
-var ws, clientID, nickname, otherID, lastSender;
+var ws, nickname, otherID, lastSender;
 var chat = document.getElementById("chat");
 var text = document.getElementById("text");
 
@@ -20,13 +20,12 @@ function ready() {
                 chat.scrollTop = chat.scrollHeight;
                 lastSender = msg1.id;
                 break;
-            case "idClient":
-                clientID = msg1.id;
-                console.log("Your id is " + clientID);
-                break;
             case "game":
-                otherID = msg1.otherId;
-                console.log("You are playing against " + otherID);
+                otherNick = msg1.otherNick;
+                console.log("You are now playing against " + otherNick);
+                break;
+            case "kicked":
+                
                 break;
         }
     });
@@ -40,7 +39,6 @@ function join(){
     nickname = document.getElementById("inputnick").value;
     var msg = {
         type: "join",
-        id: clientID,
         nick: nickname
     };
     ws.send(JSON.stringify(msg));
@@ -51,7 +49,6 @@ function sendChatMessage() {
     var msg = {
         type: "chat",
         text: document.getElementById("text").value,
-        id: clientID,
         nickname: nickname,
     };
     console.log("Messagge: " + msg.text);
