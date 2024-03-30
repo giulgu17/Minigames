@@ -52,11 +52,10 @@ socketServer.on("connection", ws => {
             queue.splice(0, 2);
 
             socketServer.clients.forEach(function (client) {
-                console.log("AAAA")
                 if (client.nick == newGame[0]) {
-                    client.send(JSON.stringify({ tipo: "game", otherNick: newGame[1] }));
+                    client.send(JSON.stringify({ type: "game", otherNick: newGame[1] }));
                 } else if (client.nick == newGame[1]) {
-                    client.send(JSON.stringify({ tipo: "game", otherNick: newGame[0] }));
+                    client.send(JSON.stringify({ type: "game", otherNick: newGame[0] }));
                 }
             });
         }

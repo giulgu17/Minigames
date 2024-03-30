@@ -8,7 +8,7 @@ function ready() {
     
     ws.addEventListener('message', function (event) {
         var msg1 = JSON.parse(event.data);
-        console.log('Message from server ', msg1.id);
+        console.log('Message from server ', msg1);
         
         switch(msg1.type){
             //Chat message
@@ -18,7 +18,7 @@ function ready() {
                 }
                 chat.innerHTML += msg1.text + "<br>";
                 chat.scrollTop = chat.scrollHeight;
-                lastSender = msg1.id;
+                lastSender = msg1.id; 
                 break;
             case "game":
                 otherNick = msg1.otherNick;
