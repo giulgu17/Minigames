@@ -8,7 +8,7 @@ function ready() {
     
     ws.addEventListener('message', function (event) {
         var msg1 = JSON.parse(event.data);
-        console.log('Message from server ', msg1);
+        console.log('Message received: ', msg1);
         
         switch(msg1.type){
             //Chat message
@@ -23,6 +23,7 @@ function ready() {
             case "game":
                 otherNick = msg1.otherNick;
                 console.log("You are now playing against " + otherNick);
+                window.location.href = "/game";
                 break;
             case "kicked":
                 
@@ -48,8 +49,8 @@ function join(){
 function sendChatMessage() {
     var msg = {
         type: "chat",
-        text: document.getElementById("text").value,
         nickname: nickname,
+        text: document.getElementById("text").value
     };
     console.log("Messagge: " + msg.text);
     ws.send(JSON.stringify(msg));

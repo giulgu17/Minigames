@@ -1,9 +1,8 @@
 var turno, giocatoreClient;
 var griglia = [[],[],[]]
-var gameId = document.getElementById("gameId").value;
-var nickname = document.getElementById("nickname").value;
+/*var nickname = document.getElementById("nickname").value;
 var giocatore1 = document.getElementById("giocatore1").value;
-var giocatore2 = document.getElementById("giocatore2").value;
+var giocatore2 = document.getElementById("giocatore2").value;*/
 
 function start(){
     if(nickname==giocatore1){
@@ -11,7 +10,7 @@ function start(){
     } else if(nickname==giocatore2){
         giocatoreClient = 2;
     } else {
-        console.log("Ao chi cazzo sei tu")
+        console.log("Who tf are you")
     }
 
     update();
