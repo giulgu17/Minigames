@@ -1,9 +1,8 @@
 var turno, giocatoreClient;
 var griglia = [[],[],[]]
-var gameId = document.getElementById("gameId").value;
-var nickname = document.getElementById("nickname").value;
+/*var nickname = document.getElementById("nickname").value;
 var giocatore1 = document.getElementById("giocatore1").value;
-var giocatore2 = document.getElementById("giocatore2").value;
+var giocatore2 = document.getElementById("giocatore2").value;*/
 
 function start(){
     if(nickname==giocatore1){
@@ -11,7 +10,7 @@ function start(){
     } else if(nickname==giocatore2){
         giocatoreClient = 2;
     } else {
-        console.log("Ao chi cazzo sei tu")
+        console.log("Who tf are you")
     }
 
     update();
@@ -80,15 +79,13 @@ function place(){
         //mandiamo i dati in post a input.php per inserirli nel database
         var mossa = {id: gameId, box: box.id, giocatore: giocatoreClient};
         console.log(mossa);
-        fetch("input.php", {
+        fetch("/update", {
             method: "POST",
-            header: {"Content-type": "application/json; charset=UTF-8"},
             body: JSON.stringify(mossa)
         })
         .then(response => response.text())
         .then(data => {
             console.log('Risposta dal server:', data);
-            window.location.replace("input.php");
         })
         .catch(error => {
             console.error('Errore durante la richiesta:', error);
