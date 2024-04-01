@@ -1,10 +1,8 @@
 extends layout
 
 block content
-    div#info 
-        div#inick1
+    div#info2.info
         div#inick2
-        div#istate
     
     section#tris
         div#1.box
@@ -17,6 +15,11 @@ block content
         div#8.box
         div#9.box
     
+    div#info1.info
+        div#inick1
     
-
+    div#gameinfo
+        input(type="hidden" id="stato")
+    
+    script(src="/javascripts/client.js")
     script(src="/javascripts/game.js")

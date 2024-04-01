@@ -22,10 +22,13 @@ socketServer.on("connection", ws => {
         msg = JSON.parse(data);
         console.log(msg);
         switch (msg.type) {
+            //ON CHAT MESSAGE
             case "chat":
                 socketServer.clients.forEach(function (client) {
                     client.send(JSON.stringify(msg));
                 })
+                break;
+            //ON JOIN
             case "join":
                 var found = false;
                 for (let i = 0; i < queue.length; i++) {
@@ -58,11 +61,26 @@ socketServer.on("connection", ws => {
                     client.send(JSON.stringify({ type: "game", otherNick: newGame[0] }));
                 }
             });
+
+            client.connect()
+                .then(() => {
+                    const database = client.db("tris");
+                    const collection = database.collection("games");
+                    collection.countDocuments()
+                        .then(n_games => {
+                            console.log("Number of games:" + n_games);
+                            const document = {id: n_games, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0]}
+                            collection.insertOne(document);
+                        })
+                })
+                .catch(error => {
+                    console.error("Error connecting to the MongoDB server:", error);
+                });
         }
     }
 
     ws.on("close", () => {
-        console.log("A client has disconnected");
+        console.log(ws.nick + " has disconnected");
     });
     ws.onerror = function () {
         console.error("Some weird ass error occurred");
@@ -73,6 +91,7 @@ router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
     //TODO: Decidere se utilizzare più URL o uno unico
     //Se fare uno unico: forse utilizzare i messaggi con i websocket per fare i redirect?
+
 });
 
 router.get('/game', function (req, res, next) {
