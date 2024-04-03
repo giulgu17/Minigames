@@ -71,8 +71,7 @@ socketServer.on("connection", ws => {
 
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
-    //TODO: Decidere se utilizzare più URL o uno unico
-    //Se fare uno unico: forse utilizzare i messaggi con i websocket per fare i redirect?
+    //TODO: iframes
 });
 
 router.get('/game', function (req, res, next) {
