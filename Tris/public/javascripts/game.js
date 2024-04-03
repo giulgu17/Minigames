@@ -1,8 +1,8 @@
 var turno, giocatoreClient;
 var griglia = [[],[],[]]
-/*var nickname = document.getElementById("nickname").value;
-var giocatore1 = document.getElementById("giocatore1").value;
-var giocatore2 = document.getElementById("giocatore2").value;*/
+var nickname = document.getElementById("infonick").value;
+var player_self = document.getElementById("player1").value;
+var player_opponent = document.getElementById("player2").value;
 
 function start(){
     if(nickname==giocatore1){

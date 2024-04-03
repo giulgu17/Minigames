@@ -1,4 +1,4 @@
-var ws, nickname, otherID, lastSender;
+var ws, clientID, nickname, otherID, otherNick, lastSender;
 var chat = document.getElementById("chat");
 var text = document.getElementById("text");
 
@@ -11,7 +11,7 @@ function ready() {
         console.log('Message received: ', msg1);
         
         switch(msg1.type){
-            //Chat message
+            //Chat message received
             case "message":
                 if(lastSender != msg1.id){
                     chat.innerHTML += "<br><b>" + msg1.nome + "</b><br>";
@@ -20,13 +20,11 @@ function ready() {
                 chat.scrollTop = chat.scrollHeight;
                 lastSender = msg1.id; 
                 break;
+            //Start a game against another player
             case "game":
                 otherNick = msg1.otherNick;
                 console.log("You are now playing against " + otherNick);
-                window.location.href = "/game";
-                break;
-            case "kicked":
-                
+
                 break;
         }
     });
@@ -43,6 +41,7 @@ function join(){
         nick: nickname
     };
     ws.send(JSON.stringify(msg));
+    //window.location.href = "/game";
 }
 
 //Player sends a chat message
@@ -60,4 +59,6 @@ function sendChatMessage() {
 
 
 document.addEventListener("DOMContentLoaded", ready);
-document.getElementById("buttonnick").addEventListener("click",join)
+try{
+    document.getElementById("buttonnick").addEventListener("click",join)
+} catch (e){}
