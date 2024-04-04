@@ -12,6 +12,27 @@ const client = new MongoClient(uri);
 const bodyParser = require('body-parser');
 var parsebody = bodyParser.urlencoded({ extended: true });
 
+const session = require('express-session');
+
+const app = express();
+
+// Configurazione del middleware di sessione
+app.use(session({
+    secret: 'rf[aly+54ert#812au765gfì@ò<ew',
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
 connectedClients = 0;
 queue = [];
 socketServer.on("connection", ws => {
@@ -69,7 +90,7 @@ socketServer.on("connection", ws => {
                     collection.countDocuments()
                         .then(n_games => {
                             console.log("Number of games:" + n_games);
-                            const document = {id: n_games, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0]}
+                            const document = { id: n_games, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
                             collection.insertOne(document);
                         })
                 })
@@ -89,11 +110,29 @@ socketServer.on("connection", ws => {
 
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
-    //TODO: iframes
+});
+router.post('/login2', function (req, res, next) {
+    let nickname = req.body.nickname;
+    req.session.user = nickname;        //FIXME: not worky
+
+    //TODO: Login?
+    /*client.connect()
+        .then(() => {
+            const database = client.db("minigames");
+            const collection = database.collection("users");
+            collection.countDocuments()
+                .then(users => {
+                    const document = { id: users, username: nickname }
+                    collection.insertOne(document);
+                })
+        })
+        .catch(error => {
+            console.error("Errore durante l'inserimento del documento:", error);
+        });*/
 });
 
 router.get('/game', function (req, res, next) {
-    res.render('game', { title: 'Game'});
+    res.render('game', { title: 'Game' });
 });
 
 module.exports = router;

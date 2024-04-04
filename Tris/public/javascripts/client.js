@@ -57,8 +57,5 @@ function sendChatMessage() {
 }
 
 
-//TODO: guardare session su moodle
 document.addEventListener("DOMContentLoaded", ready);
-try{
-    document.getElementById("buttonnick").addEventListener("click",join)
-} catch (e){}
+document.getElementById("buttonnick").addEventListener("click",join)
