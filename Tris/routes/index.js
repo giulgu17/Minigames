@@ -13,7 +13,6 @@ const bodyParser = require('body-parser');
 var parsebody = bodyParser.urlencoded({ extended: true });
 
 const session = require('express-session');
-
 const app = express();
 
 // Configurazione del middleware di sessione
@@ -23,15 +22,11 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            console.error(err);
-        } else {
-            res.redirect('/');
-        }
-    });
-});
+router.use(session({
+    secret: 'rf[aly+54ert#812au765gfì@ò<ew',
+    resave: false,
+    saveUninitialized: true
+}));
 
 connectedClients = 0;
 queue = [];
@@ -112,8 +107,8 @@ router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
 });
 router.post('/login2', function (req, res, next) {
-    let nickname = req.body.nickname;
-    req.session.user = nickname;        //FIXME: not worky
+    const nickname = req.body.nickname;
+    req.session.user = nickname;
 
     //TODO: Login?
     /*client.connect()
@@ -134,5 +129,16 @@ router.post('/login2', function (req, res, next) {
 router.get('/game', function (req, res, next) {
     res.render('game', { title: 'Game' });
 });
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
 
 module.exports = router;
