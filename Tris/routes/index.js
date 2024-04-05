@@ -124,6 +124,7 @@ router.post('/login2', function (req, res, next) {
         .catch(error => {
             console.error("Errore durante l'inserimento del documento:", error);
         });*/
+    res.redirect("/game")
 });
 
 router.get('/game', function (req, res, next) {
