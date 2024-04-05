@@ -104,11 +104,13 @@ socketServer.on("connection", ws => {
 });
 
 router.get('/', function (req, res, next) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'Home' });
 });
 router.post('/login2', function (req, res, next) {
-    const nickname = req.body.nickname;
-    req.session.user = nickname;
+    const username = req.body.username;
+    req.session.login = true;
+    req.session.username = username;
+    console.log(req.session)
 
     //TODO: Login?
     /*client.connect()
@@ -117,7 +119,7 @@ router.post('/login2', function (req, res, next) {
             const collection = database.collection("users");
             collection.countDocuments()
                 .then(users => {
-                    const document = { id: users, username: nickname }
+                    const document = { id: users, username: username }
                     collection.insertOne(document);
                 })
         })
@@ -128,7 +130,7 @@ router.post('/login2', function (req, res, next) {
 });
 
 router.get('/game', function (req, res, next) {
-    res.render('game', { title: 'Game' });
+    res.render('game', { title: 'Game', login: req.session.login, username: req.session.username });
 });
 
 app.get('/logout', (req, res) => {
