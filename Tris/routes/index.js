@@ -126,11 +126,11 @@ router.post('/login2', function (req, res, next) {
         .catch(error => {
             console.error("Errore durante l'inserimento del documento:", error);
         });*/
-    res.redirect("/game")
+    res.redirect("/tris")
 });
 
-router.get('/game', function (req, res, next) {
-    res.render('game', { title: 'Game', login: req.session.login, username: req.session.username });
+router.get('/tris', function (req, res, next) {
+    res.render('tris', { title: 'Tris', login: req.session.login, username: req.session.username });
 });
 
 app.get('/logout', (req, res) => {

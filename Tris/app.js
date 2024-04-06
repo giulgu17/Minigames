@@ -21,7 +21,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/login2', indexRouter);
-app.use('/game', indexRouter);
+app.use('/tris', indexRouter);
+app.use('/battleship', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
