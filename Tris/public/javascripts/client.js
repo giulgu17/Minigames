@@ -58,4 +58,3 @@ function sendChatMessage() {
 
 
 document.addEventListener("DOMContentLoaded", ready);
-document.getElementById("buttonnick").addEventListener("click",join)
