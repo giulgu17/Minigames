@@ -4,6 +4,18 @@ var nickname = document.getElementById("infonick").value;
 var player_self = document.getElementById("player1").value;
 var player_opponent = document.getElementById("player2").value;
 
+//Player joins the queue
+function join(){
+    nickname = document.getElementById("inputnick").value;
+    var msg = {
+        type: "join",
+        game: "tictactoe",
+        nick: nickname
+    };
+    ws.send(JSON.stringify(msg));
+    //window.location.href = "/game";
+}
+
 function start(){
     if(nickname==giocatore1){
         giocatoreClient = 1;

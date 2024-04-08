@@ -33,17 +33,6 @@ function ready() {
     });
 }
 
-//Player joins the queue
-function join(){
-    nickname = document.getElementById("inputnick").value;
-    var msg = {
-        type: "join",
-        nick: nickname
-    };
-    ws.send(JSON.stringify(msg));
-    //window.location.href = "/game";
-}
-
 //Player sends a chat message
 function sendChatMessage() {
     var msg = {

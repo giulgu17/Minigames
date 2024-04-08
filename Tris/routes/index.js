@@ -15,7 +15,6 @@ var parsebody = bodyParser.urlencoded({ extended: true });
 const session = require('express-session');
 const app = express();
 
-// Configurazione del middleware di sessione
 app.use(session({
     secret: 'rf[aly+54ert#812au765gfì@ò<ew',
     resave: false,
@@ -29,7 +28,7 @@ router.use(session({
 }));
 
 connectedClients = 0;
-queue = [];
+queueTicTacToe = [];
 socketServer.on("connection", ws => {
     connectedClients++;
     console.log("A client has connected");
@@ -45,18 +44,18 @@ socketServer.on("connection", ws => {
                 })
                 break;
             //ON JOIN
-            case "join":
+            case "joinTicTacToe":
                 var found = false;
-                for (let i = 0; i < queue.length; i++) {
-                    if (queue[i] == msg.nick) {
-                        console.log(msg.nick + " is already in the queue")
+                for (let i = 0; i < queueTicTacToe.length; i++) {
+                    if (queueTicTacToe[i] == msg.nick) {
+                        console.log(msg.nick + " is already in the network");
                         found = true;
                         break;
                     }
                 }
                 if (!found) {
                     ws.nick = msg.nick;
-                    console.log(msg.nick + " has joined the queue");
+                    console.log(msg.nick + " has joined the queue for TicTacToe");
                     queue.push(msg.nick);
                     console.log(queue);
                     matchmaking();
