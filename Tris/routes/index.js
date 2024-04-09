@@ -44,6 +44,7 @@ socketServer.on("connection", ws => {
                 })
                 break;
             //ON JOIN
+            //TODO: handle more than one game
             case "joinTicTacToe":
                 var found = false;
                 for (let i = 0; i < queueTicTacToe.length; i++) {
@@ -69,11 +70,21 @@ socketServer.on("connection", ws => {
             newGame = [queue[0], queue[1]];
             queue.splice(0, 2);
 
+            var turn = Math.floor(Math.random());
+            
+            if(turn == 0){
+                var turn0 = true;
+                var turn1 = false;
+            } else {
+                var turn0 = false;
+                var turn1 = true;
+            }
+
             socketServer.clients.forEach(function (client) {
                 if (client.nick == newGame[0]) {
-                    client.send(JSON.stringify({ type: "game", otherNick: newGame[1] }));
+                    client.send(JSON.stringify({ type: "game", otherNick: newGame[1], turn: turn0, }));
                 } else if (client.nick == newGame[1]) {
-                    client.send(JSON.stringify({ type: "game", otherNick: newGame[0] }));
+                    client.send(JSON.stringify({ type: "game", otherNick: newGame[0], turn: turn1, }));
                 }
             });
 
@@ -83,7 +94,8 @@ socketServer.on("connection", ws => {
                     const collection = database.collection("games");
                     collection.countDocuments()
                         .then(n_games => {
-                            console.log("Number of games:" + n_games);
+                            n_games++;
+                            console.log("Created game n: " + (n_games));
                             const document = { id: n_games, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
                             collection.insertOne(document);
                         })
@@ -103,6 +115,7 @@ socketServer.on("connection", ws => {
 });
 
 router.get('/', function (req, res, next) {
+    //TODO: if login = true -> redirect to homepage
     res.render('index', { title: 'Home' });
 });
 router.post('/login2', function (req, res, next) {

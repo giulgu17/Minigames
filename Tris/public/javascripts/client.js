@@ -1,6 +1,8 @@
-var ws, clientID, nickname, otherID, otherNick, lastSender;
-var chat = document.getElementById("chat");
-var text = document.getElementById("text");
+var ws, self_nickname, opponent_nickname;
+var lastSender;
+var turn;
+/*var chat = document.getElementById("chat");
+var text = document.getElementById("text");*/
 
 function ready() {
     var hostname = window.location.hostname;
@@ -22,9 +24,9 @@ function ready() {
                 break;
             //Start a game against another player
             case "game":
-                otherNick = msg1.otherNick;
-                console.log("You are now playing against " + otherNick);
-
+                opponent = msg1.opponent;
+                console.log("You are now playing against " + opponent);
+                turn = msg1.turn;
                 break;
         }
     });

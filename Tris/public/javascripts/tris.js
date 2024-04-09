@@ -1,52 +1,43 @@
-var turno, giocatoreClient;
-var griglia = [[],[],[]]
-var nickname = document.getElementById("infonick").value;
-var player_self = document.getElementById("player1").value;
-var player_opponent = document.getElementById("player2").value;
+//ws, player_self, player_opponent;
+var grid = [[],[],[]];
+
 
 //Player joins the queue
 function join(){
-    nickname = document.getElementById("inputnick").value;
+    self_nickname = document.getElementById("inputnick").value;
     var msg = {
         type: "join",
         game: "tictactoe",
-        nick: nickname
+        nick: self_nickname
     };
     ws.send(JSON.stringify(msg));
     //window.location.href = "/game";
 }
 
 function start(){
-    if(nickname==giocatore1){
-        giocatoreClient = 1;
-    } else if(nickname==giocatore2){
-        giocatoreClient = 2;
-    } else {
-        console.log("Who tf are you")
-    }
-
+    
     update();
 }
 
 function update(){
-    //Controlliamo il turno
-    let turnoStato = document.getElementById("stato").value;
-    console.log(turnoStato);
+    //Controlliamo il turn
+    let turnStato = document.getElementById("stato").value;
+    console.log(turnStato);
 
     //Controllo chi è il giocatore
     
 
-    //Controlliamo se il client ha il turno o no
-    if(turnoStato=="turno_p1" && giocatoreClient == 1 || turnoStato=="turno_p2" && giocatoreClient == 2){
-        turno=true;
+    //Controlliamo se il client ha il turn o no
+    if(turnStato=="turn_p1" && giocatoreClient == 1 || turnStato=="turn_p2" && giocatoreClient == 2){
+        turn=true;
         addEventListeners();
     }
-    else if (turnoStato=="turno_p2" && giocatoreClient == 1 || turnoStato=="turno_p1" && giocatoreClient == 2){
-        turno=false;
+    else if (turnStato=="turn_p2" && giocatoreClient == 1 || turnStato=="turn_p1" && giocatoreClient == 2){
+        turn=false;
         removeEventListeners();
     }
     else{
-        console.error("Errore inaspettato: stato del turno non riconosciuto");
+        console.error("Errore inaspettato: stato del turn non riconosciuto");
     }
 }
 
@@ -67,15 +58,15 @@ function removeEventListeners(){
 }
 
 function place(){
-    //TODO: Se giocatore1 ha cliccato = "X". Se giocatore 2 = "O". Questo lo si può controllare da chi ha il turno.
-    //Il problema è fare in modo che chi non ha il turno NON possa cliccare. Lo dovrò gestire dal lato client.
-    //Se il giocatore locale == giocatore1 e il turno è di giocatore 1 allora ottiene gli eventListener.
+    //TODO: Se giocatore1 ha cliccato = "X". Se giocatore 2 = "O". Questo lo si può controllare da chi ha il turn.
+    //Il problema è fare in modo che chi non ha il turn NON possa cliccare. Lo dovrò gestire dal lato client.
+    //Se il giocatore locale == giocatore1 e il turn è di giocatore 1 allora ottiene gli eventListener.
     //Al click, togliere gli eventListener
     //TODO: invia dati al database facendo un fetch ad un file php dedicato a leggere i dati ricevuti e a scriverli nel database
     
-    if(turno){
+    if(turn){
         console.log("Hai cliccato");
-        turno = false;
+        turn = false;
         removeEventListeners();
 
         let box = this;
