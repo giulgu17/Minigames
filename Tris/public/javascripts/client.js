@@ -1,4 +1,4 @@
-var ws, self_nickname, opponent_nickname;
+var ws, nickname, opponent_nickname;
 var lastSender;
 var turn;
 /*var chat = document.getElementById("chat");
@@ -28,6 +28,8 @@ function ready() {
                 console.log("You are now playing against " + opponent);
                 turn = msg1.turn;
                 break;
+            case "move":
+
         }
     });
     ws.addEventListener("open", () => {

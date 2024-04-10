@@ -1,59 +1,52 @@
-//ws, player_self, player_opponent;
+//ws, nickname, opponent_nickname, turn;
 var grid = [[],[],[]];
+var symbol;
 
 
 //Player joins the queue
 function join(){
-    self_nickname = document.getElementById("inputnick").value;
-    var msg = {
+    nickname = document.getElementById("inputnick").value;
+    /*var msg = {
         type: "join",
         game: "tictactoe",
-        nick: self_nickname
-    };
+        nick: nickname
+    };*/
+    var msg = {
+        type: "joinTicTacToe",
+        nick: nickname
+    }
     ws.send(JSON.stringify(msg));
     //window.location.href = "/game";
 }
 
 function start(){
-    
+    document.getElementById("inick2").innerHTML = "<a>"+opponent_nickname+"</a>";
+    if(turn){
+        addEventListeners();
+    } else {
+        removeEventListeners();
+    }
+
     update();
 }
 
 function update(){
-    //Controlliamo il turn
-    let turnStato = document.getElementById("stato").value;
-    console.log(turnStato);
-
-    //Controllo chi è il giocatore
-    
-
-    //Controlliamo se il client ha il turn o no
-    if(turnStato=="turn_p1" && giocatoreClient == 1 || turnStato=="turn_p2" && giocatoreClient == 2){
-        turn=true;
-        addEventListeners();
-    }
-    else if (turnStato=="turn_p2" && giocatoreClient == 1 || turnStato=="turn_p1" && giocatoreClient == 2){
-        turn=false;
-        removeEventListeners();
-    }
-    else{
-        console.error("Errore inaspettato: stato del turn non riconosciuto");
-    }
+    console.log(turn);
 }
 
 function addEventListeners(){
     for(let i=1; i<=9; i++){
-        let casella = document.getElementById(i);
-        casella.addEventListener("click", place);
-        casella.style = "cursor: pointer";
+        let square = document.getElementById(i);
+        square.addEventListener("click", place);
+        square.style = "cursor: pointer";
     }
 }
 
 function removeEventListeners(){
     for(let i=1; i<=9; i++){
-        let casella = document.getElementById(i);
-        casella.removeEventListener("click", place);
-        casella.style = "cursor: not-allowed";
+        let square = document.getElementById(i);
+        square.removeEventListener("click", place);
+        square.style = "cursor: not-allowed";
     }
 }
 
@@ -97,8 +90,9 @@ function place(){
         update();
     }
     else{
-        console.error("EH, VOLEVI");
+        console.error("bro how the fu");
     }
 }
 
-document.addEventListener("DOMContentLoaded", start);
+//TODO: Quando ci sono due giocatori connessi, allora avvia la funzione start
+//document.addEventListener("DOMContentLoaded", start);

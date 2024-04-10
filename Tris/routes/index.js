@@ -82,9 +82,9 @@ socketServer.on("connection", ws => {
 
             socketServer.clients.forEach(function (client) {
                 if (client.nick == newGame[0]) {
-                    client.send(JSON.stringify({ type: "game", otherNick: newGame[1], turn: turn0, }));
+                    client.send(JSON.stringify({ type: "game", opponent: newGame[1], turn: turn0 }));
                 } else if (client.nick == newGame[1]) {
-                    client.send(JSON.stringify({ type: "game", otherNick: newGame[0], turn: turn1, }));
+                    client.send(JSON.stringify({ type: "game", opponent: newGame[0], turn: turn1 }));
                 }
             });
 
