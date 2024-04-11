@@ -57,8 +57,8 @@ socketServer.on("connection", ws => {
                 if (!found) {
                     ws.nick = msg.nick;
                     console.log(msg.nick + " has joined the queue for TicTacToe");
-                    queue.push(msg.nick);
-                    console.log(queue);
+                    queueTicTacToe.push(msg.nick);
+                    console.log(queueTicTacToe);
                     matchmaking();
                 }
                 break;
@@ -66,9 +66,9 @@ socketServer.on("connection", ws => {
     });
 
     function matchmaking() {
-        if (queue.length >= 2) {
-            newGame = [queue[0], queue[1]];
-            queue.splice(0, 2);
+        if (queueTicTacToe.length >= 2) {
+            newGame = [queueTicTacToe[0], queueTicTacToe[1]];
+            queueTicTacToe.splice(0, 2);
 
             var turn = Math.floor(Math.random());
             

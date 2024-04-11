@@ -27,6 +27,8 @@ function ready() {
                 opponent = msg1.opponent;
                 console.log("You are now playing against " + opponent);
                 turn = msg1.turn;
+                document.getElementById("inick2").innerHTML = "<a>"+opponent+"</a>";
+                startGame();
                 break;
             case "move":
                 
@@ -35,6 +37,7 @@ function ready() {
     });
     ws.addEventListener("open", () => {
         console.log("Connected to the server");
+        join();
     });
 }
 
