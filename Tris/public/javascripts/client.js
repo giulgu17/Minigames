@@ -29,7 +29,8 @@ function ready() {
                 turn = msg1.turn;
                 break;
             case "move":
-
+                
+                break;
         }
     });
     ws.addEventListener("open", () => {
