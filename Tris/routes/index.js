@@ -44,7 +44,6 @@ socketServer.on("connection", ws => {
                 })
                 break;
             //ON JOIN
-            //TODO: handle more than one game
             case "joinTicTacToe":
                 var found = false;
                 for (let i = 0; i < queueTicTacToe.length; i++) {
@@ -65,7 +64,7 @@ socketServer.on("connection", ws => {
         }
     });
 
-    function matchmaking() {
+    async function matchmaking() {
         if (queueTicTacToe.length >= 2) {
             newGame = [queueTicTacToe[0], queueTicTacToe[1]];
             queueTicTacToe.splice(0, 2);
@@ -80,34 +79,40 @@ socketServer.on("connection", ws => {
                 var turn1 = true;
             }
 
+            var gameId;
+            await client.connect()
+            console.log("Connected to the MongoDB server")
+            const database = client.db("tris");
+            const collection = database.collection("games");
+            await collection.countDocuments();
+
+            let n_games = await collection.countDocuments();
+            n_games++;
+            gameId = n_games;
+            console.log("Created game n: " + (gameId));
+            const document = { gameId: gameId, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
+            collection.insertOne(document);
+
+            console.log(gameId)
+
             socketServer.clients.forEach(function (client) {
                 if (client.nick == newGame[0]) {
-                    client.send(JSON.stringify({ type: "game", opponent: newGame[1], turn: turn0 }));
+                    client.send(JSON.stringify({ type: "game", gameId: gameId, opponent: newGame[1], turn: turn0 }));
                 } else if (client.nick == newGame[1]) {
-                    client.send(JSON.stringify({ type: "game", opponent: newGame[0], turn: turn1 }));
+                    client.send(JSON.stringify({ type: "game", gameId: gameId, opponent: newGame[0], turn: turn1 }));
                 }
             });
 
-            client.connect()
-                .then(() => {
-                    const database = client.db("tris");
-                    const collection = database.collection("games");
-                    collection.countDocuments()
-                        .then(n_games => {
-                            n_games++;
-                            console.log("Created game n: " + (n_games));
-                            const document = { id: n_games, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
-                            collection.insertOne(document);
-                        })
-                })
-                .catch(error => {
-                    console.error("Error connecting to the MongoDB server:", error);
-                });
+            
         }
     }
 
     ws.on("close", () => {
         console.log(ws.nick + " has disconnected");
+        connectedClients--;
+        if(queueTicTacToe.includes(ws.nick)){
+            queueTicTacToe.splice(queueTicTacToe.indexOf(ws.nick), 1);
+        }
     });
     ws.onerror = function () {
         console.error("Some weird ass error occurred");
@@ -120,7 +125,7 @@ router.get('/', function (req, res, next) {
 });
 router.post('/login2', function (req, res, next) {
     const username = req.body.username;
-    req.session.login = true;
+    req.session.login = "true";
     req.session.username = username;
     console.log(req.session)
 

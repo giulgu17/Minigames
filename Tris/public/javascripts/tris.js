@@ -1,4 +1,4 @@
-//ws, nickname, opponent_nickname, turn;
+//ws, nickname, opponent, turn;
 var grid = [[],[],[]];
 var symbol;
 
@@ -59,7 +59,6 @@ function place(){
     //TODO: invia dati al database facendo un fetch ad un file php dedicato a leggere i dati ricevuti e a scriverli nel database
     
     if(turn){
-        console.log("Hai cliccato");
         turn = false;
         removeEventListeners();
 
@@ -73,7 +72,7 @@ function place(){
 
         //FIXME: gameId is not defined you idiot
         //send the move as a message to the server, which gets sent to the opponent's client
-        var mossa = {id: gameId, user: nickname, target: opponent_nickname, box: box.id, symbol: symbol};
+        var mossa = {id: gameId, user: nickname, target: opponent, box: box.id, symbol: symbol};
         console.log(mossa);
         /*fetch("/update", {
             method: "POST",

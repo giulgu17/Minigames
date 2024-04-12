@@ -1,10 +1,13 @@
-var ws, nickname, opponent_nickname;
+var ws, nickname, opponent;
 var lastSender;
-var turn;
+var turn, gameId;
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
 
 function ready() {
+    if(document.getElementById("login").value === ""){
+        window.location.href = "/"
+    }
     var hostname = window.location.hostname;
     ws = new WebSocket("ws://"+hostname+":8080");
     
@@ -24,13 +27,14 @@ function ready() {
                 break;
             //Start a game against another player
             case "game":
+                gameId = msg1.gameId;
                 opponent = msg1.opponent;
                 console.log("You are now playing against " + opponent);
                 turn = msg1.turn;
                 document.getElementById("inick2").innerHTML = "<a>"+opponent+"</a>";
                 startGame();
                 break;
-            case "move":
+            case "move":    //TODO: handle opponent's moves
                 
                 break;
         }
