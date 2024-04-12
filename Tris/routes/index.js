@@ -28,7 +28,7 @@ router.use(session({
 }));
 
 connectedClients = 0;
-queueTicTacToe = [];
+queue = [];
 socketServer.on("connection", ws => {
     connectedClients++;
     console.log("A client has connected");
@@ -45,10 +45,10 @@ socketServer.on("connection", ws => {
                 })
                 break;
             //ON JOIN
-            case "joinTicTacToe":
+            case "join":
                 var found = false;
-                for (let i = 0; i < queueTicTacToe.length; i++) {
-                    if (queueTicTacToe[i] == msg.nick) {
+                for (let i = 0; i < queue.length; i++) {
+                    if (queue[i] == msg.nick) {
                         console.log(msg.nick + " is already in the network");
                         found = true;
                         break;
@@ -57,8 +57,7 @@ socketServer.on("connection", ws => {
                 if (!found) {
                     ws.username = msg.nick;
                     console.log(msg.nick + " has joined the queue for TicTacToe");
-                    queueTicTacToe.push(msg.nick);
-                    console.log(queueTicTacToe);
+                    queue.push(msg.nick);
                     matchmaking();
                 }
                 break;
@@ -74,9 +73,9 @@ socketServer.on("connection", ws => {
     });
 
     async function matchmaking() {
-        if (queueTicTacToe.length >= 2) {
-            newGame = [queueTicTacToe[0], queueTicTacToe[1]];
-            queueTicTacToe.splice(0, 2);
+        if (queue.length >= 2) {
+            newGame = [queue[0], queue[1]];
+            queue.splice(0, 2);
 
             var turn = Math.floor(Math.random());
             
@@ -95,8 +94,7 @@ socketServer.on("connection", ws => {
             await collection.countDocuments();
 
             let n_games = await collection.countDocuments();
-            n_games++;
-            gameId = n_games;
+            gameId = n_games+1;
             console.log("Created game n: " + (gameId));
             const document = { gameId: gameId, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
             collection.insertOne(document);
@@ -111,12 +109,11 @@ socketServer.on("connection", ws => {
         }
     }
 
-    ws.on("close", () => {
+    ws.on("close", () => {  //TODO: handle disconnections during games
         console.log(ws.username + " has disconnected");
         connectedClients--;
-        if(queueTicTacToe.includes(ws.username)){
-            queueTicTacToe.splice(queueTicTacToe.indexOf(ws.username), 1);
-            console.log(queueTicTacToe);
+        if(queue.includes(ws.username)){
+            queue.splice(queue.indexOf(ws.username), 1);
         }
     });
     ws.onerror = function () {

@@ -13,7 +13,7 @@ function ready() {
     
     ws.addEventListener('message', function (event) {
         var msg = JSON.parse(event.data);
-        console.log('Message received: ', msg);
+        //console.log('Message received: ', msg);
         
         switch(msg.type){
             //Chat message received
@@ -29,27 +29,23 @@ function ready() {
             case "game":
                 gameId = msg.gameId;
                 opponent = msg.opponent;
-                console.log("You are now playing against " + opponent);
                 turn = msg.turn;
                 document.getElementById("inick2").innerHTML = "<a>"+opponent+"</a>";
+                //console.log("You are now playing against " + opponent);
                 startGame();
                 break;
             case "move":
-                //FIXME: non funziona l'img
-                if(msg.symbol == "X"){
-                    document.getElementById(msg.box).style.backgroundImage = "url('images/X.png')";
-                } else {
-                    document.getElementById(msg.box).style.backgroundImage = "url('images/O.png')";
-                }
+                usedSquares.push(msg.box);
 
                 if(turn){
                     turn = false;
                     removeEventListeners();
                 } else {
                     turn = true;
-                    addEventListeners()
+                    addEventListeners();
                 }
-                console.log("turn: "+turn);
+
+                document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";;
                 break;
         }
     });
