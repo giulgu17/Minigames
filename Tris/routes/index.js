@@ -35,6 +35,7 @@ socketServer.on("connection", ws => {
 
     ws.on("message", data => {
         msg = JSON.parse(data);
+        console.log("Message: ")
         console.log(msg);
         switch (msg.type) {
             //ON CHAT MESSAGE
@@ -54,12 +55,20 @@ socketServer.on("connection", ws => {
                     }
                 }
                 if (!found) {
-                    ws.nick = msg.nick;
+                    ws.username = msg.nick;
                     console.log(msg.nick + " has joined the queue for TicTacToe");
                     queueTicTacToe.push(msg.nick);
                     console.log(queueTicTacToe);
                     matchmaking();
                 }
+                break;
+            //ON MOVE
+            case "move":
+                socketServer.clients.forEach(function (client) {
+                    if(client.username == msg.user || client.username == msg.target){
+                        client.send(JSON.stringify(msg));
+                    }
+                })
                 break;
         }
     });
@@ -81,7 +90,6 @@ socketServer.on("connection", ws => {
 
             var gameId;
             await client.connect()
-            console.log("Connected to the MongoDB server")
             const database = client.db("tris");
             const collection = database.collection("games");
             await collection.countDocuments();
@@ -93,25 +101,22 @@ socketServer.on("connection", ws => {
             const document = { gameId: gameId, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
             collection.insertOne(document);
 
-            console.log(gameId)
-
             socketServer.clients.forEach(function (client) {
-                if (client.nick == newGame[0]) {
+                if (client.username == newGame[0]) {
                     client.send(JSON.stringify({ type: "game", gameId: gameId, opponent: newGame[1], turn: turn0 }));
-                } else if (client.nick == newGame[1]) {
+                } else if (client.username == newGame[1]) {
                     client.send(JSON.stringify({ type: "game", gameId: gameId, opponent: newGame[0], turn: turn1 }));
                 }
             });
-
-            
         }
     }
 
     ws.on("close", () => {
-        console.log(ws.nick + " has disconnected");
+        console.log(ws.username + " has disconnected");
         connectedClients--;
-        if(queueTicTacToe.includes(ws.nick)){
-            queueTicTacToe.splice(queueTicTacToe.indexOf(ws.nick), 1);
+        if(queueTicTacToe.includes(ws.username)){
+            queueTicTacToe.splice(queueTicTacToe.indexOf(ws.username), 1);
+            console.log(queueTicTacToe);
         }
     });
     ws.onerror = function () {

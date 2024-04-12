@@ -6,11 +6,6 @@ var symbol;
 //Player joins the queue
 function join(){
     nickname = document.getElementById("username").value;
-    /*var msg = {
-        type: "join",
-        game: "tictactoe",
-        nick: nickname
-    };*/
     var msg = {
         type: "joinTicTacToe",
         nick: nickname
@@ -27,27 +22,34 @@ function startGame(){
         removeEventListeners();
         symbol = "O";
     }
-
-    update();
-}
-
-function update(){
-    console.log(turn);
+    console.log("turn: "+turn);
 }
 
 function addEventListeners(){
-    for(let i=1; i<=9; i++){
+    /*for(let i=1; i<=9; i++){
         let square = document.getElementById(i);
         square.addEventListener("click", place);
         square.style = "cursor: pointer";
+    }*/
+
+    var squares = document.getElementsByClassName("box");
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].addEventListener("click", place);
+        squares[i].style = "cursor: pointer";
     }
 }
 
 function removeEventListeners(){
-    for(let i=1; i<=9; i++){
+    /*for(let i=1; i<=9; i++){
         let square = document.getElementById(i);
         square.removeEventListener("click", place);
         square.style = "cursor: not-allowed";
+    }*/
+
+    var squares = document.getElementsByClassName("box");
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].removeEventListener("click", place);
+        squares[i].style = "cursor: not-allowed";
     }
 }
 
@@ -59,37 +61,14 @@ function place(){
     //TODO: invia dati al database facendo un fetch ad un file php dedicato a leggere i dati ricevuti e a scriverli nel database
     
     if(turn){
-        turn = false;
-        removeEventListeners();
-
         let box = this;
         console.log(box.id);
-        if(symbol == "X"){
-            box.style.backgroundImage = "url('images/X.png')";
-        } else {
-            box.style.backgroundImage = "url('images/O.png')";
-        }
 
-        //FIXME: gameId is not defined you idiot
-        //send the move as a message to the server, which gets sent to the opponent's client
-        var mossa = {id: gameId, user: nickname, target: opponent, box: box.id, symbol: symbol};
-        console.log(mossa);
-        /*fetch("/update", {
-            method: "POST",
-            body: JSON.stringify(mossa)
-        })
-        .then(response => response.text())
-        .then(data => {
-            console.log('Risposta dal server:', data);
-        })
-        .catch(error => {
-            console.error('Errore durante la richiesta:', error);
-        });*/
-
-        update();
+        var mossa = {type: "move", gameId: gameId, user: nickname, target: opponent, box: box.id, symbol: symbol};
+        ws.send(JSON.stringify(mossa));
     }
     else{
-        console.error("bro how the fu");
+        
     }
 }
 
