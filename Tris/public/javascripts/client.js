@@ -1,6 +1,6 @@
 var ws, nickname, opponent;
 var lastSender;
-var turn, gameId;
+var turn, gameId, win;
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
 
@@ -34,8 +34,14 @@ function ready() {
                 //console.log("You are now playing against " + opponent);
                 startGame();
                 break;
+            //A player makes a move
             case "move":
                 usedSquares.push(msg.box);
+                if(msg.box%3 == 0){
+                    grid[Math.floor(msg.box/3-1)][2] = msg.symbol;
+                } else {
+                    grid[Math.floor(msg.box/3-0.1)][msg.box%3-1] = msg.symbol;
+                }
 
                 if(turn){
                     turn = false;
@@ -45,7 +51,20 @@ function ready() {
                     addEventListeners();
                 }
 
-                document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";;
+                document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";
+                
+                checkWin();
+                break;
+            //The game is over
+            case "end":
+                if(msg.win == "draw"){
+                    alert("It's a draw!");
+                } else if(symbol == win) {
+                    alert("You won!");
+                } else {
+                    alert(opponent + " won!");
+                }
+                window.location.href = "/";
                 break;
         }
     });

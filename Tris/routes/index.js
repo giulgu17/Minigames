@@ -29,6 +29,7 @@ router.use(session({
 
 connectedClients = 0;
 queue = [];
+games = [];
 socketServer.on("connection", ws => {
     connectedClients++;
     console.log("A client has connected");
@@ -69,15 +70,24 @@ socketServer.on("connection", ws => {
                     }
                 })
                 break;
+            case "end":
+                socketServer.clients.forEach(function (client) {
+                    if (client.username == msg.user || client.username == msg.target) {
+                        client.send(JSON.stringify(msg));
+                    }
+                })
+                break;
         }
     });
 
     async function matchmaking() {
         if (queue.length >= 2) {
             newGame = [queue[0], queue[1]];
+            games.push(newGame);
             queue.splice(0, 2);
 
-            var turn = Math.floor(Math.random());
+            var turn = Math.floor(Math.random() * 2);
+            console.log(turn)
             
             if(turn == 0){
                 var turn0 = true;
@@ -87,15 +97,14 @@ socketServer.on("connection", ws => {
                 var turn1 = true;
             }
 
-            var gameId;
             await client.connect()
             const database = client.db("tris");
             const collection = database.collection("games");
-            await collection.countDocuments();
 
             let n_games = await collection.countDocuments();
-            gameId = n_games+1;
+            var gameId = n_games+1;
             console.log("Created game n: " + (gameId));
+
             const document = { gameId: gameId, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
             collection.insertOne(document);
 
@@ -115,6 +124,7 @@ socketServer.on("connection", ws => {
         if(queue.includes(ws.username)){
             queue.splice(queue.indexOf(ws.username), 1);
         }
+
     });
     ws.onerror = function () {
         console.error("Some weird ass error occurred");
