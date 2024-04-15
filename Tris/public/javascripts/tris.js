@@ -102,7 +102,6 @@ function checkWin() {
                 count++;
                 if (count == 3) {
                     win = check_symbol;
-                    console.log("DIAG. ASC")
                     break;
                 }
             } else {
@@ -115,7 +114,6 @@ function checkWin() {
                 count++;
                 if (count == 3) {
                     win = check_symbol;
-                    console.log("DIAG. DISC")
                     break;
                 }
             } else {
