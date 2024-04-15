@@ -97,3 +97,16 @@ On use (failure):
     "Where do you want to move that ship? It can't go anywhere."
 */
 
+var grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+var usedSquares = [];
+
+//Player joins the queue
+function join() {
+    nickname = document.getElementById("username").value;
+    var msg = {
+        type: "join",
+        nick: nickname
+    }
+    console.log("Joined the queue for Battleship");
+    ws.send(JSON.stringify(msg));
+}

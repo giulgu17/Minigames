@@ -29,7 +29,6 @@ router.use(session({
 
 connectedClients = 0;       //TODO: playercounter?
 queue = [];
-games = [];
 const database = client.db("minigames");
 const collection = database.collection("tris");
 socketServer.on("connection", ws => {
@@ -38,8 +37,8 @@ socketServer.on("connection", ws => {
 
     ws.on("message", data => {
         msg = JSON.parse(data);
-        console.log("Message: ")
-        console.log(msg);
+        /*console.log("Message: ")
+        console.log(msg);*/
         switch (msg.type) {
             //ON CHAT MESSAGE
             case "chat":
@@ -52,7 +51,7 @@ socketServer.on("connection", ws => {
                 var found = false;
                 for (let i = 0; i < queue.length; i++) {
                     if (queue[i] == msg.nick) {
-                        console.log(msg.nick + " is already in the network");
+                        console.log(msg.nick + " is already connected");
                         found = true;
                         break;
                     }
