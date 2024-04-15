@@ -110,3 +110,7 @@ function join() {
     console.log("Joined the queue for Battleship");
     ws.send(JSON.stringify(msg));
 }
+
+function startGame(){
+
+}
