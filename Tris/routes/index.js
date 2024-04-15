@@ -27,9 +27,11 @@ router.use(session({
     saveUninitialized: true
 }));
 
-connectedClients = 0;
+connectedClients = 0;       //TODO: playercounter?
 queue = [];
 games = [];
+const database = client.db("minigames");
+const collection = database.collection("tris");
 socketServer.on("connection", ws => {
     connectedClients++;
     console.log("A client has connected");
@@ -71,6 +73,11 @@ socketServer.on("connection", ws => {
                 })
                 break;
             case "end":
+                async function run(){
+                    await client.connect();
+                    await collection.findOneAndDelete({gameId: msg.gameId});
+                }
+                run();
                 socketServer.clients.forEach(function (client) {
                     if (client.username == msg.user || client.username == msg.target) {
                         client.send(JSON.stringify(msg));
@@ -87,7 +94,6 @@ socketServer.on("connection", ws => {
             queue.splice(0, 2);
 
             var turn = Math.floor(Math.random() * 2);
-            console.log(turn)
             
             if(turn == 0){
                 var turn0 = true;
@@ -98,14 +104,11 @@ socketServer.on("connection", ws => {
             }
 
             await client.connect()
-            const database = client.db("tris");
-            const collection = database.collection("games");
-
             let n_games = await collection.countDocuments();
             var gameId = n_games+1;
             console.log("Created game n: " + (gameId));
 
-            const document = { gameId: gameId, player1: newGame[0], player2: newGame[1], state: null, board: [0, 0, 0, 0, 0, 0, 0, 0, 0] }
+            const document = { gameId: gameId, player1: newGame[0], player2: newGame[1]}
             collection.insertOne(document);
 
             socketServer.clients.forEach(function (client) {
@@ -118,13 +121,34 @@ socketServer.on("connection", ws => {
         }
     }
 
-    ws.on("close", () => {  //TODO: handle disconnections during games
+    ws.on("close", () => {
         console.log(ws.username + " has disconnected");
         connectedClients--;
         if(queue.includes(ws.username)){
             queue.splice(queue.indexOf(ws.username), 1);
         }
+        async function run(){
+            await client.connect();
+            var doc = await collection.findOneAndDelete({$or: [{player1: ws.username}, {player2: ws.username}]});
+            try {
+                if(doc.player1 == ws.username){
+                    var player = doc.player2;
+                } else {
+                    var player = doc.player1;
+                }
+            } catch (error) {
+                console.error(error);
+            }
 
+            if(doc != null){
+                socketServer.clients.forEach(function (client) {
+                    if (client.username == player){
+                        client.send(JSON.stringify({type: "disconnect"}));
+                    }
+                })
+            }
+        }
+        run();
     });
     ws.onerror = function () {
         console.error("Some weird ass error occurred");

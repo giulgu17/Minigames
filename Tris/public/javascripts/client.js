@@ -1,4 +1,4 @@
-var ws, nickname, opponent;
+var ws, nickname, opponent, game=true;
 var lastSender;
 var turn, gameId, win;
 /*var chat = document.getElementById("chat");
@@ -57,13 +57,20 @@ function ready() {
                 break;
             //The game is over
             case "end":
-                if(msg.win == "draw"){
-                    alert("It's a draw!");
-                } else if(symbol == win) {
-                    alert("You won!");
-                } else {
-                    alert(opponent + " won!");
+                if(game){
+                    if(msg.winner == "draw"){
+                        alert("It's a draw!");
+                    } else if(msg.winner == nickname) {
+                        alert("You won!");
+                    } else {
+                        alert(opponent + " won!");
+                    }
+                    game = false;
                 }
+                window.location.href = "/";
+                break;
+            case "disconnect":
+                alert("The opponent has disconnected. You win!");
                 window.location.href = "/";
                 break;
         }

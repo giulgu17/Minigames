@@ -29,6 +29,7 @@ function addEventListeners() {
         if (!usedSquares.includes(squares[i].id)) {
             squares[i].addEventListener("click", place);
             squares[i].style.cursor = "pointer";
+            squares[i].classList.add("usable");
         }
     }
 }
@@ -37,6 +38,7 @@ function removeEventListeners() {
     var squares = document.getElementsByClassName("box");
     for (var i = 0; i < squares.length; i++) {
         squares[i].removeEventListener("click", place);
+        squares[i].classList.remove("usable");
         squares[i].style.cursor = "not-allowed";
     }
 }
@@ -63,6 +65,7 @@ function checkWin() {
     var count = 0;
     win = "draw";
     var check_symbol = "X";
+
     for (var j = 0; j < 2; j++){
         for (var r = 0; r < 3; r++) {
             for (var c = 0; c < 3; c++) {
@@ -76,6 +79,7 @@ function checkWin() {
                     count = 0;
                 }
             }
+            count = 0;
         }
 
         for (var c = 0; c < 3; c++) {
@@ -90,6 +94,7 @@ function checkWin() {
                     count = 0;
                 }
             }
+            count = 0;
         }
 
         for (var i = 0; i < 3; i++) {
@@ -97,6 +102,7 @@ function checkWin() {
                 count++;
                 if (count == 3) {
                     win = check_symbol;
+                    console.log("DIAG. ASC")
                     break;
                 }
             } else {
@@ -109,6 +115,7 @@ function checkWin() {
                 count++;
                 if (count == 3) {
                     win = check_symbol;
+                    console.log("DIAG. DISC")
                     break;
                 }
             } else {
@@ -120,10 +127,17 @@ function checkWin() {
     }
 
     if(win == "X" || win == "O" || usedSquares.length == 9){
+        if(win == symbol){
+            var winner = nickname;
+        } else if(win == "draw"){
+            var winner = "draw";
+        } else {
+            var winner = opponent;
+        }
         var msg = {
             type: "end",
             gameId: gameId,
-            winner: win,
+            winner: winner,
             user: nickname,
             target: opponent
         }
