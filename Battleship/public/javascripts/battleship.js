@@ -98,7 +98,7 @@ On use (failure):
 */
 
 var grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
-var usedSquares = [];
+var unSquares = [];
 
 //Player joins the queue
 function join() {
@@ -112,5 +112,74 @@ function join() {
 }
 
 function startGame(){
+    for(var i=0; i<10; i++){
+        for(var j=1; j<=10; j++){
+            var square = document.createElement("div");
+            square.className = "box";
+            square.classList.add("self");
+            square.id = "s"+i*10+j;
+            document.getElementById("selfGrid").appendChild(square);
+        }
+    }
+    for(var i=0; i<10; i++){
+        for(var j=1; j<=10; j++){
+            var square = document.createElement("div");
+            square.className = "box";
+            square.classList.add("enemy");
+            square.id = i*10+j;
+            square.getElementsById("enemyGrid").appendChild(square);
+        }
+    }
 
+    if (turn) {
+        addEventListeners();
+    } else {
+        removeEventListeners();
+    }
+}
+
+function addEventListeners() {
+    var squares = document.getElementsByClassName("enemy");
+    for (var i = 0; i < squares.length; i++) {
+        if (!usedSquares.includes(squares[i].id)) {
+            squares[i].addEventListener("click", attack);
+            squares[i].style.cursor = "pointer";
+            squares[i].classList.add("usable");
+        }
+    }
+}
+
+function removeEventListeners() {
+    var squares = document.getElementsByClassName("box");
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].removeEventListener("click", attack);
+        squares[i].classList.remove("usable");
+        squares[i].style.cursor = "not-allowed";
+    }
+}
+
+function attack() {
+    if (turn) {
+        let box = this;
+        var move = {
+            type: "move",
+            movetype: "attack",
+            gameId: gameId,
+            user: nickname,
+            target: opponent,
+            box: box.id
+        };
+        ws.send(JSON.stringify(move));
+    }
+    else {
+        window.location.href = "https://www.google.com/search?client=firefox-b-d&q=nuh+uh"
+    }
+}
+
+
+
+
+
+function checkWin(){
+    
 }

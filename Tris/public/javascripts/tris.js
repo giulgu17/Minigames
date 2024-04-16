@@ -57,7 +57,7 @@ function place() {
         ws.send(JSON.stringify(move));
     }
     else {
-        window.location.href = "https://www.google.com/search?client=firefox-b-d&q=fuck+you"
+        window.location.href = "https://www.google.com/search?client=firefox-b-d&q=nuh+uh"
     }
 }
 

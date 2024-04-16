@@ -36,11 +36,15 @@ function ready() {
                 break;
             //A player makes a move
             case "move":
-                usedSquares.push(msg.box);
-                if(msg.box%3 == 0){
-                    grid[Math.floor(msg.box/3-1)][2] = msg.symbol;
-                } else {
-                    grid[Math.floor(msg.box/3-0.1)][msg.box%3-1] = msg.symbol;
+                switch(msg.moveType){
+                    case "attack":
+                        var box = document.getElementById(msg.box);
+                        if(msg.hit){
+                            box.style.backgroundImage = "url('images/hit.png')";    //TODO: add images
+                        } else {
+                            box.style.backgroundImage = "url('images/miss.png')";
+                        }
+                        break;
                 }
 
                 if(turn){
