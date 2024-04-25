@@ -89,7 +89,6 @@ socketServer.on("connection", ws => {
     async function matchmaking() {
         if (queue.length >= 2) {
             newGame = [queue[0], queue[1]];
-            games.push(newGame);
             queue.splice(0, 2);
 
             var turn = Math.floor(Math.random() * 2);

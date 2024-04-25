@@ -67,6 +67,8 @@ function checkWin() {
     var check_symbol = "X";
 
     for (var j = 0; j < 2; j++){
+        //COLUMN
+        count=0;
         for (var r = 0; r < 3; r++) {
             for (var c = 0; c < 3; c++) {
                 if (grid[r][c] == check_symbol) {
@@ -82,6 +84,8 @@ function checkWin() {
             count = 0;
         }
 
+        //ROW
+        count=0;
         for (var c = 0; c < 3; c++) {
             for (var r = 0; r < 3; r++) {
                 if (grid[r][c] == check_symbol) {
@@ -97,6 +101,8 @@ function checkWin() {
             count = 0;
         }
 
+        //DIAGONAL DECREASING LEFT-RIGHT
+        count=0;
         for (var i = 0; i < 3; i++) {
             if (grid[i][i] == check_symbol) {
                 count++;
@@ -109,11 +115,15 @@ function checkWin() {
             }
         }
 
+        //DIAGONAL DECREASING RIGHT-LEFT
+        count=0;
         for (var i = 0; i < 3; i++) {
             if (grid[i][2-i] == check_symbol) {
+                console.log(grid[i][2-i])
                 count++;
                 if (count == 3) {
                     win = check_symbol;
+                    console.log("B")
                     break;
                 }
             } else {
