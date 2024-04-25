@@ -135,9 +135,7 @@ socketServer.on("connection", ws => {
                 } else {
                     var player = doc.player1;
                 }
-            } catch (error) {
-                console.error(error);
-            }
+            } catch (error) {}
 
             if(doc != null){
                 socketServer.clients.forEach(function (client) {
