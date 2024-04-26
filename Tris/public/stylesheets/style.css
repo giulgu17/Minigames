@@ -35,7 +35,7 @@
 
 .usable:hover {
     background-color: yellow;
-    cursor: point;
+    cursor: pointer;
 }
 
 .box {

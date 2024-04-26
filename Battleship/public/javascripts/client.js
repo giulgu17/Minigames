@@ -5,9 +5,10 @@ var turn, gameId, win;
 var text = document.getElementById("text");*/
 
 function ready() {
-    if(document.getElementById("login").value === ""){
+    //TODO: login
+    /*if(document.getElementById("login").value === ""){
         window.location.href = "/"
-    }
+    }*/
     var hostname = window.location.hostname;
     ws = new WebSocket("ws://"+hostname+":8080");
     

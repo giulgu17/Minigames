@@ -80,7 +80,7 @@ On use:
     "You successfully repaired a ship square."
     "You put out the fire on your ship."
 On use (failure):
-    "You shouldn't fix what it's broken. Use it on a damaged ship."
+    "You shouldn't fix what it's not broken. Use it on a damaged ship."
     "That ship looks fine to me. Why are you trying to repair it?"
     "That ship is not damaged."
 
@@ -102,6 +102,27 @@ var unSquares = [];
 
 //Player joins the queue
 function join() {
+    for(var i=0; i<10; i++){
+        for(var j=1; j<=10; j++){
+            var square = document.createElement("div");
+            square.className = "box";
+            square.classList.add("self");
+            square.id = "s"+rows[i]+j;
+            document.getElementById("selfGrid").appendChild(square);
+        }
+    }
+
+    for(var i=0; i<10; i++){
+        console.log("a")
+        for(var j=1; j<=10; j++){
+            var square = document.createElement("div");
+            square.className = "box";
+            square.classList.add("enemy");
+            square.id = rows[i]+j;
+            document.getElementById("enemyGrid").appendChild(square);
+        }
+    }
+
     nickname = document.getElementById("username").value;
     var msg = {
         type: "join",
@@ -112,25 +133,6 @@ function join() {
 }
 
 function startGame(){
-    for(var i=0; i<10; i++){
-        for(var j=1; j<=10; j++){
-            var square = document.createElement("div");
-            square.className = "box";
-            square.classList.add("self");
-            square.id = "s"+rows[i]+j;
-            document.getElementById("selfGrid").appendChild(square);
-        }
-    }
-    for(var i=0; i<10; i++){
-        for(var j=1; j<=10; j++){
-            var square = document.createElement("div");
-            square.className = "box";
-            square.classList.add("enemy");
-            square.id = rows[i]+j;
-            square.getElementsById("enemyGrid").appendChild(square);
-        }
-    }
-
     if (turn) {
         addEventListeners();
     } else {

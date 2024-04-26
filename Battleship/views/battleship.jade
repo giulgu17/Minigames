@@ -10,5 +10,17 @@ block content
 
     section#board
         section#selfGrid.grid
-        section(class="divider divider-horizontal" id="divider")
+        section(class="divider divider-horizontal divider-neutral" id="divider" )
         section#enemyGrid.grid
+
+    section#inventory 
+    section#notif
+    section#notif2
+    
+    div#hiddenInfo
+        input(type="hidden" id="login" value=login)
+        input(type="hidden" id="username" value=username)
+        input(type="hidden" id="state")
+    
+    script(src="/javascripts/client.js")
+    script(src="/javascripts/battleship.js")
