@@ -97,7 +97,7 @@ On use (failure):
     "Where do you want to move that ship? It can't go anywhere."
 */
 
-var grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var unSquares = [];
 
 //Player joins the queue
@@ -117,7 +117,7 @@ function startGame(){
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("self");
-            square.id = "s"+i*10+j;
+            square.id = "s"+rows[i]+j;
             document.getElementById("selfGrid").appendChild(square);
         }
     }
@@ -126,7 +126,7 @@ function startGame(){
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("enemy");
-            square.id = i*10+j;
+            square.id = rows[i]+j;
             square.getElementsById("enemyGrid").appendChild(square);
         }
     }
