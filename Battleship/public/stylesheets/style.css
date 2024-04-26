@@ -1,8 +1,28 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
 a {
   color: #00B7FF;
+}
+
+#board{
+  background-color: rgb(255, 94, 0);
+  margin: auto;
+  margin-top: 45px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+/*TODO: guarda il lavoro fatto in seconda per allineare tutto*/
+.grid {
+  height: 300px;
+  width: 300px;
+
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  flex-wrap: wrap;
+  border: 3px solid rgb(0, 0, 0);
+  margin-left: 250px;
+}
+
+#divider {
+  background-color: black;
 }
