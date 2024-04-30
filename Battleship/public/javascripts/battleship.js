@@ -79,10 +79,6 @@ Allows you to repair an existing ship square once. Also used for taking out fire
 On use:
     "You successfully repaired a ship square."
     "You put out the fire on your ship."
-On use (failure):
-    "You shouldn't fix what it's not broken. Use it on a damaged ship."
-    "That ship looks fine to me. Why are you trying to repair it?"
-    "That ship is not damaged."
 
 
 
