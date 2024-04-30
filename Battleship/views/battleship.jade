@@ -1,28 +1,29 @@
 extends layout 
 
 block content
-    section#left.side
-        div#info1.info
-            div#inick1
-                a= username
-        div.sideinfo
+    section#page
+        section#left.side
+            div#info1.info
+                div#inick1
+                    a= username
+            div.sideinfo
 
-    section#board
-        section#selfGrid.grid
-        section(class="divider divider-horizontal divider-neutral" id="divider" )
-        section#enemyGrid.grid
+        section#board
+            section#selfGrid.grid
+            section(class="divider divider-horizontal divider-neutral" id="divider")
+            section#enemyGrid.grid
 
-    section#right.side
-        div#info2.info
-            div#inick2
-        section#chat.sideinfo
-    
-    section#middle
-    
-    div#hiddenInfo
-        input(type="hidden" id="login" value=login)
-        input(type="hidden" id="username" value=username)
-        input(type="hidden" id="state")
-    
+        section#right.side
+            div#info2.info
+                div#inick2
+            section#chat.sideinfo
+
+        section#middle
+
+        div#hiddenInfo
+            input(type="hidden" id="login" value=login)
+            input(type="hidden" id="username" value=username)
+            input(type="hidden" id="state")
+
     script(src="/javascripts/client.js")
     script(src="/javascripts/battleship.js")
