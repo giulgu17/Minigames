@@ -37,10 +37,10 @@ On hit:
     "The shell exploded, setting the ship on fire!"
 Fire spreading:
     "The fire on {square} is spreading!"
-    "Oh no, the fire on {square} is getting out of control!"
+    "The fire on {square} is getting out of control!"
 Fire dying out:
     "The fire on {square} is dying out."
-    "The fire on {square} went out. Phew."
+    "The fire on {square} went out."
 Fire taking down a ship:
     "The {Ship} was overwhelmed by the fire and sunk."
     "The fire on {Ship} spread too much and destroyed it."
@@ -55,7 +55,7 @@ On activation:
     "{Enemy} is now under surveillance, let's see what they're up to..."
 On activation (failure):
     "You sent a spy to check on {Enemy}'s activies... but before they could do anything they were caught!" "Looks like {Enemy} was aware of it somehow..."
-    "{Enemy is now under surveilance... not! Your spy was immediately caught." "How could they have known?..."
+    "{Enemy} is now under surveilance... not. Your spy was immediately caught." "How could they have known?..."
 On enemy's move:
     "{Enemy} has placed a {Object} on {square}"
     "The spy reports that {Enemy} put down a {Object} on {square}"
@@ -88,9 +88,6 @@ You can only move the ship in the direction it's facing or in the opposite direc
 On use:
     "You moved the {ship}. How evil!"
     "The {ship} has been moved. They're never gonna see this one coming!"
-On use (failure):
-    "That ship can't move anywhere."
-    "Where do you want to move that ship? It can't go anywhere."
 */
 
 var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
