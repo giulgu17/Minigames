@@ -1,21 +1,23 @@
 extends layout 
 
 block content
-    div#info1.info
-        div#inick1
-            a= username
-
-    div#info2.info
-        div#inick2
+    section#left.side
+        div#info1.info
+            div#inick1
+                a= username
+        div.sideinfo
 
     section#board
         section#selfGrid.grid
         section(class="divider divider-horizontal divider-neutral" id="divider" )
         section#enemyGrid.grid
 
-    section#inventory 
-    section#notif
-    section#notif2
+    section#right.side
+        div#info2.info
+            div#inick2
+        section#chat.sideinfo
+    
+    section#middle
     
     div#hiddenInfo
         input(type="hidden" id="login" value=login)

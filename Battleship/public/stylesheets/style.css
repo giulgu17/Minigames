@@ -24,8 +24,8 @@ a {
 }
 
 #divider {
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 3%;
+  margin-right: 3%;
   height: 350px;
 }
 
@@ -45,41 +45,41 @@ a {
   cursor: pointer;
 }
 
+
+
+
+
+.side{
+  position: absolute;
+  margin-left: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#right {
+  margin-top: -25.7%;
+  margin-left: 78.05%; 
+}
+
 .info {
   height: 100px;
   width: 200px;
   background-color: white;
-  position: absolute;
-  margin-left: 50px;
   border: 3px solid rgb(0, 0, 0);
 }
 
-#info2 {
-  margin-left: 81.65%;
+.sideinfo{
+  height: 400px;
+  width: 275px;
+  border: 3px solid rgb(0, 0, 0);
+  margin-top: 50px;
 }
 
-#inventory{
+#middle{
   height: 200px;
-  width: 800px;
+  width: 710px;
   border: 3px solid rgb(0, 0, 0);
-  margin: auto;
-  margin-top: 10px;
-}
-
-#notif{
-  height: 450px;
-  width: 200px;
   position: absolute;
-  border: 3px solid rgb(0, 0, 0);
-  margin-top: -450px;
-  margin-left: 50px;
-}
-
-#notif2{
-  height: 450px;
-  width: 200px;
-  position: absolute;
-  border: 3px solid rgb(0, 0, 0);
-  margin-top: -450px;
-  margin-left: 81.65%;
+  margin-left: 24%;
 }
