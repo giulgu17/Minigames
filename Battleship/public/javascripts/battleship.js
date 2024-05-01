@@ -106,7 +106,6 @@ function join() {
     }
 
     for(var i=0; i<10; i++){
-        console.log("a")
         for(var j=1; j<=10; j++){
             var square = document.createElement("div");
             square.className = "box";
@@ -116,7 +115,7 @@ function join() {
         }
     }
 
-    nickname = document.getElementById("username").value;
+    nickname = document.getElementById("username").value;       //TODO: add test page for usernames (or something idk)
     var msg = {
         type: "join",
         nick: nickname
@@ -142,6 +141,7 @@ function addEventListeners() {
             squares[i].classList.add("usable");
         }
     }
+    console.log("added event listeners");
 }
 
 function removeEventListeners() {
@@ -151,6 +151,7 @@ function removeEventListeners() {
         squares[i].classList.remove("usable");
         squares[i].style.cursor = "not-allowed";
     }
+    console.log("removed event listeners");
 }
 
 function attack() {

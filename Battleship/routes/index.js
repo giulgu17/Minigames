@@ -158,6 +158,13 @@ router.get('/', function (req, res, next) {
     //TODO: if login = true -> redirect to homepage
     res.render('index', { title: 'Home' });
 });
+router.post('/login2', function (req, res, next) {
+    const username = req.body.username;
+    req.session.login = "true";
+    req.session.username = username;
+
+    res.redirect("/tris")
+});
 
 router.get('/battleship', function (req, res, next) {
     res.render('battleship', { title: 'Battleship', login: req.session.login, username: req.session.username });

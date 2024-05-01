@@ -6,7 +6,7 @@ a {
 
 #board {
   margin: auto;
-  margin-top: 2vw;
+  margin-top: 5vh;
   display: flex;
   flex-direction: row;
   align-items: center;
