@@ -31,15 +31,26 @@ function allowDrop(ev) {
 function drop(ev) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    console.log("Target: "+ev.target.id+" Data: "+data) //Data = Element being dragged
+    console.log("Target: " + ev.target.id + " Data: " + data) //Data = Element being dragged
 
     document.getElementById(ev.target.id).classList.add("ship")
     shipSquares.push(ev.target.id)
     //TODO: Add type of ship
 }
 
-function join(){
-    
+function join() {
+    var hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "code";
+
+    var code;
+    for (var i = 0; i < 10; i++) {
+        for (var j = 1; j <= 10; j++) {
+            var square = document.getElementById("s" + rows[i] + j);
+            code = square.classList.contains("ship") ? 1 : 0;
+        }
+    }
+    document.getElementById("code").value = code;
     document.getElementById("form").submit();
 }
 
