@@ -3,6 +3,14 @@ extends layout
 block content
     h1= Battleship
     section#home
-        form(action="/login2" method="post")
+        form(action="/login2" id="form" method="post")
             input(type="text" name="username" id="inputnick" placeholder="Nickname")
-            input(type="submit" id="buttonnick" value="Join Game")
+            input(type="button" id="join" value="Join Game")
+
+            input(type="hidden" id="ships")
+            //TODO: Find a way to submit an array with the form
+        
+        section#homegrid
+        div#test.box(style="cursor: pointer" draggable="true" ondragstart="drag(event)")
+    
+    script(src="/javascripts/home.js")

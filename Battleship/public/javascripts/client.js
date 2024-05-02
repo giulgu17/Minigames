@@ -39,24 +39,34 @@ function ready() {
             case "move":
                 switch(msg.moveType){
                     case "attack":
-                        var box = document.getElementById(msg.box);
-                        if(msg.hit){
-                            box.style.backgroundImage = "url('images/hit.png')";    //TODO: add images
+                        if(target == nickname){
+                            var box = document.getElementById("s"+msg.box);
                         } else {
-                            box.style.backgroundImage = "url('images/miss.png')";
+                            var box = document.getElementById(msg.box);
+                        }
+
+                        if(msg.hit){        //TODO: fix this condition (first add ships tho)
+                            box.classList.add("hit")
+                            //TODO: add images
+                        } else {
+                            box.classList.add("miss")
                         }
                         break;
                 }
 
                 if(turn){
                     turn = false;
+                    document.getElementById("info1").style="background-color: white;"
+                    document.getElementById("info2").style="background-color: yellow;"
                     removeEventListeners();
                 } else {
                     turn = true;
+                    document.getElementById("info1").style="background-color: yellow;"
+                    document.getElementById("info2").style="background-color: white;"
                     addEventListeners();
                 }
 
-                document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";
+                //document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";
                 
                 checkWin();
                 break;
