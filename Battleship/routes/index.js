@@ -159,6 +159,7 @@ router.get('/', function (req, res, next) {
 });
 router.post('/login2', function (req, res, next) {
     const username = req.body.username;
+    //const ships = req.body.ships;
     req.session.login = "true";
     req.session.username = username;
 
