@@ -29,63 +29,37 @@ On activation:
 
 
 
-HIGH-EXPLOSIVE INCENDIARY SHELL:
-A special shell designed to cause set enemy's ships on fire. The shell explodes on impact, setting all adjacent squares on fire.
-Squares on fire have a chance to spread to adjacent squares (33%) or to go out on their own (33%). If the whole ship is on fire, the ship is destroyed.
+HIGH-EXPLOSIVE SHELL:
+A special shell designed to instantly sink a ship.
 On hit:
-    "That was a high-explosive shell! The ship is on fire!"
-    "The shell exploded, setting the ship on fire!"
-Fire spreading:
-    "The fire on {square} is spreading!"
-    "The fire on {square} is getting out of control!"
-Fire dying out:
-    "The fire on {square} is dying out."
-    "The fire on {square} went out."
-Fire taking down a ship:
-    "The {Ship} was overwhelmed by the fire and sunk."
-    "The fire on {Ship} spread too much and destroyed it."
+    "It was a high explosive shell! it instantly sunk the ship!"
 
 
 
 SPY:
 Allows you to see the enemy's inventory and you get notified of every move they make. Lasts for 5 turns.
-HIDDEN PERK: you become immune to spies, but the enemy becomes aware of it.
 On activation:
     "You sent a spy to check on {Enemy}'s activies..."
     "{Enemy} is now under surveillance, let's see what they're up to..."
-On activation (failure):
-    "You sent a spy to check on {Enemy}'s activies... but before they could do anything they were caught!" "Looks like {Enemy} was aware of it somehow..."
-    "{Enemy} is now under surveilance... not. Your spy was immediately caught." "How could they have known?..."
 On enemy's move:
     "{Enemy} has placed a {Object} on {square}"
     "The spy reports that {Enemy} put down a {Object} on {square}"
-    "{Enemy} tried to send a spy on you, but you were prepared and caught them immediately."
-On enemy using repair kits:
-    "Looks like {Enemy} has repaired a ship square."
-    "The spy reports that {Enemy} repaired a ship square."
-    "Looks like {Enemy} has put out a fire."
-    "The spy reports that {Enemy} put out a fire.
-On enemy using turbo engine:
-    "Looks like has {Enemy} moved a ship. Great, now you can't even trust your own map"
-    "The spy reports that {Enemy} has moved a ship. That has to be cheating right?"
 On deactivation:
     "The spy is retreating before {Enemy} notices them."
     "The spy is back. {Enemy} is no longer under surveillance."
 
 
 
-REPAIR KIT:
-Allows you to repair an existing ship square once. Also used for taking out fires.
-On use:
-    "You successfully repaired a ship square."
-    "You put out the fire on your ship."
 
-
-
-TURBO ENGINE:
-Allows you to move a ship square to an adjacent square. The square must empty.
-You can only move the ship in the direction it's facing or in the opposite direction.
-On use:
-    "You moved the {ship}. How evil!"
-    "The {ship} has been moved. They're never gonna see this one coming!"
+SONAR:
+Allows you to scan a 5x5 area to see how many ships are present.
+On activation:
+    "You activated the sonar. Scanning the area..."
+    "The sonar is scanning the area..."
+On success:
+    "{Number} of squares in the area are occupied by ships."
+    "The sonar detected {Number} of ships in the area."
+On failure:
+    "The sonar didn't detect any ships in the area."
+    "Looks like there are no ships in the area."
 */

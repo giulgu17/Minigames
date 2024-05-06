@@ -11,7 +11,7 @@ function ready() {
             square.style.cursor = "pointer";
             square.addEventListener("drop", drop);
             square.addEventListener("dragover", allowDrop);
-            square.id = "s" + rows[i] + j;
+            square.id = "s" + i * 10 + j;
             document.getElementById("homegrid").appendChild(square);
         }
     }
@@ -42,15 +42,17 @@ function join() {
     var hidden = document.createElement("input");
     hidden.type = "hidden";
     hidden.name = "code";
+    document.getElementById("form").appendChild(hidden);
 
     var code;
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
-            var square = document.getElementById("s" + rows[i] + j);
+            var square = document.getElementById("s" + i * 10 + j);
             code = square.classList.contains("ship") ? 1 : 0;
+            hidden.value += code;
         }
     }
-    document.getElementById("code").value = code;
+    
     document.getElementById("form").submit();
 }
 

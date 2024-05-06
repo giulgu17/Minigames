@@ -1,5 +1,6 @@
 var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var usedSquares = [];
+var code;
 
 //Player joins the queue
 function join() {
@@ -8,7 +9,7 @@ function join() {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("self");
-            square.id = "s"+rows[i]+j;
+            square.id = "s"+i*10+j;
             document.getElementById("selfGrid").appendChild(square);
         }
     }
@@ -18,7 +19,7 @@ function join() {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("enemy");
-            square.id = rows[i]+j;
+            square.id = i*10+j;
             document.getElementById("enemyGrid").appendChild(square);
         }
     }
@@ -29,6 +30,7 @@ function join() {
         nick: nickname
     }
     console.log("Joined the queue for Battleship");
+    ships = document.getElementById("code").value;
     ws.send(JSON.stringify(msg));
 }
 
