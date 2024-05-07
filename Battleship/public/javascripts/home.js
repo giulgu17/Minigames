@@ -1,5 +1,4 @@
 var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-var shipSquares = [];
 
 function ready() {
     grid = document.getElementById("homegrid");
@@ -34,7 +33,9 @@ function drop(ev) {
     console.log("Target: " + ev.target.id + " Data: " + data) //Data = Element being dragged
 
     document.getElementById(ev.target.id).classList.add("ship")
-    shipSquares.push(ev.target.id)
+    var ship = document.createElement("div");
+    ship.className = "ship";
+    
     //TODO: Add type of ship
 }
 
