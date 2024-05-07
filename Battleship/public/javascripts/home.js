@@ -37,6 +37,7 @@ function drop(ev) {
     ship.className = "ship";
     
     //TODO: Add type of ship
+    //Horrizontal ships have .hor class, vertical have .ver
 }
 
 function join() {
