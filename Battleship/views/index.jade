@@ -1,16 +1,17 @@
 extends layout
 
 block content
-    h1= "Battleship"
-    h5= "Drag a ship from outside the grid and drop it in the grid to place it. Click on the ship to rotate it."
+    section#title
+        h1(class="text-4xl font-bold")|Battleship+
+        h5= "Click a ship from outside the grid to select it, then click again on the grid to place it. Press 'R' to rotate the selected ship."
     section#home
         form(action="/login2" id="form" method="post")
-            input(type="text" name="username" id="inputnick" placeholder="Nickname")
-            input(type="text" placeholder="Type here" class="input input-bordered input-sm w-full max-w-xs")
+            //input(type="text" name="username" id="inputnick" placeholder="Nickname")
+            input(type="text" name="username" id="inputnick" placeholder="Nickname" class="input input-bordered input-sm w-full max-w-xs")
             input(type="button" id="join" value="Join Game")
         
         section#homegrid
-        div#test.box(style="cursor: pointer" draggable="true" ondragstart="drag(event)")
-        div#test2.box.hor(style="cursor: pointer" draggable="true" ondragstart="drag(event)")
+        div#test.box(style="cursor: pointer" draggable="true")
+        div#test2.box.hor(style="cursor: pointer" draggable="true")
     
     script(src="/javascripts/home.js")

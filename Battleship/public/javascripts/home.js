@@ -8,9 +8,7 @@ function ready() {
             square.className = "box";
             square.classList.add("self");
             square.style.cursor = "pointer";
-            square.addEventListener("drop", drop);
-            square.addEventListener("dragover", allowDrop);
-            square.id = "s" + i * 10 + j;
+            square.id = "s" + (i * 10 + j);
             document.getElementById("homegrid").appendChild(square);
         }
     }
@@ -18,8 +16,13 @@ function ready() {
 
 }
 
-
-function drag(ev) {
+function select() {
+    var selected = this;
+    selected.classList.toggle("selected");
+    selected.style.backgroundColor = selected.classList.contains("selected") ? "lime" : "yellow";
+    console.log(selected.style.backgroundColor);
+}
+/*function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
@@ -38,7 +41,7 @@ function drop(ev) {
     
     //TODO: Add type of ship
     //Horrizontal ships have .hor class, vertical have .ver
-}
+}*/
 
 function join() {
     var hidden = document.createElement("input");
@@ -59,4 +62,6 @@ function join() {
 }
 
 document.addEventListener("DOMContentLoaded", ready);
+document.getElementById("test").addEventListener("click", select);
+document.getElementById("test2").addEventListener("click", select);
 document.getElementById("join").addEventListener("click", join);

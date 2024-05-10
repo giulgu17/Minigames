@@ -2,10 +2,29 @@ a {
   color: #00B7FF;
 }
 
+#title {
+  margin: auto;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+#home {
+  margin: auto;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+#inputnick{
+  margin-right: 1vw;
+}
+
 #homegrid {
   height: 306px;
   width: 306px;
   margin:auto;
+  margin-top: 5vh;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   flex-wrap: wrap;

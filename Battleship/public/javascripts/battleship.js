@@ -4,22 +4,22 @@ var code;
 
 //Player joins the queue
 function join() {
-    for(var i=0; i<10; i++){
-        for(var j=1; j<=10; j++){
+    for (var i = 0; i < 10; i++) {
+        for (var j = 1; j <= 10; j++) {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("self");
-            square.id = "s"+i*10+j;
+            square.id = "s" + (i * 10 + j);
             document.getElementById("selfGrid").appendChild(square);
         }
     }
 
-    for(var i=0; i<10; i++){
-        for(var j=1; j<=10; j++){
+    for (var i = 0; i < 10; i++) {
+        for (var j = 1; j <= 10; j++) {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("enemy");
-            square.id = i*10+j;
+            square.id = i * 10 + j;
             document.getElementById("enemyGrid").appendChild(square);
         }
     }
@@ -34,14 +34,14 @@ function join() {
     ws.send(JSON.stringify(msg));
 }
 
-function startGame(){
+function startGame() {
     if (turn) {
-        document.getElementById("info1").style="background-color: yellow;";
-        document.getElementById("info2").style="background-color: white;";
+        document.getElementById("info1").style = "background-color: yellow;";
+        document.getElementById("info2").style = "background-color: white;";
         addEventListeners();
     } else {
-        document.getElementById("info1").style="background-color: white;";
-        document.getElementById("info2").style="background-color: yellow;";
+        document.getElementById("info1").style = "background-color: white;";
+        document.getElementById("info2").style = "background-color: yellow;";
         removeEventListeners();
     }
 }
@@ -86,6 +86,6 @@ function attack() {
 
 
 
-function checkWin(){
-    
+function checkWin() {
+
 }
