@@ -3,7 +3,7 @@ var usedSquares = [];
 var code;
 
 //Player joins the queue
-function join() {
+function joinQueue() {
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.createElement("div");
