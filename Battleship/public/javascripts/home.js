@@ -50,6 +50,15 @@ function select() {
             square.addEventListener("mouseout", resetPreview);
         }
     }
+
+    document.addEventListener('keydown', function(e) {
+        switch (e.key) {
+            case "r":
+                selected.classList.toggle("ver");
+                selected.classList.toggle("hor");
+                
+                break;
+        }});
 }
 
 function place() {
