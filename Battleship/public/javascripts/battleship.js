@@ -9,7 +9,7 @@ function joinQueue() {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("self");
-            square.id = "s" + (i * 10 + j);
+            square.id = "s" + rows[i] + j;
             document.getElementById("selfGrid").appendChild(square);
         }
     }
