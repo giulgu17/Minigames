@@ -51,14 +51,15 @@ function select() {
         }
     }
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         switch (e.key) {
             case "r":
                 selected.classList.toggle("ver");
                 selected.classList.toggle("hor");
-                
+
                 break;
-        }});
+        }
+    });
 }
 
 function place() {
@@ -70,7 +71,7 @@ function place() {
 
     function check() {
         if (selectMode) {
-            try{
+            try {
                 //TODO: exclude corners?
                 for (var i = 0; i < shipLength; i++) {
                     if (direction == "vertical") {
@@ -87,7 +88,7 @@ function place() {
                     }
                 }
                 return true;
-            } catch(e){
+            } catch (e) {
                 //console.log(e);
             }
         }
@@ -97,33 +98,33 @@ function place() {
 
     if (confirm) {
         if (direction == "vertical") {
-                for (var i = 0; i < shipLength + 2; i++) {
-                    for (var j = clickedColumn - 1; j <= clickedColumn + 1; j++) {
-                        try{
-                            var checkedSquare = document.getElementById(rows[clickedRow.charCodeAt() - 66 + i] + j);
-                            checkedSquare.classList.add("unavailable");
-                            if (j == clickedColumn && i != 0 && i != shipLength + 1) {
-                                checkedSquare.classList.add("ship");
-                            }
-                        } catch(e){
-                            //console.error(e);
+            for (var i = 0; i < shipLength + 2; i++) {
+                for (var j = clickedColumn - 1; j <= clickedColumn + 1; j++) {
+                    try {
+                        var checkedSquare = document.getElementById(rows[clickedRow.charCodeAt() - 66 + i] + j);
+                        checkedSquare.classList.add("unavailable");
+                        if (j == clickedColumn && i != 0 && i != shipLength + 1) {
+                            checkedSquare.classList.add("ship");
                         }
+                    } catch (e) {
+                        //console.error(e);
                     }
                 }
+            }
         } else {
-                for (var j = clickedRow.charCodeAt() - 66; j <= clickedRow.charCodeAt() - 64; j++) {
-                    for (var i = clickedColumn - 1; i <= clickedColumn + shipLength; i++) {
-                        try{
-                            var checkedSquare = document.getElementById(rows[j] + i);
-                            checkedSquare.classList.add("unavailable");
-                            if (j == clickedRow.charCodeAt() - 65 && i != clickedColumn - 1 && i != clickedColumn + shipLength) {
-                                checkedSquare.classList.add("ship");
-                            }
-                        } catch(e){
-                            //console.error(e);
+            for (var j = clickedRow.charCodeAt() - 66; j <= clickedRow.charCodeAt() - 64; j++) {
+                for (var i = clickedColumn - 1; i <= clickedColumn + shipLength; i++) {
+                    try {
+                        var checkedSquare = document.getElementById(rows[j] + i);
+                        checkedSquare.classList.add("unavailable");
+                        if (j == clickedRow.charCodeAt() - 65 && i != clickedColumn - 1 && i != clickedColumn + shipLength) {
+                            checkedSquare.classList.add("ship");
                         }
+                    } catch (e) {
+                        //console.error(e);
                     }
                 }
+            }
         }
 
         selected.remove();
@@ -139,29 +140,44 @@ function preview() {
     var shipLength = parseInt(selected.id.substring(1, 2));
     var direction = selected.classList.contains("ver") ? "vertical" : "horizontal";
 
-    function view(){
+    console.log(rows[hoveredRow.charCodeAt() - 65] + (hoveredColumn))
+    function view() {
         if (selectMode) {
-            if(direction == "vertical"){
+            if (direction == "vertical") {
                 for (var i = 0; i < shipLength; i++) {
-                    if (direction == "vertical") {
-                        var hoveredSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65 + i] + hoveredColumn);
-                        hoveredSquare.classList.add("preview");
-                    } else {
-                        var hoveredSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65] + (hoveredColumn + i));
-                        hoveredSquare.classList.add("preview");
-                    }
+                    try{
+                        var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65 + i] + (hoveredColumn));
+                        if (hoveredRow.charCodeAt() - 65 <= ncols - shipLength){
+                            checkHovSquare.style.backgroundColor = selected.classList.contains("unavailable") ? "ff000085" : "#00ff0085";
+                        } else {
+                            console.log("AEK")
+                            console.log(checkHovSquare.id)
+                            checkHovSquare.style.backgroundColor = "ff000085";
+                        }
+                    } catch(e){}
+                }
+            } else {
+                for (var i = 0; i < shipLength; i++) {
+                    try{
+                        var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65] + (hoveredColumn + i));
+                        if (hoveredColumn <= ncols - shipLength){
+                            checkHovSquare.style.backgroundColor = selected.classList.contains("unavailable") ? "ff000085" : "#00ff0085";
+                        } else {
+                            checkHovSquare.style.backgroundColor = "ff000085";
+                        }
+                    } catch(e){}
                 }
             }
         }
     }
-    
+    view();
 }
 
-function resetPreview(){
+function resetPreview() {
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.getElementById(rows[i] + j);
-            square.classList.remove("preview");
+            square.style.backgroundColor = square.classList.contains("ship") ? "blue" : "white";
         }
     }
 }
