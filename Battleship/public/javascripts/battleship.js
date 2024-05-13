@@ -4,6 +4,8 @@ var code;
 
 //Player joins the queue
 function joinQueue() {
+    var code = document.getElementById("code").value;
+    console.log(code)
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.createElement("div");
@@ -11,6 +13,9 @@ function joinQueue() {
             square.classList.add("self");
             square.id = "s" + rows[i] + j;
             document.getElementById("selfGrid").appendChild(square);
+            if(code[i*10+j-1]==1){
+                square.classList.add("ship");
+            }
         }
     }
 
@@ -30,7 +35,6 @@ function joinQueue() {
         nick: nickname
     }
     console.log("Joined the queue for Battleship");
-    ships = document.getElementById("code").value;
     ws.send(JSON.stringify(msg));
 }
 

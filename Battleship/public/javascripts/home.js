@@ -5,7 +5,7 @@ var selected;
 var selectMode = false;
 
 function ready() {
-    grid = document.getElementById("homegrid");
+    grid = document.getElementById("placegrid");
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.createElement("div");
@@ -13,7 +13,7 @@ function ready() {
             square.classList.add("self");
             square.style.cursor = "pointer";
             square.id = rows[i] + j;
-            document.getElementById("homegrid").appendChild(square);
+            document.getElementById("placegrid").appendChild(square);
         }
     }
 
@@ -132,7 +132,6 @@ function place() {
 }
 
 
-//TODO: do this thing
 function preview() {
     var hovered = this;
     var hoveredRow = hovered.id.substring(0, 1);

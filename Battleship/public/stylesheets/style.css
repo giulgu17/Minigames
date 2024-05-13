@@ -20,19 +20,32 @@ a {
   margin-right: 1vw;
 }
 
-#homegrid {
+#homegrid{
+  margin: auto;
+  margin-top: 5vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.grids {
   height: 306px;
   width: 306px;
-  margin:auto;
-  margin-top: 5vh;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  margin-right: 5vw;
+  margin-left: 5vw;
   flex-wrap: wrap;
   border: 3px solid rgb(0, 0, 0);
 }
 
+#placegrid{
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+}
+
 .unShip {
-  background-color: yellow
+  background-color: yellow;
+  cursor: pointer;
 }
 
 

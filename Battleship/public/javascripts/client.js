@@ -90,7 +90,7 @@ function ready() {
     });
     ws.addEventListener("open", () => {
         console.log("Connected to the server");
-        join();
+        joinQueue();
     });
 }
 

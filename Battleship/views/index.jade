@@ -11,10 +11,12 @@ block content
             input(type="button" id="join" value="Join Game")
         
         section#homegrid
-        div#s11.box.unShip(style="cursor: pointer")
-        div#s22.box.unShip.ver(style="cursor: pointer")
-        div#s23.box.unShip.hor(style="cursor: pointer")
-        div#s34.box.unShip.ver(style="cursor: pointer")
-        div#s35.box.unShip.hor(style="cursor: pointer")
+            section#unplaced.grids
+                div#s11.box.unShip
+                div#s22.box.unShip.ver
+                div#s23.box.unShip.hor
+                div#s34.box.unShip.ver
+                div#s35.box.unShip.hor
+            section#placegrid.grids
     
     script(src="/javascripts/home.js")
