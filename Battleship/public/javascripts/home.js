@@ -76,7 +76,6 @@ function place() {
                 for (var i = 0; i < shipLength; i++) {
                     if (direction == "vertical") {
                         var checkedSquare = document.getElementById(rows[clickedRow.charCodeAt() - 65 + i] + clickedColumn);
-                        console.log(checkedSquare.id)
                         if (checkedSquare.classList.contains("unavailable")) {
                             return false;
                         }
@@ -94,9 +93,9 @@ function place() {
         }
     }
     var confirm = check();
-    console.log(confirm)
 
     if (confirm) {
+        selectMode = false;
         if (direction == "vertical") {
             for (var i = 0; i < shipLength + 2; i++) {
                 for (var j = clickedColumn - 1; j <= clickedColumn + 1; j++) {
@@ -127,6 +126,7 @@ function place() {
             }
         }
 
+        resetPreview();
         selected.remove();
     }
 }
@@ -140,7 +140,6 @@ function preview() {
     var shipLength = parseInt(selected.id.substring(1, 2));
     var direction = selected.classList.contains("ver") ? "vertical" : "horizontal";
 
-    console.log(rows[hoveredRow.charCodeAt() - 65] + (hoveredColumn))
     function view() {
         if (selectMode) {
             if (direction == "vertical") {
@@ -148,11 +147,9 @@ function preview() {
                     try{
                         var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65 + i] + (hoveredColumn));
                         if (hoveredRow.charCodeAt() - 65 <= ncols - shipLength){
-                            checkHovSquare.style.backgroundColor = selected.classList.contains("unavailable") ? "ff000085" : "#00ff0085";
+                            checkHovSquare.style.backgroundColor = checkHovSquare.classList.contains("unavailable") ? "#ff000085" : "#00ff0085";
                         } else {
-                            console.log("AEK")
-                            console.log(checkHovSquare.id)
-                            checkHovSquare.style.backgroundColor = "ff000085";
+                            checkHovSquare.style.backgroundColor = "#ff000085";
                         }
                     } catch(e){}
                 }
@@ -160,10 +157,10 @@ function preview() {
                 for (var i = 0; i < shipLength; i++) {
                     try{
                         var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65] + (hoveredColumn + i));
-                        if (hoveredColumn <= ncols - shipLength){
-                            checkHovSquare.style.backgroundColor = selected.classList.contains("unavailable") ? "ff000085" : "#00ff0085";
+                        if (hoveredColumn <= ncols - shipLength + 1){
+                            checkHovSquare.style.backgroundColor = checkHovSquare.classList.contains("unavailable") ? "#ff000085" : "#00ff0085";
                         } else {
-                            checkHovSquare.style.backgroundColor = "ff000085";
+                            checkHovSquare.style.backgroundColor = "#ff000085";
                         }
                     } catch(e){}
                 }
@@ -174,10 +171,15 @@ function preview() {
 }
 
 function resetPreview() {
+    console.log("reset")
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.getElementById(rows[i] + j);
-            square.style.backgroundColor = square.classList.contains("ship") ? "blue" : "white";
+            if(square.classList.contains("ship")){
+                square.style.backgroundColor = "blue";
+            } else {
+                square.style.backgroundColor = square.classList.contains("unavailable") ? "#b8b8b8" : "white";
+            }
         }
     }
 }
