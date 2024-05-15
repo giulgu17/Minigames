@@ -3,9 +3,29 @@ const ncols = 10;
 var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var selected;
 var selectMode = false;
+localStorage.clear();
 
 function ready() {
     grid = document.getElementById("placegrid");
+    for (var i = 1; i <= 8; i++) {
+        var unship = document.createElement("div");
+        unship.classList.add("unShip");
+        unship.classList.add("hor");
+        if(i <= 3){
+            unship.id = "s2" + i;
+            document.getElementById("carriers").appendChild(unship);
+        } else if (3 < i && i < 7) {
+            unship.id = "s3" + i;
+            document.getElementById("battleships").appendChild(unship);
+        } else if (i == 7) {
+            unship.id = "s4" + i;
+            document.getElementById("other").appendChild(unship);
+        } else if (i == 8){
+            unship.id = "s5" + i;
+            document.getElementById("other").appendChild(unship);
+        }
+    }
+
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.createElement("div");
@@ -46,21 +66,29 @@ function select() {
             square.style.cursor = "pointer";
             //TODO: show preview onHover
             square.addEventListener("click", place);
-            square.addEventListener("mouseover", preview);
+            square.addEventListener("mouseover", function(e) {preview(e.target)});
             square.addEventListener("mouseout", resetPreview);
         }
     }
-
-    document.addEventListener('keydown', function (e) {
-        switch (e.key) {
-            case "r":
-                selected.classList.toggle("ver");
-                selected.classList.toggle("hor");
-
-                break;
-        }
-    });
 }
+
+document.addEventListener('keydown', function (e) {
+    switch (e.key) {
+        case "r":
+            selected.classList.toggle("ver");
+            selected.classList.toggle("hor");
+            if(selected.classList.contains("ver")){
+                selected.style.transform = "rotate(90deg)";
+            } else {
+                selected.style.transform = "rotate(0deg)";
+            }
+            var lastHovered = document.getElementsByClassName("hovered");
+            localStorage.setItem("lastHovered", lastHovered[0].id);
+            resetPreview();
+            preview(document.getElementById(localStorage.getItem("lastHovered")));
+            break;
+    }
+});
 
 function place() {
     var clicked = this;
@@ -132,8 +160,8 @@ function place() {
 }
 
 
-function preview() {
-    var hovered = this;
+function preview(hovered) {
+    hovered.classList.add("hovered");
     var hoveredRow = hovered.id.substring(0, 1);
     var hoveredColumn = parseInt(hovered.id.substring(1));
     var shipLength = parseInt(selected.id.substring(1, 2));
@@ -170,7 +198,6 @@ function preview() {
 }
 
 function resetPreview() {
-    console.log("reset")
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.getElementById(rows[i] + j);
@@ -181,6 +208,36 @@ function resetPreview() {
             }
         }
     }
+    for (var i = 0; i < 10; i++) {
+        for (var j = 1; j <= 10; j++) {
+            var square = document.getElementById(rows[i] + j);
+            if(square.classList.contains("hovered")){
+                square.classList.remove("hovered");
+            }
+        }
+    }
+}
+
+function clear(){
+    /*for (var i = 0; i < 10; i++) {
+        for (var j = 1; j <= 10; j++) {
+            var square = document.getElementById(rows[i] + j);
+            square.classList.remove("unavailable");
+            square.classList.remove("ship");
+            square.style.backgroundColor = "white";
+        }
+    }
+    var ships = document.getElementsByClassName("ship");
+    for (var i = 0; i < ships.length; i++) {
+        ships[i].classList.remove("ship");
+    }
+    var unShips = document.getElementsByClassName("unShip");
+    for (var i = 0; i < unShips.length; i++) {
+        unShips[i].classList.remove("selected");
+        unShips[i].style.backgroundColor = "yellow";
+    }
+    localStorage.clear();*/
+    window.location.reload();
 }
 
 
@@ -202,8 +259,11 @@ function join() {
         }
     }
 
+    ready();
+
     document.getElementById("form").submit();
 }
 
 document.addEventListener("DOMContentLoaded", ready);
 document.getElementById("join").addEventListener("click", join);
+document.getElementById("clear").addEventListener("click", clear);

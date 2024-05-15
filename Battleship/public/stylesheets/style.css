@@ -44,8 +44,41 @@ a {
 }
 
 .unShip {
+  height: 30px;
+  padding: 1px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: yellow;
   cursor: pointer;
+}
+
+#carriers{
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}
+
+#battleships{
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20%;
+}
+
+#other{
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20%;
 }
 
 
@@ -142,15 +175,27 @@ a {
 
 
 
+#s21{
+  width: 60px;
+}
 #s22{
-  height: 60px;
+  width: 60px;
 }
 #s23{
   width: 60px;
 }
 #s34{
-  height: 90px;
+  width: 90px;
 }
 #s35{
   width: 90px;
+}
+#s36{
+  width: 90px;
+}
+#s47{
+  width: 120px;
+} 
+#s58{
+  width: 150px;
 }
