@@ -7,40 +7,61 @@ var placedShips = 0;
 localStorage.clear();
 
 function ready() {
-    grid = document.getElementById("placegrid");
-    for (var i = 1; i <= 8; i++) {
-        var unship = document.createElement("div");
-        unship.classList.add("unShip");
-        unship.classList.add("hor");
-        if(i <= 3){
-            unship.id = "s2" + i;
-            document.getElementById("carriers").appendChild(unship);
-        } else if (3 < i && i < 7) {
-            unship.id = "s3" + i;
-            document.getElementById("battleships").appendChild(unship);
-        } else if (i == 7) {
-            unship.id = "s4" + i;
-            document.getElementById("other").appendChild(unship);
-        } else if (i == 8){
-            unship.id = "s5" + i;
-            document.getElementById("other").appendChild(unship);
+    let code = getCookie("code");
+    if (code != "") {
+        for (var i = 0; i < 10; i++) {
+            for (var j = 1; j <= 10; j++) {
+                var square = document.createElement("div");
+                square.className = "box";
+                square.classList.add("self");
+                square.id = rows[i] + j;
+                document.getElementById("placegrid").appendChild(square);
+                if (code[i * 10 + j - 1] == 1) {
+                    square.classList.add("ship");
+                }
+            }
         }
-    }
-
-    for (var i = 0; i < 10; i++) {
-        for (var j = 1; j <= 10; j++) {
-            var square = document.createElement("div");
-            square.className = "box";
-            square.classList.add("self");
-            square.style.cursor = "pointer";
-            square.id = rows[i] + j;
-            document.getElementById("placegrid").appendChild(square);
+        placedShips = 8;
+        var joinbtn = document.getElementById("join");
+        joinbtn.cursor = "pointer";
+        joinbtn.disabled = false;
+        joinbtn.addEventListener("click", join);
+    } else {
+        grid = document.getElementById("placegrid");
+        for (var i = 1; i <= 8; i++) {
+            var unship = document.createElement("div");
+            unship.classList.add("unShip");
+            unship.classList.add("hor");
+            if (i <= 3) {
+                unship.id = "s2" + i;
+                document.getElementById("carriers").appendChild(unship);
+            } else if (3 < i && i < 7) {
+                unship.id = "s3" + i;
+                document.getElementById("battleships").appendChild(unship);
+            } else if (i == 7) {
+                unship.id = "s1" + i;
+                document.getElementById("other").appendChild(unship);
+            } else if (i == 8) {
+                unship.id = "s4" + i;
+                document.getElementById("other").appendChild(unship);
+            }
         }
-    }
 
-    var ships = document.getElementsByClassName("unShip");
-    for (var i = 0; i < ships.length; i++) {
-        ships[i].addEventListener("click", select);
+        for (var i = 0; i < 10; i++) {
+            for (var j = 1; j <= 10; j++) {
+                var square = document.createElement("div");
+                square.className = "box";
+                square.classList.add("self");
+                square.style.cursor = "pointer";
+                square.id = rows[i] + j;
+                document.getElementById("placegrid").appendChild(square);
+            }
+        }
+
+        var ships = document.getElementsByClassName("unShip");
+        for (var i = 0; i < ships.length; i++) {
+            ships[i].addEventListener("click", select);
+        }
     }
 }
 
@@ -58,7 +79,6 @@ function select() {
     selected.classList.toggle("selected");
     var shipLength = parseInt(selected.id.substring(1, 2));
     var direction = selected.classList.contains("ver") ? "vertical" : "horizontal";
-    console.log("Selected ship length: " + shipLength + " Direction: " + direction)
 
     selected.style.backgroundColor = "lime";
     for (var i = 0; i < nrows; i++) {
@@ -67,7 +87,7 @@ function select() {
             square.style.cursor = "pointer";
             //TODO: show preview onHover
             square.addEventListener("click", place);
-            square.addEventListener("mouseover", function(e) {preview(e.target)});
+            square.addEventListener("mouseover", function (e) { preview(e.target) });
             square.addEventListener("mouseout", resetPreview);
         }
     }
@@ -78,7 +98,7 @@ document.addEventListener('keydown', function (e) {
         case "r":
             selected.classList.toggle("ver");
             selected.classList.toggle("hor");
-            if(selected.classList.contains("ver")){
+            if (selected.classList.contains("ver")) {
                 selected.style.transform = "rotate(90deg)";
             } else {
                 selected.style.transform = "rotate(0deg)";
@@ -159,9 +179,10 @@ function place() {
         selected.remove();
 
         placedShips++;
-        if(placedShips == 8){
+        if (placedShips == 8) {
             var joinbtn = document.getElementById("join");
             joinbtn.cursor = "pointer";
+            joinbtn.disabled = false;
             joinbtn.addEventListener("click", join);
         }
     }
@@ -179,25 +200,25 @@ function preview(hovered) {
         if (selectMode) {
             if (direction == "vertical") {
                 for (var i = 0; i < shipLength; i++) {
-                    try{
+                    try {
                         var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65 + i] + (hoveredColumn));
-                        if (hoveredRow.charCodeAt() - 65 <= ncols - shipLength){
+                        if (hoveredRow.charCodeAt() - 65 <= ncols - shipLength) {
                             checkHovSquare.style.backgroundColor = checkHovSquare.classList.contains("unavailable") ? "#ff000085" : "#00ff0085";
                         } else {
                             checkHovSquare.style.backgroundColor = "#ff000085";
                         }
-                    } catch(e){}
+                    } catch (e) { }
                 }
             } else {
                 for (var i = 0; i < shipLength; i++) {
-                    try{
+                    try {
                         var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65] + (hoveredColumn + i));
-                        if (hoveredColumn <= ncols - shipLength + 1){
+                        if (hoveredColumn <= ncols - shipLength + 1) {
                             checkHovSquare.style.backgroundColor = checkHovSquare.classList.contains("unavailable") ? "#ff000085" : "#00ff0085";
                         } else {
                             checkHovSquare.style.backgroundColor = "#ff000085";
                         }
-                    } catch(e){}
+                    } catch (e) { }
                 }
             }
         }
@@ -209,7 +230,7 @@ function resetPreview() {
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.getElementById(rows[i] + j);
-            if(square.classList.contains("ship")){
+            if (square.classList.contains("ship")) {
                 square.style.backgroundColor = "blue";
             } else {
                 square.style.backgroundColor = square.classList.contains("unavailable") ? "#b8b8b8" : "white";
@@ -219,14 +240,14 @@ function resetPreview() {
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.getElementById(rows[i] + j);
-            if(square.classList.contains("hovered")){
+            if (square.classList.contains("hovered")) {
                 square.classList.remove("hovered");
             }
         }
     }
 }
 
-function clear(){
+function clear() {
     /*for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.getElementById(rows[i] + j);
@@ -245,11 +266,26 @@ function clear(){
         unShips[i].style.backgroundColor = "yellow";
     }
     localStorage.clear();*/
+    document.cookie = "code=;"
     window.location.reload();
 }
 
 
-
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 
 
 function join() {
@@ -258,7 +294,10 @@ function join() {
     hidden.name = "code";
     document.getElementById("form").appendChild(hidden);
 
-    var code;
+    var code = getCookie("code");
+    if(code != "") {
+        document.cookie = 'code=; Max-Age=0; path=/; domain=' + location.hostname;
+    }
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.getElementById(rows[i] + j);
@@ -266,6 +305,7 @@ function join() {
             hidden.value += code;
         }
     }
+    document.cookie = "code=" + hidden.value;
 
     document.getElementById("form").submit();
 }

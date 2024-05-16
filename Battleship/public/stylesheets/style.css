@@ -1,3 +1,4 @@
+/*HOME PAGE*/
 a {
   color: #00B7FF;
 }
@@ -36,16 +37,16 @@ a {
 }
 
 #placegrid{
-  height: 305px;
-  width: 305px;
+  height: 304px;
+  width: 304px;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  border: 3px solid rgb(0, 0, 0);
+  border: 2px solid rgb(0, 0, 0);
 }
 
 #unplaced{
   height: 305px;
-  width: 400px;
+  width: 350px;
 }
 
 .unShip {
@@ -66,6 +67,7 @@ a {
   justify-content: center;
   align-items: center;
   margin-top: 10%;
+  justify-content: space-between;
 }
 
 #battleships{
@@ -75,6 +77,7 @@ a {
   justify-content: center;
   align-items: center;
   margin-top: 20%;
+  justify-content: space-between;
 }
 
 #other{
@@ -89,7 +92,7 @@ a {
 
 
 
-
+/*IN GAME*/
 #board {
   margin: auto;
   margin-top: 5vh;
@@ -100,13 +103,13 @@ a {
 }
 
 .grid {
-  height: 306px;
-  width: 306px;
+  height: 304px;
+  width: 304px;
 
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   flex-wrap: wrap;
-  border: 3px solid rgb(0, 0, 0);
+  border: 2px solid rgb(0, 0, 0);
 }
 
 #divider {
@@ -133,6 +136,14 @@ a {
   /*TODO: make the hover feel less clunky*/
   background-color: yellow;
   cursor: pointer;
+}
+
+.miss {
+  background-color: gray;
+}
+
+.hit{
+  background-color: red;
 }
 
 
@@ -198,9 +209,10 @@ a {
 #s36{
   width: 90px;
 }
-#s47{
-  width: 120px;
+#s17{
+  width: 30px;
+  margin-right: 30%;
 } 
-#s58{
-  width: 150px;
+#s48{
+  width: 120px;
 }

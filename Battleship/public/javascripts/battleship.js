@@ -24,7 +24,7 @@ function joinQueue() {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("enemy");
-            square.id = i * 10 + j;
+            square.id = rows[i] + j;
             document.getElementById("enemyGrid").appendChild(square);
         }
     }
@@ -54,7 +54,7 @@ function addEventListeners() {
     var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
         if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", attack);
+            squares[i].addEventListener("click", function (e) { attack(e.target) });
             squares[i].style.cursor = "pointer";
             squares[i].classList.add("usable");
         }
@@ -64,15 +64,14 @@ function addEventListeners() {
 function removeEventListeners() {
     var squares = document.getElementsByClassName("box");
     for (var i = 0; i < squares.length; i++) {
-        squares[i].removeEventListener("click", attack);
+        squares[i].removeEventListener("click", function (e) { attack(e.target) });
         squares[i].classList.remove("usable");
         squares[i].style.cursor = "not-allowed";
     }
 }
 
-function attack() {
+function attack(box) {
     if (turn) {
-        let box = this.id;
         usedSquares.push(box.id);
         var move = {
             type: "move",
@@ -80,16 +79,10 @@ function attack() {
             gameId: gameId,
             user: nickname,
             target: opponent,
-            box: box
+            box: box.id
         };
         ws.send(JSON.stringify(move));
+        turn = false;
+        removeEventListeners();
     }
-}
-
-
-
-
-
-function checkWin() {
-
 }

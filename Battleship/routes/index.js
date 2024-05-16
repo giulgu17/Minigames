@@ -149,7 +149,7 @@ socketServer.on("connection", ws => {
         run();
     });
     ws.onerror = function () {
-        console.error("Some weird ass error occurred");
+        console.error("Some weird error occurred");
     }
 });
 

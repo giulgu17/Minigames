@@ -1,20 +1,20 @@
 var ws, nickname, opponent, game=true;
 var lastSender;
-var turn, gameId, win;
+var turn, gameId, win, hp=20;
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
 
 function ready() {
     //TODO: login
-    /*if(document.getElementById("login").value === ""){
+    if(document.getElementById("login").value === ""){
         window.location.href = "/"
-    }*/
+    }
     var hostname = window.location.hostname;
     ws = new WebSocket("ws://"+hostname+":8080");
     
     ws.addEventListener('message', function (event) {
         var msg = JSON.parse(event.data);
-        //console.log('Message received: ', msg);
+        console.log('Message received: ', msg);
         
         switch(msg.type){
             //Chat message received
@@ -35,21 +35,74 @@ function ready() {
                 //console.log("You are now playing against " + opponent);
                 startGame();
                 break;
+            case "end":
+                if(game){
+                    if(msg.winner == nickname) {
+                        alert("You won!");
+                    } else {
+                        alert(opponent + " won!");
+                    }
+                    game = false;
+                }
+                window.location.href = "/";
+                break;
             //A player makes a move
             case "move":
+                //console.log("Move received: ", msg)
                 switch(msg.moveType){
-                    case "attack":
-                        if(target == nickname){
+                    case "report":
+                        if(msg.user == nickname){
                             var box = document.getElementById("s"+msg.box);
                         } else {
                             var box = document.getElementById(msg.box);
                         }
-
-                        if(msg.hit){        //TODO: fix this condition (first add ships tho)
+                        
+                        if(msg.hit){
                             box.classList.add("hit")
                             //TODO: add images
                         } else {
                             box.classList.add("miss")
+                        }
+                        break;
+                    case "attack":
+                        if(msg.target == nickname){
+                            var box = document.getElementById("s"+msg.box);
+                            if(box.classList.contains("ship")){
+                                var move = {
+                                    type: "move",
+                                    moveType: "report",
+                                    gameId: gameId,
+                                    user: nickname,
+                                    target: opponent,
+                                    box: msg.box,
+                                    hit: true
+                                };
+                                ws.send(JSON.stringify(move));
+                                hp--;
+                                if(hp == 0){
+                                    var endmsg = {
+                                        type: "end",
+                                        gameId: gameId,
+                                        user: nickname,
+                                        target: opponent,
+                                        winner: opponent
+                                    };
+                                    ws.send(JSON.stringify(endmsg));
+                                }
+                            } else {
+                                var move = {
+                                    type: "move",
+                                    moveType: "report",
+                                    gameId: gameId,
+                                    user: nickname,
+                                    target: opponent,
+                                    box: msg.box,
+                                    hit: false
+                                };
+                                ws.send(JSON.stringify(move));
+                            }
+                            turn = true;
+                            addEventListeners();
                         }
                         break;
                 }
@@ -67,8 +120,6 @@ function ready() {
                 }
 
                 //document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";
-                
-                checkWin();
                 break;
             //The game is over
             case "end":
