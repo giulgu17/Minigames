@@ -7,8 +7,8 @@ block content
     section#home
         form(action="/login2" id="form" method="post")
             //input(type="text" name="username" id="inputnick" placeholder="Nickname")
-            input(type="text" name="username" id="inputnick" placeholder="Nickname" class="input input-bordered input-sm w-full max-w-xs")
-            input(type="button" id="join" value="Join Game")
+            input(type="text" name="username" id="inputnick" placeholder="Nickname" class="w-1/4 input input-bordered input-sm w-full max-w-xs")
+            input(type="button" id="join" value="Join Game" cursor="not-allowed" class="btn btn-primary btn-sm" disabled)
         
         section#homegrid
             section#unplaced.grids

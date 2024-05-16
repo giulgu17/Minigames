@@ -3,6 +3,7 @@ const ncols = 10;
 var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var selected;
 var selectMode = false;
+var placedShips = 0;
 localStorage.clear();
 
 function ready() {
@@ -156,6 +157,13 @@ function place() {
 
         resetPreview();
         selected.remove();
+
+        placedShips++;
+        if(placedShips == 8){
+            var joinbtn = document.getElementById("join");
+            joinbtn.cursor = "pointer";
+            joinbtn.addEventListener("click", join);
+        }
     }
 }
 
@@ -259,11 +267,8 @@ function join() {
         }
     }
 
-    ready();
-
     document.getElementById("form").submit();
 }
 
 document.addEventListener("DOMContentLoaded", ready);
-document.getElementById("join").addEventListener("click", join);
 document.getElementById("clear").addEventListener("click", clear);
