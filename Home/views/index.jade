@@ -1,5 +1,13 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1(class="text-4xl font-bold")|Home
+  h5="Welcome to my server! Here you can select a variety of projects that I made. Have fun!";
+
+  section#projects
+    #project1
+      p TicTacToe
+      //TODO: add images
+      //and then a short description
+    #project2 
+      p Battleship+
