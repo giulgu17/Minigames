@@ -99,9 +99,11 @@ document.addEventListener('keydown', function (e) {
             selected.classList.toggle("ver");
             selected.classList.toggle("hor");
             if (selected.classList.contains("ver")) {
-                selected.style.transform = "rotate(90deg)";
+                selected.style.height = selected.id.substring(1, 2) * 30 + "px";
+                selected.style.width = "30px";
             } else {
-                selected.style.transform = "rotate(0deg)";
+                selected.style.width = selected.id.substring(1, 2) * 30 + "px";
+                selected.style.height = "30px";
             }
             var lastHovered = document.getElementsByClassName("hovered");
             localStorage.setItem("lastHovered", lastHovered[0].id);

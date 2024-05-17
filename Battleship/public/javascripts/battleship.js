@@ -86,3 +86,42 @@ function attack(box) {
         removeEventListeners();
     }
 }
+
+function notification(msg){
+    var notifbox = document.getElementById("notif");
+    switch(msg.type){
+        case "turn":
+            notifbox.innerHTML += "It's your turn!<br>";
+            break;
+        case "attack":
+            notifbox.innerHTML += "You try shooting in " + msg.box + "...<br>";
+            break;
+        case "attackHit":
+            notifbox.innerHTML += "You hit a ship!<br>";
+            break;
+        case "attackMiss":
+            notifbox.innerHTML += "It's a miss<br>";
+            break;
+
+        case "enemyTurn":
+            notifbox.innerHTML += "It's the enemy's turn.<br>";
+            break;
+        case "enemyAttack":
+            notifbox.innerHTML += "The enemy shot in " + msg.box + ".<br>";
+            break;
+        case "enemyAttackHit":
+            notifbox.innerHTML += "They hit a ship!<br>";
+            break;
+        case "enemyAttackMiss":
+            notifbox.innerHTML += "They missed.<br>";
+            break;
+
+        case "win":
+            notifbox.innerHTML += "You won!<br>";
+            break;
+        case "lose":
+            notifbox.innerHTML += "You lost!<br>";
+            break;
+    }
+    
+}

@@ -53,20 +53,28 @@ function ready() {
                     case "report":
                         if(msg.user == nickname){
                             var box = document.getElementById("s"+msg.box);
+                            if(msg.hit){
+                                box.classList.add("hit")
+                                notification({type: "enemyAttackHit"});
+                            } else {
+                                box.classList.add("miss")
+                                notification({type: "enemyAttackMiss"});
+                            }
                         } else {
                             var box = document.getElementById(msg.box);
-                        }
-                        
-                        if(msg.hit){
-                            box.classList.add("hit")
-                            //TODO: add images
-                        } else {
-                            box.classList.add("miss")
+                            if(msg.hit){
+                                box.classList.add("hit")
+                                notification({type: "attackHit"});
+                            } else {
+                                box.classList.add("miss")
+                                notification({type: "attackMiss"});
+                            }
                         }
                         break;
                     case "attack":
                         if(msg.target == nickname){
                             var box = document.getElementById("s"+msg.box);
+                            notification({type: "enemyAttack", box: msg.box});
                             if(box.classList.contains("ship")){
                                 var move = {
                                     type: "move",
@@ -103,6 +111,8 @@ function ready() {
                             }
                             turn = true;
                             addEventListeners();
+                        } else {
+                            notification({type: "attack", box: msg.box});
                         }
                         break;
                 }
