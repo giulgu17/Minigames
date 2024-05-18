@@ -85,7 +85,6 @@ function select() {
         for (var j = 1; j <= ncols; j++) {
             var square = document.getElementById(rows[i] + j);
             square.style.cursor = "pointer";
-            //TODO: show preview onHover
             square.addEventListener("click", place);
             square.addEventListener("mouseover", function (e) { preview(e.target) });
             square.addEventListener("mouseout", resetPreview);
@@ -123,7 +122,6 @@ function place() {
     function check() {
         if (selectMode) {
             try {
-                //TODO: exclude corners?
                 for (var i = 0; i < shipLength; i++) {
                     if (direction == "vertical") {
                         var checkedSquare = document.getElementById(rows[clickedRow.charCodeAt() - 65 + i] + clickedColumn);

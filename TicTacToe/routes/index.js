@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var WebSocket = require('ws');
-const socketServer = new WebSocket.Server({ port: 8080 });
+const socketServer = new WebSocket.Server({ port: 8081 });
 
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
@@ -30,7 +30,7 @@ router.use(session({
 connectedClients = 0;       //TODO: playercounter?
 queue = [];
 const database = client.db("minigames");
-const collection = database.collection("tris");
+const collection = database.collection("tictactoe");
 socketServer.on("connection", ws => {
     connectedClients++;
     console.log("A client has connected");
@@ -175,11 +175,11 @@ router.post('/login2', function (req, res, next) {
         .catch(error => {
             console.error("Errore durante l'inserimento del documento:", error);
         });*/
-    res.redirect("/tris")
+    res.redirect("/tictactoe")
 });
 
-router.get('/tris', function (req, res, next) {
-    res.render('tris', { title: 'Tris', login: req.session.login, username: req.session.username });
+router.get('/tictactoe', function (req, res, next) {
+    res.render('tictactoe', { title: 'tictactoe', login: req.session.login, username: req.session.username });
 });
 
 app.get('/logout', (req, res) => {
@@ -192,5 +192,8 @@ app.get('/logout', (req, res) => {
     });
 });
 
+router.post('/plrcount', function (req, res, next) {
+    res.json({ count: connectedClients });
+});
 
 module.exports = router;

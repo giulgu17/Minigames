@@ -5,7 +5,6 @@ var turn, gameId, win, hp=20;
 var text = document.getElementById("text");*/
 
 function ready() {
-    //TODO: login
     if(document.getElementById("login").value === ""){
         window.location.href = "/"
     }

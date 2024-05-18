@@ -9,7 +9,7 @@ function ready() {
         window.location.href = "/"
     }
     var hostname = window.location.hostname;
-    ws = new WebSocket("ws://"+hostname+":8080");
+    ws = new WebSocket("ws://"+hostname+":8081");
     
     ws.addEventListener('message', function (event) {
         var msg = JSON.parse(event.data);
@@ -61,9 +61,9 @@ function ready() {
                     if(msg.winner == "draw"){
                         alert("It's a draw!");
                     } else if(msg.winner == nickname) {
-                        alert("You won!");
+                        alert("You win!");
                     } else {
-                        alert(opponent + " won!");
+                        alert("You lost!");
                     }
                     game = false;
                 }

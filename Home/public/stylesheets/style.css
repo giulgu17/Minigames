@@ -6,3 +6,32 @@ body {
 a {
   color: #00B7FF;
 }
+
+#title {
+  margin: auto;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+#portals{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.projects{
+  height: 200px;
+  width: 200px;
+  border: 1px solid black;
+  text-align: center;
+  align-items: center;
+}
+
+.image:hover{
+  transform: scale(1.05);
+  transition: 0.3s;
+}
+.image{
+  
+}

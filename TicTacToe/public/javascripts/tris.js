@@ -16,9 +16,13 @@ function join() {
 function startGame() {
     if (turn) {
         addEventListeners();
+        document.getElementById("info1").style.backgroundColor = "yellow";
+        document.getElementById("info2").style.backgroundColor = "white";
         symbol = "X";
     } else {
         removeEventListeners();
+        document.getElementById("info2").style.backgroundColor = "yellow";
+        document.getElementById("info1").style.backgroundColor = "white";
         symbol = "O";
     }
 }

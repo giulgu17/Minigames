@@ -179,5 +179,7 @@ app.get('/logout', (req, res) => {
     });
 });
 
-
+router.post('/plrcount', function (req, res, next) {
+    res.json({ count: connectedClients });
+});
 module.exports = router;
