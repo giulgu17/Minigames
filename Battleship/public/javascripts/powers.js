@@ -83,6 +83,7 @@ function activateForcefield(){
             squares[i].addEventListener("click", function (e) { placeForcefield(e.target) });
             squares[i].style.cursor = "pointer";
             squares[i].classList.add("usable");
+            squares[i].classList.add("previewForcefield");
         }
     }
 }
@@ -103,6 +104,7 @@ function placeForcefield(box){
         squares[i].removeEventListener("click", function (e) { placeForcefield(e.target) });
         squares[i].classList.remove("usable");
         squares[i].style.cursor = "not-allowed";
+        squares[i].classList.remove("previewForcefield");
     }
 }
 
@@ -113,6 +115,7 @@ function activateSpotTrap(){
             squares[i].addEventListener("click", function (e) { placeTrap(e.target) });
             squares[i].style.cursor = "pointer";
             squares[i].classList.add("usable");
+            squares[i].classList.add("previewTrap");
         }
     }
 }
@@ -135,6 +138,7 @@ function placeTrap(box){
         squares[i].style.cursor = "not-allowed";
     }
 }
+
 
 function activateHighExplosive(){
     attackType = "highexplosive";
