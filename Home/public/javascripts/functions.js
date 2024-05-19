@@ -13,14 +13,12 @@ function count(){
         .then(response => response.json())
         .then(data => {
             document.getElementById("count1").innerHTML = data.count + " players connected";
-            console.log(data.count)
         });
 
     fetch("http://"+hostname+":3200/plrcount")
         .then(response => response.json())
         .then(data => {
             document.getElementById("count2").innerHTML = data.count + " players connected";
-            console.log(data.count)
         });
 }
 

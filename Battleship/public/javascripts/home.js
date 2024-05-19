@@ -289,25 +289,29 @@ function getCookie(cname) {
 
 
 function join() {
-    var hidden = document.createElement("input");
-    hidden.type = "hidden";
-    hidden.name = "code";
-    document.getElementById("form").appendChild(hidden);
+    document.getElementById("inputnick").value = document.getElementById("inputnick").value.trim()
+    document.getElementById("inputnick").value = document.getElementById("inputnick").value.replace(/\s/g, '');
+    if(document.getElementById("inputnick").value != ""){
+        var hidden = document.createElement("input");
+        hidden.type = "hidden";
+        hidden.name = "code";
+        document.getElementById("form").appendChild(hidden);
 
-    var code = getCookie("code");
-    if(code != "") {
-        document.cookie = 'code=; Max-Age=0; path=/; domain=' + location.hostname;
-    }
-    for (var i = 0; i < 10; i++) {
-        for (var j = 1; j <= 10; j++) {
-            var square = document.getElementById(rows[i] + j);
-            code = square.classList.contains("ship") ? 1 : 0;
-            hidden.value += code;
+        var code = getCookie("code");
+        if(code != "") {
+            document.cookie = 'code=; Max-Age=0; path=/; domain=' + location.hostname;
         }
-    }
-    document.cookie = "code=" + hidden.value;
+        for (var i = 0; i < 10; i++) {
+            for (var j = 1; j <= 10; j++) {
+                var square = document.getElementById(rows[i] + j);
+                code = square.classList.contains("ship") ? 1 : 0;
+                hidden.value += code;
+            }
+        }
+        document.cookie = "code=" + hidden.value;
 
-    document.getElementById("form").submit();
+        document.getElementById("form").submit();
+    }
 }
 
 document.addEventListener("DOMContentLoaded", ready);

@@ -7,7 +7,7 @@ Makes you shoot twice per turn.
 
 
 
-SCATTERSHOT:
+Barrage:
 Shoots 5 random squares in a 3x3, 5x5 or 7x7 area.
 
 
@@ -63,3 +63,113 @@ On failure:
     "The sonar didn't detect any ships in the area."
     "Looks like there are no ships in the area."
 */
+
+function activateDouble(){
+    attackType = "double";
+}
+
+function activateBarrage(){
+    attackType = "barrage";
+    for(var i = 0; i < 5; i++){
+        var box = document.getElementById("s"+Math.floor(Math.random() * 100));
+        attack(box);
+    }
+}
+
+function activateForcefield(){
+    var squares = document.getElementsByClassName("self");
+    for (var i = 0; i < squares.length; i++) {
+        if (!usedSquares.includes(squares[i].id)) {
+            squares[i].addEventListener("click", function (e) { placeForcefield(e.target) });
+            squares[i].style.cursor = "pointer";
+            squares[i].classList.add("usable");
+        }
+    }
+}
+
+function placeForcefield(box){
+    var move = {
+        type: "move",
+        moveType: "forcefield",
+        gameId: gameId,
+        user: nickname,
+        target: opponent,
+        box: box.id
+    };
+    ws.send(JSON.stringify(move));
+    
+    var squares = document.getElementsByClassName("self");
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].removeEventListener("click", function (e) { placeForcefield(e.target) });
+        squares[i].classList.remove("usable");
+        squares[i].style.cursor = "not-allowed";
+    }
+}
+
+function activateSpotTrap(){
+    var squares = document.getElementsByClassName("self");
+    for (var i = 0; i < squares.length; i++) {
+        if (!usedSquares.includes(squares[i].id)) {
+            squares[i].addEventListener("click", function (e) { placeTrap(e.target) });
+            squares[i].style.cursor = "pointer";
+            squares[i].classList.add("usable");
+        }
+    }
+}
+
+function placeTrap(box){
+    var move = {
+        type: "move",
+        moveType: "trap",
+        gameId: gameId,
+        user: nickname,
+        target: opponent,
+        box: box.id
+    };
+    ws.send(JSON.stringify(move));
+    
+    var squares = document.getElementsByClassName("self");
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].removeEventListener("click", function (e) { placeTrap(e.target) });
+        squares[i].classList.remove("usable");
+        squares[i].style.cursor = "not-allowed";
+    }
+}
+
+function activateHighExplosive(){
+    attackType = "highexplosive";
+}
+
+function activateSpy(){
+    var move = {
+        type: "move",
+        moveType: "spy",
+        gameId: gameId,
+        user: nickname,
+        target: opponent
+    };
+    ws.send(JSON.stringify(move));
+}
+
+function activateSonar(){
+    var squares = document.getElementsByClassName("self");
+    for (var i = 0; i < squares.length; i++) {
+        if (!usedSquares.includes(squares[i].id)) {
+            squares[i].addEventListener("click", function (e) { scanArea(e.target) });
+            squares[i].style.cursor = "pointer";
+            squares[i].classList.add("usable");
+        }
+    }
+}
+
+function scanArea(box){
+    var move = {
+        type: "move",
+        moveType: "sonar",
+        gameId: gameId,
+        user: nickname,
+        target: opponent,
+        box: box.id
+    };
+    ws.send(JSON.stringify(move));
+}

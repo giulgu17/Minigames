@@ -1,11 +1,11 @@
 var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var usedSquares = [];
 var code;
+var attackType;
 
 //Player joins the queue
 function joinQueue() {
     var code = document.getElementById("code").value;
-    console.log(code)
     for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
             var square = document.createElement("div");
@@ -42,15 +42,16 @@ function startGame() {
     if (turn) {
         document.getElementById("info1").style = "background-color: yellow;";
         document.getElementById("info2").style = "background-color: white;";
-        addEventListeners();
+        activateAttack();
+        attackType = "attack";
     } else {
         document.getElementById("info1").style = "background-color: white;";
         document.getElementById("info2").style = "background-color: yellow;";
-        removeEventListeners();
+        removeAttack();
     }
 }
 
-function addEventListeners() {
+function activateAttack() {
     var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
         if (!usedSquares.includes(squares[i].id)) {
@@ -61,7 +62,7 @@ function addEventListeners() {
     }
 }
 
-function removeEventListeners() {
+function removeAttack() {
     var squares = document.getElementsByClassName("box");
     for (var i = 0; i < squares.length; i++) {
         squares[i].removeEventListener("click", function (e) { attack(e.target) });
@@ -75,7 +76,7 @@ function attack(box) {
         usedSquares.push(box.id);
         var move = {
             type: "move",
-            moveType: "attack",
+            moveType: attackType,
             gameId: gameId,
             user: nickname,
             target: opponent,
@@ -83,7 +84,11 @@ function attack(box) {
         };
         ws.send(JSON.stringify(move));
         turn = false;
-        removeEventListeners();
+        if(attacktype != "double"){
+            removeAttack();
+        } else {
+            attackType = "attack";
+        }
     }
 }
 

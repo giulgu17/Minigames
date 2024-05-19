@@ -70,6 +70,7 @@ function ready() {
                             }
                         }
                         break;
+                    case "double":
                     case "attack":
                         if(msg.target == nickname){
                             var box = document.getElementById("s"+msg.box);
@@ -108,8 +109,11 @@ function ready() {
                                 };
                                 ws.send(JSON.stringify(move));
                             }
-                            turn = true;
-                            addEventListeners();
+                            
+                            if(msg.moveType == "attack"){
+                                turn = true;
+                                activateAttack();
+                            }
                         } else {
                             notification({type: "attack", box: msg.box});
                         }
@@ -120,12 +124,12 @@ function ready() {
                     turn = false;
                     document.getElementById("info1").style="background-color: white;"
                     document.getElementById("info2").style="background-color: yellow;"
-                    removeEventListeners();
+                    removeAttack();
                 } else {
                     turn = true;
                     document.getElementById("info1").style="background-color: yellow;"
                     document.getElementById("info2").style="background-color: white;"
-                    addEventListeners();
+                    activateAttack();
                 }
 
                 //document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";
