@@ -2,15 +2,21 @@ extends layout
 
 block content
   section#title
-    h1(class="text-4xl font-bold")|Home
+    h1(class="text-4xl font-bold")|Home Page
     h5="Welcome to my server! Here you can select a variety of projects that I made. Have fun!"
 
   section#portals
     #project1.projects
-      p TicTacToe
-      //TODO: add images
-      img.image(src="images/tictactoe.png" alt="TicTacToe" width="150" height="150")
-      //and then a short description
+      h2(class="text-2xl font-bold") TicTacToe
+      img#image1.image(src="images/tictactoe.png" alt="TicTacToe" width="150" height="150")
+      p#count1(class="font-bold")
+      p Just your average TicTacToe game.
+      
     #project2.projects
-      p Battleship+
-      img.image(src="images/battleship.png" alt="Battleship" width="150" height="150")
+      h2(class="text-2xl font-bold") Battleship+
+      img#image2.image(src="images/battleship.png" alt="Battleship" width="150" height="150")
+      p#count2(class="font-bold")
+      p A modernized version of Battleship, now featuring power-ups!
+      
+
+  script(src="javascripts/functions.js")

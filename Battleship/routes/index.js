@@ -179,7 +179,10 @@ app.get('/logout', (req, res) => {
     });
 });
 
-router.post('/plrcount', function (req, res, next) {
+router.get('/plrcount', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*").header("Access-Control-Allow-Credentials", true);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", " GET, POST, PUT, PATCH, POST, DELETE, OPTIONS");
     res.json({ count: connectedClients });
 });
 module.exports = router;

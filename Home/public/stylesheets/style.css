@@ -23,15 +23,20 @@ a {
 .projects{
   height: 200px;
   width: 200px;
-  border: 1px solid black;
   text-align: center;
   align-items: center;
 }
 
-.image:hover{
-  transform: scale(1.05);
-  transition: 0.3s;
-}
 .image{
-  
+  margin: auto;
+  transform: scale(1);
+  transition: 0.2s;
+  transition-timing-function: ease-out;
+  cursor: pointer;
+}
+
+.image:hover{
+  transform: scale(1.03);
+  transition: 0.2s;
+  transition-timing-function: ease-out;
 }
