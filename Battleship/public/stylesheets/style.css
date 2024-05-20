@@ -145,12 +145,16 @@ a {
   background-color: red;
 }
 
-.previewForcefield{
+.previewAttack:hover{
+  background-color: rgba(255, 255, 0, 0.651)
+}
+
+.previewForcefield:hover{
   background-color: rgba(0, 255, 255, 0.651)
 }
 
-.previewTrap{
-  background-color: rgba(255, 68, 0, 0.692)
+.previewTrap:hover{
+  background-color: rgba(255, 68, 0, 0.651)
 }
 
 
@@ -192,6 +196,7 @@ a {
   border: 3px solid rgb(0, 0, 0);
   position: absolute;
   margin-top: 60vh;
+  overflow-y: auto;
 }
 
 

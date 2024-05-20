@@ -7,6 +7,14 @@ block content
                 div#inick1
                     a= username
             div.sideinfo
+                input(type="button" id="double" value="Double Shot" class="btn")
+                input(type="button" id="barrage" value="Barrage" class="btn")
+                input(type="button" id="forcefield" value="Force Field" class="btn")
+                input(type="button" id="trap" value="Spot Trap" class="btn")
+                input(type="button" id="he" value="HE Shell" class="btn")
+                input(type="button" id="spy" value="Spy" class="btn")
+                input(type="button" id="sonar" value="Sonar" class="btn")
+                input(type="button" id="jammer" value="Jammer" class="btn")
 
         section#board
             section#selfGrid.grid
@@ -28,3 +36,4 @@ block content
 
     script(src="/javascripts/client.js")
     script(src="/javascripts/battleship.js")
+    script(src="/javascripts/powers.js")

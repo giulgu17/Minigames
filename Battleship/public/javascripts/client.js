@@ -31,7 +31,6 @@ function ready() {
                 opponent = msg.opponent;
                 turn = msg.turn;
                 document.getElementById("inick2").innerHTML = "<a>"+opponent+"</a>";
-                //console.log("You are now playing against " + opponent);
                 startGame();
                 break;
             case "end":
@@ -47,7 +46,6 @@ function ready() {
                 break;
             //A player makes a move
             case "move":
-                //console.log("Move received: ", msg)
                 switch(msg.moveType){
                     case "report":
                         if(msg.user == nickname){
@@ -70,8 +68,22 @@ function ready() {
                             }
                         }
                         break;
-                    case "double":
                     case "attack":
+                        if(turn){
+                            turn = false;
+                            document.getElementById("info1").style="background-color: white;"
+                            document.getElementById("info2").style="background-color: yellow;"
+                            removeAttack();
+                            deactivatePowerups();
+                        } else {
+                            turn = true;
+                            document.getElementById("info1").style="background-color: yellow;"
+                            document.getElementById("info2").style="background-color: white;"
+                            activateAttack();
+                            activatePowerups();
+                        }
+                    case "double":
+                    case "barrage":
                         if(msg.target == nickname){
                             var box = document.getElementById("s"+msg.box);
                             notification({type: "enemyAttack", box: msg.box});
@@ -118,18 +130,6 @@ function ready() {
                             notification({type: "attack", box: msg.box});
                         }
                         break;
-                }
-
-                if(turn){
-                    turn = false;
-                    document.getElementById("info1").style="background-color: white;"
-                    document.getElementById("info2").style="background-color: yellow;"
-                    removeAttack();
-                } else {
-                    turn = true;
-                    document.getElementById("info1").style="background-color: yellow;"
-                    document.getElementById("info2").style="background-color: white;"
-                    activateAttack();
                 }
 
                 //document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";

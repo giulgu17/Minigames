@@ -13,7 +13,7 @@ function joinQueue() {
             square.classList.add("self");
             square.id = "s" + rows[i] + j;
             document.getElementById("selfGrid").appendChild(square);
-            if(code[i*10+j-1]==1){
+            if (code[i * 10 + j - 1] == 1) {
                 square.classList.add("ship");
             }
         }
@@ -39,15 +39,20 @@ function joinQueue() {
 }
 
 function startGame() {
+    notification({type: "start"});
+    attackType = "attack";
     if (turn) {
         document.getElementById("info1").style = "background-color: yellow;";
         document.getElementById("info2").style = "background-color: white;";
         activateAttack();
-        attackType = "attack";
+        activatePowerups();
+        notification({type: "turn"});
     } else {
         document.getElementById("info1").style = "background-color: white;";
         document.getElementById("info2").style = "background-color: yellow;";
         removeAttack();
+        deactivatePowerups();
+        notification({type: "enemyTurn"});
     }
 }
 
@@ -55,20 +60,26 @@ function activateAttack() {
     var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
         if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", function (e) { attack(e.target) });
+            squares[i].addEventListener("click", clicked);
             squares[i].style.cursor = "pointer";
             squares[i].classList.add("usable");
+            squares[i].classList.add("previewAttack");
         }
     }
 }
 
 function removeAttack() {
-    var squares = document.getElementsByClassName("box");
+    var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
-        squares[i].removeEventListener("click", function (e) { attack(e.target) });
-        squares[i].classList.remove("usable");
+        squares[i].removeEventListener("click", clicked);
         squares[i].style.cursor = "not-allowed";
+        squares[i].classList.remove("usable");
+        squares[i].classList.remove("previewAttack");
     }
+}
+
+function clicked(){
+    attack(this);
 }
 
 function attack(box) {
@@ -83,21 +94,22 @@ function attack(box) {
             box: box.id
         };
         ws.send(JSON.stringify(move));
-        turn = false;
-        if(attacktype != "double"){
-            removeAttack();
-        } else {
+        if (attackType == "double") {
             attackType = "attack";
         }
     }
 }
 
-function notification(msg){
+function notification(msg) {
     var notifbox = document.getElementById("notif");
-    switch(msg.type){
+    switch (msg.type) {
+        case "start":
+            notifbox.innerHTML += "You are now playing against " + opponent + ".<br>";
+            break;
         case "turn":
             notifbox.innerHTML += "It's your turn!<br>";
             break;
+
         case "attack":
             notifbox.innerHTML += "You try shooting in " + msg.box + "...<br>";
             break;
@@ -105,7 +117,16 @@ function notification(msg){
             notifbox.innerHTML += "You hit a ship!<br>";
             break;
         case "attackMiss":
-            notifbox.innerHTML += "It's a miss<br>";
+            notifbox.innerHTML += "It's a miss.<br>";
+            break;
+        case "normalAttack":
+            notifbox.innerHTML += "Equipping standard missiles.<br>";
+            break;
+        case "activateDouble":
+            notifbox.innerHTML += "Activating Double Shot!<br>";
+            break;
+        case "activateBarrage":
+            notifbox.innerHTML += "Activating Barrage!<br>";
             break;
 
         case "enemyTurn":
@@ -128,5 +149,5 @@ function notification(msg){
             notifbox.innerHTML += "You lost!<br>";
             break;
     }
-    
+    notifbox.scrollTop =notifbox.scrollHeight;
 }

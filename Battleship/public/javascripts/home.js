@@ -7,6 +7,13 @@ var placedShips = 0;
 localStorage.clear();
 
 function ready() {
+    let username = getCookie("username");
+    console.log(username)
+    if(username != ""){
+        document.getElementById("inputnick").value = username;
+    } else {
+        document.getElementById("inputnick").value = "";
+    }
     let code = getCookie("code");
     if (code != "") {
         for (var i = 0; i < 10; i++) {
@@ -77,8 +84,6 @@ function select() {
     selected = this;
     selectMode = true;
     selected.classList.toggle("selected");
-    var shipLength = parseInt(selected.id.substring(1, 2));
-    var direction = selected.classList.contains("ver") ? "vertical" : "horizontal";
 
     selected.style.backgroundColor = "lime";
     for (var i = 0; i < nrows; i++) {
@@ -299,7 +304,7 @@ function join() {
 
         var code = getCookie("code");
         if(code != "") {
-            document.cookie = 'code=; Max-Age=0; path=/; domain=' + location.hostname;
+            document.cookie = 'username=; code=; Max-Age=0; path=/; domain=' + location.hostname;
         }
         for (var i = 0; i < 10; i++) {
             for (var j = 1; j <= 10; j++) {
@@ -308,6 +313,7 @@ function join() {
                 hidden.value += code;
             }
         }
+        document.cookie = "username=" + document.getElementById("inputnick").value;
         document.cookie = "code=" + hidden.value;
 
         document.getElementById("form").submit();

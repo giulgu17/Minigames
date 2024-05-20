@@ -62,25 +62,120 @@ On success:
 On failure:
     "The sonar didn't detect any ships in the area."
     "Looks like there are no ships in the area."
+
+JAMMER:
+Temporarily disables the enemy's vision. Lasts for 3 turns.
+On activation:
+    "You activated the jammer. The enemy's vision is now disabled."
+    "The jammer is now active. Now the enemy can't see your board."
 */
 
-function activateDouble(){
-    attackType = "double";
+function activatePowerups() {
+    document.getElementById("double").addEventListener("click", activateDouble);
+    document.getElementById("barrage").addEventListener("click", activateBarrage);
+    document.getElementById("forcefield").addEventListener("click", activateForcefield);
+    document.getElementById("trap").addEventListener("click", activateSpotTrap);
+    document.getElementById("he").addEventListener("click", activateHE);
+    document.getElementById("spy").addEventListener("click", activateSpy);
+    document.getElementById("sonar").addEventListener("click", activateSonar);
+    document.getElementById("jammer").addEventListener("click", activateJammer);
 }
 
-function activateBarrage(){
-    attackType = "barrage";
-    for(var i = 0; i < 5; i++){
-        var box = document.getElementById("s"+Math.floor(Math.random() * 100));
-        attack(box);
+function deactivatePowerups() {
+    document.getElementById("double").removeEventListener("click", activateDouble);
+    document.getElementById("barrage").removeEventListener("click", activateBarrage);
+    document.getElementById("forcefield").removeEventListener("click", activateForcefield);
+    document.getElementById("trap").removeEventListener("click", activateSpotTrap);
+    document.getElementById("he").removeEventListener("click", activateHE);
+    document.getElementById("spy").removeEventListener("click", activateSpy);
+    document.getElementById("sonar").removeEventListener("click", activateSonar);
+    document.getElementById("jammer").removeEventListener("click", activateJammer);
+    resetAttack();
+}
+
+function resetAttack() {
+    attackType = "attack";
+    var squares = document.getElementsByClassName("box");
+        for (var i = 0; i < squares.length; i++) {
+            squares[i].removeEventListener("click", barrageFunction);
+            squares[i].removeEventListener("mouseover", barrageFunctionHover);
+            squares[i].removeEventListener("mouseout", resetHover);
+            squares[i].removeEventListener("click", activateForcefieldFunction);
+            squares[i].removeEventListener("click", placeForcefieldFunction);
+            squares[i].removeEventListener("click", activateTrapFunction);
+            squares[i].removeEventListener("click", placeTrapFunction);
+            squares[i].removeEventListener("click", scanAreaFunction);
+
+        }
+}
+
+function activateDouble() {
+    if(attackType != "double"){
+        notification({ type: "activateDouble" });
+        attackType = "double";
+    } else {
+        notification({ type: "normalAttack" })
+        resetAttack();
     }
 }
 
-function activateForcefield(){
+function activateBarrage() {
+    if (attackType != "barrage") {
+        notification({ type: "activateBarrage" });
+        attackType = "barrage";
+        var squares = document.getElementsByClassName("enemy");
+        for (var i = 0; i < squares.length; i++) {
+            squares[i].addEventListener("click", function barrageFunction(e) { barrage(e.target) });
+            squares[i].addEventListener("mouseover", function barrageFunctionHover(e) { barrageHover(e.target) });
+            squares[i].addEventListener("mouseout", resetHover);
+        }
+    } else {
+        notification({ type: "normalAttack" })
+        resetAttack()
+    }
+
+}
+
+function barrageHover(box) {
+    var hoveredRow = box.id.substring(0, 1);
+    var hoveredColumn = parseInt(box.id.substring(1));
+    for (var i = -1; i <= 1; i++) {
+        for (var j = -1; j <= 1; j++) {
+            try {
+                square = document.getElementById((rows[hoveredRow.charCodeAt() - 65 + i]) + (hoveredColumn + j));
+                square.style.backgroundColor = "rgba(255, 255, 0, 0.651)"
+            } catch (e) { }
+        }
+    }
+}
+
+function barrage(box) {
+    var square = box;
+    for (var i = -1; i <= 1; i++) {
+        for (var j = -1; j <= 1; j++) {
+            while (square.classList.contains("miss" || square.classList.contains("hit"))) {
+                square = document.getElementById((rows[box.id.substring(0, 1).charCodeAt() - 65 + i]) + (parseInt(box.id.substring(1)) + j));
+                attack(box);
+            }
+        }
+    }
+}
+
+function resetHover() {
+    var squares = document.getElementsByClassName("enemy");
+    for (var i = 0; i < squares.length; i++) {
+        if (squares[i].classList.contains("usable")) {
+            squares[i].style.backgroundColor = "white";
+            squares[i].classList.remove("hoveredBarrage");
+        }
+    }
+}
+
+function activateForcefield() {
     var squares = document.getElementsByClassName("self");
     for (var i = 0; i < squares.length; i++) {
         if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", function (e) { placeForcefield(e.target) });
+            squares[i].addEventListener("click", function activateForcefieldFunction(e) { placeForcefield(e.target) });
             squares[i].style.cursor = "pointer";
             squares[i].classList.add("usable");
             squares[i].classList.add("previewForcefield");
@@ -88,7 +183,7 @@ function activateForcefield(){
     }
 }
 
-function placeForcefield(box){
+function placeForcefield(box) {
     var move = {
         type: "move",
         moveType: "forcefield",
@@ -98,21 +193,21 @@ function placeForcefield(box){
         box: box.id
     };
     ws.send(JSON.stringify(move));
-    
+
     var squares = document.getElementsByClassName("self");
     for (var i = 0; i < squares.length; i++) {
-        squares[i].removeEventListener("click", function (e) { placeForcefield(e.target) });
+        squares[i].removeEventListener("click", function placeForcefieldFunction(e) { placeForcefield(e.target) });
         squares[i].classList.remove("usable");
         squares[i].style.cursor = "not-allowed";
         squares[i].classList.remove("previewForcefield");
     }
 }
 
-function activateSpotTrap(){
+function activateSpotTrap() {
     var squares = document.getElementsByClassName("self");
     for (var i = 0; i < squares.length; i++) {
         if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", function (e) { placeTrap(e.target) });
+            squares[i].addEventListener("click", function activateTrapfunction(e) { placeTrap(e.target) });
             squares[i].style.cursor = "pointer";
             squares[i].classList.add("usable");
             squares[i].classList.add("previewTrap");
@@ -120,7 +215,7 @@ function activateSpotTrap(){
     }
 }
 
-function placeTrap(box){
+function placeTrap(box) {
     var move = {
         type: "move",
         moveType: "trap",
@@ -130,21 +225,21 @@ function placeTrap(box){
         box: box.id
     };
     ws.send(JSON.stringify(move));
-    
+
     var squares = document.getElementsByClassName("self");
     for (var i = 0; i < squares.length; i++) {
-        squares[i].removeEventListener("click", function (e) { placeTrap(e.target) });
+        squares[i].removeEventListener("click", function placeTrapFunction(e) { placeTrap(e.target) });
         squares[i].classList.remove("usable");
         squares[i].style.cursor = "not-allowed";
     }
 }
 
 
-function activateHighExplosive(){
+function activateHE() {
     attackType = "highexplosive";
 }
 
-function activateSpy(){
+function activateSpy() {
     var move = {
         type: "move",
         moveType: "spy",
@@ -155,18 +250,18 @@ function activateSpy(){
     ws.send(JSON.stringify(move));
 }
 
-function activateSonar(){
+function activateSonar() {
     var squares = document.getElementsByClassName("self");
     for (var i = 0; i < squares.length; i++) {
         if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", function (e) { scanArea(e.target) });
+            squares[i].addEventListener("click", function activateSonarFunction(e) { scanArea(e.target) });
             squares[i].style.cursor = "pointer";
             squares[i].classList.add("usable");
         }
     }
 }
 
-function scanArea(box){
+function scanArea(box) {
     var move = {
         type: "move",
         moveType: "sonar",
@@ -174,6 +269,17 @@ function scanArea(box){
         user: nickname,
         target: opponent,
         box: box.id
+    };
+    ws.send(JSON.stringify(move));
+}
+
+function activateJammer() {
+    var move = {
+        type: "move",
+        moveType: "jammer",
+        gameId: gameId,
+        user: nickname,
+        target: opponent
     };
     ws.send(JSON.stringify(move));
 }
