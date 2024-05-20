@@ -126,8 +126,6 @@ function ready() {
                                 turn = true;
                                 activateAttack();
                             }
-                        } else {
-                            notification({type: "attack", box: msg.box});
                         }
                         break;
                 }

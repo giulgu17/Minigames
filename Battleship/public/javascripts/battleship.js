@@ -96,6 +96,8 @@ function attack(box) {
         ws.send(JSON.stringify(move));
         if (attackType == "double") {
             attackType = "attack";
+        } else if (attackType == "attack") {
+            notification({type: "attack", box: msg.box});
         }
     }
 }
@@ -107,26 +109,92 @@ function notification(msg) {
             notifbox.innerHTML += "You are now playing against " + opponent + ".<br>";
             break;
         case "turn":
-            notifbox.innerHTML += "It's your turn!<br>";
+            var random = Math.floor(Math.random() * 1);
+            switch (random){
+                case 0:
+                    notifbox.innerHTML += "It is now your turn.<br>";
+                    break;
+                case 1:
+                    notifbox.innerHTML += "It's your turn.<br>";
+                    break;
+                case 2:
+                    notifbox.innerHTML += "It's your turn to move.<br>";
+                    break;
+            }
             break;
 
         case "attack":
             notifbox.innerHTML += "You try shooting in " + msg.box + "...<br>";
             break;
         case "attackHit":
-            notifbox.innerHTML += "You hit a ship!<br>";
+            var random = Math.floor(Math.random() * 1);
+            switch (random){
+                case 0:
+                    notifbox.innerHTML += "You hit a ship!<br>";
+                    break;
+                case 1:
+                    notifbox.innerHTML += "A ship has been hit!<br>";
+                    break;
+                case 2:
+                    notifbox.innerHTML += "It's a hit!<br>";
+                    break;
+            }
             break;
         case "attackMiss":
-            notifbox.innerHTML += "It's a miss.<br>";
+            var random = Math.floor(Math.random() * 1);
+            switch (random){
+                case 0:
+                    notifbox.innerHTML += "It's a miss.<br>";
+                    break;
+                case 1:
+                    notifbox.innerHTML += "No ship has been hit.<br>";
+                    break;
+                case 2:
+                    break;
+            }
+            break;
             break;
         case "normalAttack":
             notifbox.innerHTML += "Equipping standard missiles.<br>";
             break;
+
+    
         case "activateDouble":
             notifbox.innerHTML += "Activating Double Shot!<br>";
             break;
         case "activateBarrage":
             notifbox.innerHTML += "Activating Barrage!<br>";
+            break;
+        case "startBarrage":
+            notifbox.innerHTML += "Shooting barrage...<br>";
+            break;
+        case "shotBarrage":
+            notifbox.innerHTML += "The barrage hit " + msg.box + ". ";
+            break;
+        case "barrageHit":
+            var random = Math.floor(Math.random() * 1);
+            switch (random){
+                case 0:
+                    notifbox.innerHTML += "It's a hit!<br>";
+                    break;
+                case 1:
+                    notifbox.innerHTML += "You hit a ship!<br>";
+                    break;
+            }
+            break;
+        case "barrageMiss":
+            var random = Math.floor(Math.random() * 1);
+            switch (random){
+                case 0:
+                    notifbox.innerHTML += "It's a miss.<br>";
+                    break;
+                case 1:
+                    notifbox.innerHTML += "You missed.<br>";
+                    break;
+                case 2:
+                    notifbox.innerHTML += "No ship was hit.<br>";
+                    break;
+            }
             break;
 
         case "enemyTurn":
