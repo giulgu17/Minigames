@@ -138,11 +138,11 @@ a {
 }
 
 .miss {
-  background-color: gray;
+  background-color: gray !important;
 }
 
 .hit{
-  background-color: red;
+  background-color: red !important;
 }
 
 .previewAttack:hover{

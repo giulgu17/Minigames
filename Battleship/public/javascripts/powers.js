@@ -7,7 +7,7 @@ Makes you shoot twice per turn.
 
 
 
-Barrage:
+Mortar:
 Shoots 5 random squares in a 3x3, 5x5 or 7x7 area.
 
 
@@ -72,7 +72,7 @@ On activation:
 
 function activatePowerups() {
     document.getElementById("double").addEventListener("click", activateDouble);
-    document.getElementById("barrage").addEventListener("click", activateBarrage);
+    document.getElementById("mortar").addEventListener("click", activateMortar);
     document.getElementById("forcefield").addEventListener("click", activateForcefield);
     document.getElementById("trap").addEventListener("click", activateSpotTrap);
     document.getElementById("he").addEventListener("click", activateHE);
@@ -83,13 +83,18 @@ function activatePowerups() {
 
 function deactivatePowerups() {
     document.getElementById("double").removeEventListener("click", activateDouble);
-    document.getElementById("barrage").removeEventListener("click", activateBarrage);
+    document.getElementById("mortar").removeEventListener("click", activateMortar);
     document.getElementById("forcefield").removeEventListener("click", activateForcefield);
     document.getElementById("trap").removeEventListener("click", activateSpotTrap);
     document.getElementById("he").removeEventListener("click", activateHE);
     document.getElementById("spy").removeEventListener("click", activateSpy);
     document.getElementById("sonar").removeEventListener("click", activateSonar);
     document.getElementById("jammer").removeEventListener("click", activateJammer);
+    var buttons = document.getElementsByClassName("powerup");
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].style.cursor = "not-allowed";
+        buttons[i].disabled = true;
+    }
     resetAttack();
 }
 
@@ -98,8 +103,8 @@ function resetAttack() {
     var squares = document.getElementsByClassName("box");
         for (var i = 0; i < squares.length; i++) {
             squares[i].addEventListener("click", clicked);
-            squares[i].removeEventListener("click", barrageFunction);
-            squares[i].removeEventListener("mouseover", barrageHoverFunction);
+            squares[i].removeEventListener("click", mortarFunction);
+            squares[i].removeEventListener("mouseover", mortarHoverFunction);
             squares[i].removeEventListener("mouseout", resetHover);
             squares[i].removeEventListener("click", activateForcefieldFunction);
             squares[i].removeEventListener("click", placeForcefieldFunction);
@@ -107,6 +112,20 @@ function resetAttack() {
             squares[i].removeEventListener("click", placeTrapFunction);
             squares[i].removeEventListener("click", activateSonarFunction);
         }
+
+    var squares = document.getElementsByClassName("self");
+    for (var i = 0; i < squares.length; i++) {
+        squares[i].style.cursor = "not-allowed";
+    }
+
+    var squares = document.getElementsByClassName("enemy");
+    for (var i = 0; i < squares.length; i++) {
+        if(!usedSquares.includes(squares[i].id)){
+            squares[i].style.cursor = "pointer";
+        } else {
+            squares[i].style.cursor = "not-allowed";
+        }
+    }
 }
 
 function activateDouble() {
@@ -114,32 +133,33 @@ function activateDouble() {
         notification({ type: "activateDouble" });
         attackType = "double";
     } else {
-        notification({ type: "normalAttack" })
+        notification({ type: "resetAttack" })
         resetAttack();
     }
 }
 
-function activateBarrage() {
+function activateMortar() {
     var squares = document.getElementsByClassName("enemy");
-    if (attackType != "barrage") {
-        notification({ type: "activateBarrage" });
-        attackType = "barrage";
+    if (attackType != "mortar") {
+        notification({ type: "activateMortar" });
+        attackType = "mortar";
         for (var i = 0; i < squares.length; i++) {
             squares[i].removeEventListener("click", clicked);
-            squares[i].addEventListener("click", barrageFunction);
-            squares[i].addEventListener("mouseover", barrageHoverFunction);
+            squares[i].addEventListener("click", mortarFunction);
+            squares[i].addEventListener("mouseover", mortarHoverFunction);
             squares[i].addEventListener("mouseout", resetHover);
+            squares[i].style.cursor = "pointer";
         }
     } else {
-        notification({ type: "normalAttack" })
+        notification({ type: "resetAttack" })
         resetAttack();
     }
 }   
 
-var barrageFunction = function(e){ barrage(e.target) }
-var barrageHoverFunction = function (e) { barrageHover(e.target) }
+var mortarFunction = function(e){ mortar(e.target) }
+var mortarHoverFunction = function (e) { mortarHover(e.target) }
 
-function barrageHover(box) {
+function mortarHover(box) {
     var hoveredRow = box.id.substring(0, 1);
     var hoveredColumn = parseInt(box.id.substring(1));
     for (var i = -1; i <= 1; i++) {
@@ -152,7 +172,7 @@ function barrageHover(box) {
     }
 }
 
-function barrage(box) {
+function mortar(box) {
     var selSquares = [];
     for (var i = -1; i <= 1; i++) {
         for (var j = -1; j <= 1; j++) {
@@ -163,35 +183,58 @@ function barrage(box) {
         }
     }
 
-    notification({ type: "startBarrage" });
+    notification({ type: "startMortar" });
     for (var i = 0; i < 4; i++) {
         var random = Math.floor(Math.random() * selSquares.length);
+        if(i != 3 && selSquares.length != 1){
+            notification({ type: "shotMortar", box: selSquares[random].id });
+        } else {
+            notification({ type: "endMortar", box: selSquares[random].id });
+            attackType = "endMortar";
+        }
         attack(selSquares[random]);
-        notification({ type: "barrageShot", box: selSquares[random].id });
+        selSquares.splice(random, 1);
+        if(selSquares.length == 0){
+            break;
+        }
     }
     resetAttack();
+    resetHover();
 }
 
 function resetHover() {
     var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
-        if (squares[i].classList.contains("usable")) {
+        if (!usedSquares.includes(squares[i].id)) {
             squares[i].style.backgroundColor = "white";
-            squares[i].classList.remove("hoveredBarrage");
+            squares[i].classList.remove("hoveredMortar");
         }
     }
 }
 
 function activateForcefield() {
     var squares = document.getElementsByClassName("self");
-    for (var i = 0; i < squares.length; i++) {
-        if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", activateForcefieldFunction);
-            squares[i].style.cursor = "pointer";
-            squares[i].classList.add("usable");
-            squares[i].classList.add("previewForcefield");
+    if (attackType != "forcefield") {
+        notification({ type: "activateForcefield" });
+        attackType = "forcefield";
+        for (var i = 0; i < squares.length; i++) {
+            for (var i = 0; i < squares.length; i++) {
+                if (!usedSquares.includes(squares[i].id)) {
+                    squares[i].addEventListener("click", activateForcefieldFunction);
+                    squares[i].style.cursor = "pointer";
+                    squares[i].classList.add("usable");
+                    squares[i].classList.add("previewForcefield");
+                }
+            }
         }
+        removeAttack();
+    } else {
+        notification({ type: "resetAttack" })
+        resetAttack();
+        activateAttack();
     }
+    
+    
 }
 
 var activateForcefieldFunction = function(e){ placeForcefield(e.target) };
@@ -248,6 +291,7 @@ function placeTrap(box) {
         squares[i].removeEventListener("click", placeTrapFunction);
         squares[i].classList.remove("usable");
         squares[i].style.cursor = "not-allowed";
+        squares[i].classList.remove("previewTrap");
     }
 }
 

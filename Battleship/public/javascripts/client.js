@@ -19,7 +19,7 @@ function ready() {
             //Chat message received
             case "message":
                 if(lastSender != msg.id){
-                    chat.innerHTML += "<br><b>" + msg.nome + "</b><br>";
+                    chat.innerHTML += "<b>" + msg.nome + ":</b> ";
                 }
                 chat.innerHTML += msg.text + "<br>";
                 chat.scrollTop = chat.scrollHeight;
@@ -69,6 +69,7 @@ function ready() {
                         }
                         break;
                     case "attack":
+                    case "endMortar":
                         if(turn){
                             turn = false;
                             document.getElementById("info1").style="background-color: white;"
@@ -83,7 +84,7 @@ function ready() {
                             activatePowerups();
                         }
                     case "double":
-                    case "barrage":
+                    case "mortar":
                         if(msg.target == nickname){
                             var box = document.getElementById("s"+msg.box);
                             notification({type: "enemyAttack", box: msg.box});
@@ -122,7 +123,7 @@ function ready() {
                                 ws.send(JSON.stringify(move));
                             }
                             
-                            if(msg.moveType == "attack"){
+                            if(msg.moveType == "attack" || msg.moveType == "endMortar"){
                                 turn = true;
                                 activateAttack();
                             }

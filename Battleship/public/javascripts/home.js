@@ -8,7 +8,6 @@ localStorage.clear();
 
 function ready() {
     let username = getCookie("username");
-    console.log(username)
     if(username != ""){
         document.getElementById("inputnick").value = username;
     } else {
