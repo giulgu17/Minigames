@@ -102,12 +102,11 @@ function resetAttack() {
     attackType = "attack";
     var squares = document.getElementsByClassName("box");
         for (var i = 0; i < squares.length; i++) {
-            squares[i].addEventListener("click", clicked);
             squares[i].removeEventListener("click", mortarFunction);
             squares[i].removeEventListener("mouseover", mortarHoverFunction);
             squares[i].removeEventListener("mouseout", resetHover);
             squares[i].removeEventListener("click", activateForcefieldFunction);
-            squares[i].removeEventListener("click", placeForcefieldFunction);
+            squares[i].removeEventListener("click", placeForcefield);
             squares[i].removeEventListener("click", activateTrapFunction);
             squares[i].removeEventListener("click", placeTrapFunction);
             squares[i].removeEventListener("click", activateSonarFunction);
@@ -116,11 +115,14 @@ function resetAttack() {
     var squares = document.getElementsByClassName("self");
     for (var i = 0; i < squares.length; i++) {
         squares[i].style.cursor = "not-allowed";
+        squares[i].classList.remove("previewForcefield");
+        squares[i].classList.remove("previewForcefieldShip");
     }
 
     var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
         if(!usedSquares.includes(squares[i].id)){
+            squares[i].addEventListener("click", clicked);
             squares[i].style.cursor = "pointer";
         } else {
             squares[i].style.cursor = "not-allowed";
@@ -153,6 +155,7 @@ function activateMortar() {
     } else {
         notification({ type: "resetAttack" })
         resetAttack();
+        activateAttack();
     }
 }   
 
@@ -166,7 +169,7 @@ function mortarHover(box) {
         for (var j = -1; j <= 1; j++) {
             try {
                 square = document.getElementById((rows[hoveredRow.charCodeAt() - 65 + i]) + (hoveredColumn + j));
-                square.style.backgroundColor = "rgba(255, 255, 0, 0.651)"
+                square.classList.add("hoveredMortar");
             } catch (e) { }
         }
     }
@@ -206,7 +209,6 @@ function resetHover() {
     var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
         if (!usedSquares.includes(squares[i].id)) {
-            squares[i].style.backgroundColor = "white";
             squares[i].classList.remove("hoveredMortar");
         }
     }
@@ -218,13 +220,11 @@ function activateForcefield() {
         notification({ type: "activateForcefield" });
         attackType = "forcefield";
         for (var i = 0; i < squares.length; i++) {
-            for (var i = 0; i < squares.length; i++) {
-                if (!usedSquares.includes(squares[i].id)) {
-                    squares[i].addEventListener("click", activateForcefieldFunction);
-                    squares[i].style.cursor = "pointer";
-                    squares[i].classList.add("usable");
-                    squares[i].classList.add("previewForcefield");
-                }
+            if (!squares[i].classList.contains("hit") && !squares[i].classList.contains("miss") && !squares[i].classList.contains("forcefield")) {
+                squares[i].addEventListener("click", activateForcefieldFunction);
+                squares[i].style.cursor = "pointer";
+                squares[i].classList.add("usable");
+                squares[i].classList.add("previewForcefield");
             }
         }
         removeAttack();
@@ -249,17 +249,11 @@ function placeForcefield(box) {
         box: box.id
     };
     ws.send(JSON.stringify(move));
+    box.classList.add("forcefield");
 
-    var squares = document.getElementsByClassName("self");
-    for (var i = 0; i < squares.length; i++) {
-        squares[i].removeEventListener("click", placeForcefieldFunction);
-        squares[i].classList.remove("usable");
-        squares[i].style.cursor = "not-allowed";
-        squares[i].classList.remove("previewForcefield");
-    }
+    resetAttack();
+    activateAttack();
 }
-
-var placeForcefieldFunction = function(e){ placeForcefield(e.target) };
 
 function activateSpotTrap() {
     var squares = document.getElementsByClassName("self");

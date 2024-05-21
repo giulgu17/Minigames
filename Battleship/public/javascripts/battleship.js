@@ -170,7 +170,7 @@ function notification(msg) {
 
 
         case "resetAttack":
-            notifbox.innerHTML += "Equipping standard missiles.<br>";
+            notifbox.innerHTML += "Unequipping power.<br>";
             break;
         case "activateDouble":
             notifbox.innerHTML += "Equipping Double Shot!<br>";
@@ -187,6 +187,16 @@ function notification(msg) {
         case "endMortar":
             notifbox.innerHTML += "and " + msg.box + ".<br>";
             break;
+        case "activateForcefield":
+            notifbox.innerHTML += "Equipping Forcefield!<br>";
+            break;
+        case "placeForcefield":
+            notifbox.innerHTML += "Forcefield placed in " + msg.box + ".<br>";
+            break;
+        case "activateTrap":
+            notifbox.innerHTML += "Equipping Trap!<br>";
+            break;
+        
 
         case "enemyTurn":
             notifbox.innerHTML += "It's the enemy's turn.<br>";

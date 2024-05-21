@@ -129,6 +129,55 @@ function ready() {
                             }
                         }
                         break;
+                    case "forcefield":
+                        if(msg.target == nickname){
+                            var box = document.getElementById("s"+msg.box);
+                            box.classList.add("forcefield");
+                            if(spiedOn != 0){
+                                var msg1 = {
+                                    type: "move",
+                                    moveType: "spyReport",
+                                    news: "forcefield",
+                                    gameId: gameId,
+                                    user: nickname,
+                                    target: opponent,
+                                    box: msg.box
+                                };
+                                ws.send(JSON.stringify(msg1));
+                            }
+                        }                        
+                        break;
+                    case "spy":
+                        if(msg.target == nickname){
+                            spiedOn = 5;
+                            var report = {
+                                type: "move",
+                                moveType: "spyReport",
+                                news: "money",
+                                money: money,
+                                gameId: gameId,
+                                user: nickname,
+                                target: opponent,
+                                box: msg.box
+                            };
+                            ws.send(JSON.stringify(report));
+                        }
+                    case "spyReport":
+                        if(msg.target == nickname){
+                            switch(msg.news){
+                                case "money":
+                                    //TODO: add money somewhere
+                                    break;
+                                case "forcefield":
+                                    notification({type: "spyReportForcefield", box: msg.box});
+                                    break;
+                                case "trap":
+                                    notification({type: "spyReportTrap", box: msg.box});
+                                    break;
+                                
+                            }
+                        }
+                        break;
                 }
 
                 //document.getElementById(msg.box).style.backgroundImage = "url('images/"+msg.symbol+".png')";
