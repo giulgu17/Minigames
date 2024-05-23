@@ -311,6 +311,10 @@ function activateHE() {
     if (attackType != "highexplosive") {
         resetAttack();
         attackType = "highexplosive";
+        let squares = Array.from(document.getElementsByClassName("enemy"));
+        squares.forEach(square => {
+            square.classList.add("previewHE");
+        });
     } else {
         notification({ type: "resetAttack" })
         resetAttack();

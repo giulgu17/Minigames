@@ -169,6 +169,9 @@ a {
 .hoveredMortar{
   background-color: rgba(255, 255, 0, 0.651)
 }
+.previewHE:hover{
+  background-color: rgb(255, 165, 0, 0.5)
+}
 
 .previewForcefield:hover::before{
   content: '';

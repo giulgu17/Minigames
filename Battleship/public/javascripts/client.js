@@ -118,8 +118,9 @@ function ready() {
                                         hit: true
                                     };
                                     ws.send(JSON.stringify(move));
-                                    if(attackType == "highexplosive"){
-
+                                    console.log(msg.moveType)
+                                    if (msg.moveType == "highexplosive") {
+                                        highExplosiveHit(msg.box);
                                     }
                                     hp--;
                                     if (hp == 0) {
@@ -168,7 +169,7 @@ function ready() {
                         if (msg.user == nickname) {
                             var ships = Array.from(document.getElementsByClassName("ship"));
                             ships.forEach((ship) => {
-                                if(ship.classList.contains("hit")){
+                                if (ship.classList.contains("hit")) {
                                     ships.splice(ships.indexOf(ship), 1);
                                 }
                             });
@@ -187,7 +188,7 @@ function ready() {
                         }
                         break;
                     case "trapReport":
-                        if(msg.user == nickname){
+                        if (msg.user == nickname) {
                             var box = document.getElementById(msg.box);
                             box.classList.add("spotted");
                             notification({ type: "trapReport", box: msg.box });
@@ -252,8 +253,37 @@ function ready() {
     });
 }
 
-function highExplosiveHit(box){
-    
+function highExplosiveHit(box) {
+    var boxRow = box.substring(0, 1);
+    console.log(boxRow)
+    var boxCol = parseInt(box.substring(1));
+    let checkBox = [];
+    checkBox.push("s" + boxRow + (boxCol - 1), "s" + boxRow + (boxCol + 1), "s" + (boxRow.charCodeAt() - 65 - 1) + boxCol, "s" + (boxRow.charCodeAt() - 65 + 1) + boxCol);
+    for (let i = 0; i < checkBox.length; i++) {
+        try {
+            console.log(checkBox[i])
+            let checkedBox = document.getElementById(checkBox[i]);
+            console.log(checkedBox)
+            console.log(checkedBox.classList.contains("ship"))
+            console.log(!checkedBox.classList.contains("hit"))
+            if (checkedBox.classList.contains("ship") && checkBox.classList.contains("hit") == false){
+                console.log("HIT!")
+                checkedBox.classList.add("hit");
+                hp--;
+                let msg = {
+                    type: "move",
+                    moveType: "report",
+                    gameId: gameId,
+                    user: nickname,
+                    target: opponent,
+                    box: checkBox[i].substring(1),
+                    hit: true
+                };
+                ws.send(JSON.stringify(msg));
+                highExplosiveHit(checkBox[i].substring(1));
+            }
+        } catch (e) { }
+    }
 }
 
 //Player sends a chat message
