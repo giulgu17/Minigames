@@ -108,19 +108,19 @@ function notification(msg) {
     var notifbox = document.getElementById("notif");
     switch (msg.type) {
         case "start":
-            notifbox.innerHTML += "You are now playing against " + opponent + ".<br>";
+            notifbox.innerHTML += "<b>You are now playing against " + opponent + ".</b><br>";
             break;
         case "turn":
             var random = Math.floor(Math.random() * 3);
             switch (random){
                 case 0:
-                    notifbox.innerHTML += "It is now your turn.<br>";
+                    notifbox.innerHTML += "<b>It is now your turn.</b><br>";
                     break;
                 case 1:
-                    notifbox.innerHTML += "It's your turn.<br>";
+                    notifbox.innerHTML += "<b>It's your turn.</b><br>";
                     break;
                 case 2:
-                    notifbox.innerHTML += "It's your turn to move.<br>";
+                    notifbox.innerHTML += "<b>It's your turn to move.</b><br>";
                     break;
             }
             break;
@@ -167,6 +167,20 @@ function notification(msg) {
                     break;
             }
             break;
+        case "attackBlock":
+            var random = Math.floor(Math.random() * 3);
+            switch (random){
+                case 0:
+                    notifbox.innerHTML += "You hit a forcefield!<br>";
+                    break;
+                case 1:
+                    notifbox.innerHTML += "There was a forcefield! Your shell did nothing.<br>";
+                    break;
+                case 2:
+                    notifbox.innerHTML += "You hit and broke a forcefield.<br>";
+                    break;
+            }
+            break;
 
 
         case "resetAttack":
@@ -199,7 +213,18 @@ function notification(msg) {
         
 
         case "enemyTurn":
-            notifbox.innerHTML += "It's the enemy's turn.<br>";
+            var random = Math.floor(Math.random() * 3);
+            switch (random){
+                case 0:
+                    notifbox.innerHTML += "<b>It's your opponent's turn.</b><br>";
+                    break;
+                case 1:
+                    notifbox.innerHTML += "<b>It's your opponent's turn.</b><br>";
+                    break;
+                case 2:
+                    notifbox.innerHTML += "<b>It's your opponent's turn.</b><br>";
+                    break;
+            }
             break;
         case "enemyAttack":
             notifbox.innerHTML += "The enemy shot in " + msg.box + ".<br>";
@@ -209,6 +234,9 @@ function notification(msg) {
             break;
         case "enemyAttackMiss":
             notifbox.innerHTML += "They missed.<br>";
+            break;
+        case "enemyAttackBlock":
+            notifbox.innerHTML += "They hit a forcefield!<br>";
             break;
 
         case "win":

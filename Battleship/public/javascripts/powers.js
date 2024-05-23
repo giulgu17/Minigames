@@ -63,6 +63,8 @@ On failure:
     "The sonar didn't detect any ships in the area."
     "Looks like there are no ships in the area."
 
+
+    
 JAMMER:
 Temporarily disables the enemy's vision. Lasts for 3 turns.
 On activation:
@@ -116,7 +118,7 @@ function resetAttack() {
     for (var i = 0; i < squares.length; i++) {
         squares[i].style.cursor = "not-allowed";
         squares[i].classList.remove("previewForcefield");
-        squares[i].classList.remove("previewForcefieldShip");
+        squares[i].classList.remove("previewTrap");
     }
 
     var squares = document.getElementsByClassName("enemy");
@@ -132,6 +134,7 @@ function resetAttack() {
 
 function activateDouble() {
     if(attackType != "double"){
+        resetAttack();
         notification({ type: "activateDouble" });
         attackType = "double";
     } else {
@@ -143,6 +146,7 @@ function activateDouble() {
 function activateMortar() {
     var squares = document.getElementsByClassName("enemy");
     if (attackType != "mortar") {
+        resetAttack();
         notification({ type: "activateMortar" });
         attackType = "mortar";
         for (var i = 0; i < squares.length; i++) {
@@ -217,6 +221,7 @@ function resetHover() {
 function activateForcefield() {
     var squares = document.getElementsByClassName("self");
     if (attackType != "forcefield") {
+        resetAttack();
         notification({ type: "activateForcefield" });
         attackType = "forcefield";
         for (var i = 0; i < squares.length; i++) {
@@ -233,22 +238,23 @@ function activateForcefield() {
         resetAttack();
         activateAttack();
     }
-    
-    
 }
 
 var activateForcefieldFunction = function(e){ placeForcefield(e.target) };
 
 function placeForcefield(box) {
-    var move = {
-        type: "move",
-        moveType: "forcefield",
-        gameId: gameId,
-        user: nickname,
-        target: opponent,
-        box: box.id
-    };
-    ws.send(JSON.stringify(move));
+    if (spiedOn != 0) {
+        var msg1 = {
+            type: "move",
+            moveType: "spyReport",
+            news: "forcefield",
+            gameId: gameId,
+            user: nickname,
+            target: opponent,
+            box: box.id
+        };
+        ws.send(JSON.stringify(msg1));
+    }
     box.classList.add("forcefield");
 
     resetAttack();
@@ -257,42 +263,58 @@ function placeForcefield(box) {
 
 function activateSpotTrap() {
     var squares = document.getElementsByClassName("self");
-    for (var i = 0; i < squares.length; i++) {
-        if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", activateTrapFunction);
-            squares[i].style.cursor = "pointer";
-            squares[i].classList.add("usable");
-            squares[i].classList.add("previewTrap");
+    if (attackType != "trap") {
+        resetAttack();
+        notification({ type: "activateTrap" });
+        attackType = "trap";
+        for (var i = 0; i < squares.length; i++) {
+            if (!squares[i].classList.contains("hit") && !squares[i].classList.contains("miss") && !squares[i].classList.contains("trap")) {
+                squares[i].addEventListener("click", activateTrapFunction);
+                squares[i].style.cursor = "pointer";
+                squares[i].classList.add("usable");
+                squares[i].classList.add("previewTrap");
+            }
         }
+        removeAttack();
+    } else {
+        notification({ type: "resetAttack" })
+        resetAttack();
+        activateAttack();
     }
 }
 
 var activateTrapFunction = function(e){ placeTrap(e.target) };
 
 function placeTrap(box) {
-    var move = {
-        type: "move",
-        moveType: "trap",
-        gameId: gameId,
-        user: nickname,
-        target: opponent,
-        box: box.id
-    };
-    ws.send(JSON.stringify(move));
-
-    var squares = document.getElementsByClassName("self");
-    for (var i = 0; i < squares.length; i++) {
-        squares[i].removeEventListener("click", placeTrapFunction);
-        squares[i].classList.remove("usable");
-        squares[i].style.cursor = "not-allowed";
-        squares[i].classList.remove("previewTrap");
+    if (spiedOn != 0) {
+        var msg1 = {
+            type: "move",
+            moveType: "spyReport",
+            news: "trap",
+            gameId: gameId,
+            user: nickname,
+            target: opponent,
+            box: box.id
+        };
+        ws.send(JSON.stringify(msg1));
     }
+    box.classList.add("trap");
+
+    resetAttack();
+    activateAttack();
 }
 
 var placeTrapFunction = function(e){ placeTrap(e.target) };
 
 function activateHE() {
-    attackType = "highexplosive";
+    activateAttack();
+    if (attackType != "highexplosive") {
+        resetAttack();
+        attackType = "highexplosive";
+    } else {
+        notification({ type: "resetAttack" })
+        resetAttack();
+    }
 }
 
 function activateSpy() {

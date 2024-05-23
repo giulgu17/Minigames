@@ -60,6 +60,7 @@ socketServer.on("connection", ws => {
                     ws.username = msg.nick;
                     console.log(msg.nick + " has joined the queue for Battleship");
                     queue.push(msg.nick);
+                    console.log(queue)
                     matchmaking();
                 }
                 break;
