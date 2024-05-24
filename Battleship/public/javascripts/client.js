@@ -53,18 +53,18 @@ function ready() {
                             var box = document.getElementById("s" + msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
-                                if(msg.moveType == "report")
+                                if (msg.moveType == "report")
                                     notification({ type: "enemyAttackHit" });
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
-                                if(msg.moveType == "report")
+                                if (msg.moveType == "report")
                                     notification({ type: "enemyAttackMiss" });
                             } else if (msg.hit == "block") {
                                 box.classList.remove("forcefield");
                                 notification({ type: "enemyAttackBlock" });
                             }
 
-                            if((msg.attackType == "attack" || msg.attackType == "endMortar" || msg.attackType == "highexplosive") && !turn){
+                            if ((msg.attackType == "attack" || msg.attackType == "endMortar" || msg.attackType == "highexplosive") && !turn) {
                                 turn = true;
                                 document.getElementById("info1").style = "background-color: yellow;"
                                 document.getElementById("info2").style = "background-color: white;"
@@ -76,18 +76,18 @@ function ready() {
                             var box = document.getElementById(msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
-                                if(msg.moveType == "report")
+                                if (msg.moveType == "report")
                                     notification({ type: "attackHit" });
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
-                                if(msg.moveType == "report")
+                                if (msg.moveType == "report")
                                     notification({ type: "attackMiss" });
                             } else if (msg.hit == "block") {
                                 notification({ type: "attackBlock" });
                                 usedSquares.splice(usedSquares.indexOf(msg.box), 1);
                             }
 
-                            if((msg.attackType == "attack" || msg.attackType == "endMortar" || msg.attackType == "highexplosive") && turn){
+                            if ((msg.attackType == "attack" || msg.attackType == "endMortar" || msg.attackType == "highexplosive") && turn) {
                                 turn = false;
                                 document.getElementById("info1").style = "background-color: white;"
                                 document.getElementById("info2").style = "background-color: yellow;"
@@ -131,6 +131,7 @@ function ready() {
                                     };
                                     ws.send(JSON.stringify(move));
                                     if (msg.moveType == "highexplosive") {
+                                        notification({ type: "highExplosiveHit" });
                                         highExplosiveHit(msg.box);
                                     }
                                     hp--;
@@ -201,6 +202,38 @@ function ready() {
                             notification({ type: "trapReport", box: msg.box });
                         }
                         break;
+                    case "sonar":
+                        if (msg.target == nickname) {
+                            let countedShips = 0;
+                            for (var i = -2; i <= 2; i++) {
+                                for (var j = -2; j <= 2; j++) {
+                                    var square = document.getElementById("s" + (rows[msg.box.substring(0, 1).charCodeAt() - 65 + i]) + (parseInt(msg.box.substring(1)) + j));
+                                    if (square.classList.contains("ship") && !square.classList.contains("hit")) {
+                                        countedShips++;
+                                    }
+                                }
+                            }
+                            notification({ type: "enemyScanArea" });
+                            var move = {
+                                type: "move",
+                                moveType: "sonarReport",
+                                gameId: gameId,
+                                user: nickname,
+                                target: opponent,
+                                number: countedShips
+                            };
+                            ws.send(JSON.stringify(move));
+                        }
+                        break;
+                    case "sonarReport":
+                        if (msg.target == nickname) {
+                            if (msg.number == 0) {
+                                notification({ type: "scanNoShips" });
+                            } else {
+                                notification({ type: "scanReport", number: msg.number });
+                            }
+                        }
+                        break;
 
                     case "spy":
                         if (msg.target == nickname) {
@@ -269,9 +302,8 @@ function highExplosiveHit(box) {
     clickedBox.push("s" + boxRow + (boxCol - 1), "s" + boxRow + (boxCol + 1), "s" + rows[(boxRow.charCodeAt() - 65) - 1] + boxCol, "s" + (rows[(boxRow.charCodeAt() - 65) + 1] + boxCol));
     for (let i = 0; i < clickedBox.length; i++) {
         try {
-            console.log(clickedBox[i])
             let checkedBox = document.getElementById(clickedBox[i]);
-            if (checkedBox.classList.contains("ship") && !checkedBox.classList.contains("hit")){
+            if (checkedBox.classList.contains("ship") && !checkedBox.classList.contains("hit")) {
                 checkedBox.classList.add("hit");
                 checkedBox.classList.remove("forcefield");
                 checkedBox.classList.remove("trap");
@@ -288,7 +320,7 @@ function highExplosiveHit(box) {
                 ws.send(JSON.stringify(msg));
                 highExplosiveHit(clickedBox[i].substring(1));
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 }
 

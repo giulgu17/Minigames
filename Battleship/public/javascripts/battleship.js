@@ -158,13 +158,13 @@ function notification(msg) {
             var random = Math.floor(Math.random() * 3);
             switch (random){
                 case 0:
-                    notifbox.innerHTML += "It's a miss.<br>";
+                    notifbox.innerHTML += "You missed.<br>";
                     break;
                 case 1:
                     notifbox.innerHTML += "No ship has been hit.<br>";
                     break;
                 case 2:
-                    notifbox.innerHTML += "You missed.<br>";
+                    notifbox.innerHTML += "It's a miss.<br>";
                     break;
             }
             break;
@@ -223,8 +223,27 @@ function notification(msg) {
         case "activateHE":
             notifbox.innerHTML += "Equipping High Explosive!<br>";
             break;
-        case "highExplosive":
+        case "highExplosiveHit":
             notifbox.innerHTML += "It was a high explosive shell, it instantly sunk the ship!.<br>";
+            break;
+        case "activateSonar":
+            notifbox.innerHTML += "Equipping Sonar!<br>";
+            break;
+        case "scanning":
+            notifbox.innerHTML += "Scanning the area around " + msg.box + "...<br>";
+            break;
+        case "scanReport":
+            if(msg.number == 1){
+                notifbox.innerHTML += msg.number + " square in the area is occupied by a ship.<br>";
+            } else {
+                notifbox.innerHTML += msg.number + " squares in the area are occupied by ships.<br>";
+            }
+            break;
+        case "scanNoShips":
+            notifbox.innerHTML += "Looks like there are no ships in the area.<br>";
+            break;
+        case "activateSpy":
+            notifbox.innerHTML += "You sent a spy to check on " + opponent + "'s actions...<br>You will now be able to see their moves for 5 turns.<br>";
             break;
         
 
@@ -243,7 +262,7 @@ function notification(msg) {
             }
             break;
         case "enemyAttack":
-            notifbox.innerHTML += "The enemy shot in " + msg.box + ".<br>";
+            notifbox.innerHTML += opponent + " shot in " + msg.box + ".<br>";
             break;
         case "enemyAttackHit":
             notifbox.innerHTML += "They hit a ship!<br>";
@@ -254,6 +273,7 @@ function notification(msg) {
         case "enemyAttackBlock":
             notifbox.innerHTML += "They hit a forcefield!<br>";
             break;
+        
         
 
         case "win":

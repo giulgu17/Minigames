@@ -113,6 +113,8 @@ document.addEventListener('keydown', function (e) {
             resetPreview();
             preview(document.getElementById(localStorage.getItem("lastHovered")));
             break;
+        case "enter":
+            join();
     }
 });
 

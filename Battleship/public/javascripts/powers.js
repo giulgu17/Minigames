@@ -104,14 +104,15 @@ function resetAttack() {
     attackType = "attack";
     var squares = document.getElementsByClassName("box");
         for (var i = 0; i < squares.length; i++) {
+            squares[i].removeEventListener("mouseout", resetHover);
             squares[i].removeEventListener("click", mortarFunction);
             squares[i].removeEventListener("mouseover", mortarHoverFunction);
-            squares[i].removeEventListener("mouseout", resetHover);
             squares[i].removeEventListener("click", activateForcefieldFunction);
             squares[i].removeEventListener("click", placeForcefield);
             squares[i].removeEventListener("click", activateTrapFunction);
             squares[i].removeEventListener("click", placeTrapFunction);
-            squares[i].removeEventListener("click", activateSonarFunction);
+            squares[i].removeEventListener("click", activateSonar);
+            squares[i].removeEventListener("mouseover", sonarHoverFunction);
         }
 
     var squares = document.getElementsByClassName("self");
@@ -129,6 +130,16 @@ function resetAttack() {
             squares[i].style.cursor = "pointer";
         } else {
             squares[i].style.cursor = "not-allowed";
+        }
+    }
+}
+
+function resetHover() {
+    var squares = document.getElementsByClassName("enemy");
+    for (var i = 0; i < squares.length; i++) {
+        if (!usedSquares.includes(squares[i].id)) {
+            squares[i].classList.remove("previewMortar");
+            squares[i].classList.remove("previewSonar");
         }
     }
 }
@@ -174,7 +185,7 @@ function mortarHover(box) {
         for (var j = -1; j <= 1; j++) {
             try {
                 square = document.getElementById((rows[hoveredRow.charCodeAt() - 65 + i]) + (hoveredColumn + j));
-                square.classList.add("hoveredMortar");
+                square.classList.add("previewMortar");
             } catch (e) { }
         }
     }
@@ -208,15 +219,6 @@ function mortar(box) {
     }
     resetAttack();
     resetHover();
-}
-
-function resetHover() {
-    var squares = document.getElementsByClassName("enemy");
-    for (var i = 0; i < squares.length; i++) {
-        if (!usedSquares.includes(squares[i].id)) {
-            squares[i].classList.remove("hoveredMortar");
-        }
-    }
 }
 
 function activateForcefield() {
@@ -337,17 +339,40 @@ function activateSpy() {
 }
 
 function activateSonar() {
-    var squares = document.getElementsByClassName("self");
-    for (var i = 0; i < squares.length; i++) {
-        if (!usedSquares.includes(squares[i].id)) {
-            squares[i].addEventListener("click", activateSonarFunction);
+    var squares = document.getElementsByClassName("enemy");
+    if (attackType != "sonar") {
+        resetAttack();
+        notification({ type: "activateSonar" });
+        attackType = "sonar";
+        for (var i = 0; i < squares.length; i++) {
+            squares[i].removeEventListener("click", clicked);
+            squares[i].addEventListener("click", sonarFunction);
+            squares[i].addEventListener("mouseover", sonarHoverFunction);
+            squares[i].addEventListener("mouseout", resetHover);
             squares[i].style.cursor = "pointer";
-            squares[i].classList.add("usable");
         }
+    } else {
+        notification({ type: "resetAttack" })
+        resetAttack();
+        activateAttack();
     }
 }
 
-var activateSonarFunction = function(e){ scanArea(e.target) }
+var sonarFunction = function(e){ scanArea(e.target) }
+var sonarHoverFunction = function (e) { sonarHover(e.target) }
+
+function sonarHover(box) {
+    var hoveredRow = box.id.substring(0, 1);
+    var hoveredColumn = parseInt(box.id.substring(1));
+    for (var i = -2; i <= 2; i++) {
+        for (var j = -2; j <= 2; j++) {
+            try {
+                square = document.getElementById((rows[hoveredRow.charCodeAt() - 65 + i]) + (hoveredColumn + j));
+                square.classList.add("previewSonar");
+            } catch (e) { }
+        }
+    }
+}
 
 function scanArea(box) {
     var move = {

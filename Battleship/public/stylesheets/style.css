@@ -166,11 +166,14 @@ a {
 .previewAttack:hover{
   background-color: rgba(255, 255, 0, 0.651)
 }
-.hoveredMortar{
+.previewMortar{
   background-color: rgba(255, 255, 0, 0.651)
 }
 .previewHE:hover{
   background-color: rgb(255, 165, 0, 0.5)
+}
+.previewSonar{
+  background-color: rgb(0, 128, 0, 0.5)
 }
 
 .previewForcefield:hover::before{
