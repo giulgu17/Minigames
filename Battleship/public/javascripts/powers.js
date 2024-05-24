@@ -1,40 +1,10 @@
 /*Powerups:
-
-
-
-DOUBLE SHOT:
-Makes you shoot twice per turn.
-
-
-
-Mortar:
-Shoots 5 random squares in a 3x3, 5x5 or 7x7 area.
-
-
-
-FORCEFIELD:
-Places a forcefield on a square. The forcefield breaks after being shot once.
-On hit:
-    "The shell is blown up in mid-air. Looks like you hit a forcefield."
-    "There was a forcefield on {Square} and the shell exploded on it."
-
-
-
 SPOT TRAP:
 Places a hidden trap on a square. When the enemy shoots it, the trap explodes and a random ship square gets marked on your map.
 The enemy doesn't get notified of the trap.
 On activation:
     "{Enemy} has activated a trap. A random ship square has been marked on your map."
     "Looks like {Enemy} has fallen into the trap, now you can see where one of their ships is."
-
-
-
-HIGH-EXPLOSIVE SHELL:
-A special shell designed to instantly sink a ship.
-On hit:
-    "It was a high explosive shell! it instantly sunk the ship!"
-
-
 
 SPY:
 Allows you to see the enemy's inventory and you get notified of every move they make. Lasts for 5 turns.
@@ -395,4 +365,5 @@ function activateJammer() {
         target: opponent
     };
     ws.send(JSON.stringify(move));
+    notification({ type: "activateJammer" });
 }

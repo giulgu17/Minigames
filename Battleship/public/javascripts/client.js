@@ -1,6 +1,6 @@
 var ws, nickname, opponent, game = true;
 var lastSender;
-var turn, gameId, win, hp = 20, spiedOn = 0;
+var turn, gameId, win, hp = 20, spiedOn = 0, jammed = 0;
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
 
@@ -94,6 +94,19 @@ function ready() {
                                 removeAttack();
                                 deactivatePowerups();
                                 notification({ type: "enemyTurn" });
+                                if (spiedOn > 0) {
+                                    spiedOn--;
+                                }
+                                if (jammed > 0) {
+                                    jammed--;
+                                    if (jammed == 0) {
+                                        var squares = Array.from(document.getElementsByClassName("enemy"));
+                                        squares.forEach(square => {
+                                            square.classList.remove("jammed");
+                                        });
+                                        notification({ type: "enemyJammerEnd" });
+                                    }
+                                }
                             }
                         }
                         break;
@@ -234,7 +247,16 @@ function ready() {
                             }
                         }
                         break;
-
+                    case "jammer":
+                        if (msg.target == nickname) {
+                            notification({ type: "enemyJammer" });
+                            jammed = 3;
+                            var squares = Array.from(document.getElementsByClassName("enemy"));
+                            squares.forEach((square) => {
+                                square.classList.add("jammed");
+                            });
+                        }
+                        break;
                     case "spy":
                         if (msg.target == nickname) {
                             spiedOn = 5;

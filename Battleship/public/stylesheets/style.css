@@ -194,6 +194,10 @@ a {
   background-color: rgb(255, 72, 0);
 }
 
+.jammed{
+  background-color: rgb(255, 255, 255) !important;
+}
+
 
 
 #page{
