@@ -124,6 +124,7 @@ function resetAttack() {
     var squares = document.getElementsByClassName("enemy");
     for (var i = 0; i < squares.length; i++) {
         if(!usedSquares.includes(squares[i].id)){
+            squares[i].classList.remove("previewHE");
             squares[i].addEventListener("click", clicked);
             squares[i].style.cursor = "pointer";
         } else {
@@ -256,6 +257,7 @@ function placeForcefield(box) {
         ws.send(JSON.stringify(msg1));
     }
     box.classList.add("forcefield");
+    notification({ type: "placeForcefield", box: box.id });
 
     resetAttack();
     activateAttack();
@@ -299,6 +301,7 @@ function placeTrap(box) {
         ws.send(JSON.stringify(msg1));
     }
     box.classList.add("trap");
+    notification({ type: "placeTrap", box: box.id });
 
     resetAttack();
     activateAttack();
@@ -310,6 +313,7 @@ function activateHE() {
     activateAttack();
     if (attackType != "highexplosive") {
         resetAttack();
+        notification({ type: "activateHE" });
         attackType = "highexplosive";
         let squares = Array.from(document.getElementsByClassName("enemy"));
         squares.forEach(square => {

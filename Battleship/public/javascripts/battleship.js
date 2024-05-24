@@ -98,7 +98,8 @@ function attack(box) {
         if (attackType == "double") {
             attackType = "attack";
             deactivatePowerups();
-        } else if (attackType == "attack") {
+        }
+        if (attackType != "mortar" && attackType != "endMortar") {
             notification({type: "attack", box: box.id});
         }
     }
@@ -135,7 +136,7 @@ function notification(msg) {
                     notifbox.innerHTML += "You aim at " + msg.box + ".<br>";
                     break;
                 case 2:
-                    notifbox.innerHTML += "You shoot in " + msg.box + ".<br>";
+                    notifbox.innerHTML += "Shooting in " + msg.box + ".<br>";
                     break;  
             }
             break;
@@ -210,6 +211,21 @@ function notification(msg) {
         case "activateTrap":
             notifbox.innerHTML += "Equipping Trap!<br>";
             break;
+        case "placeTrap":
+            notifbox.innerHTML += "Trap placed in " + msg.box + ".<br>";
+            break;
+        case "trapTriggered":
+            notifbox.innerHTML += "The opponent triggered a trap!";
+            break;
+        case "trapReport":
+            notifbox.innerHTML += "An enemy ship in " + msg.box + " has been spotted!<br>";
+            break;
+        case "activateHE":
+            notifbox.innerHTML += "Equipping High Explosive!<br>";
+            break;
+        case "highExplosive":
+            notifbox.innerHTML += "It was a high explosive shell, it instantly sunk the ship!.<br>";
+            break;
         
 
         case "enemyTurn":
@@ -238,6 +254,7 @@ function notification(msg) {
         case "enemyAttackBlock":
             notifbox.innerHTML += "They hit a forcefield!<br>";
             break;
+        
 
         case "win":
             notifbox.innerHTML += "You won!<br>";

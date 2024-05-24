@@ -48,50 +48,60 @@ function ready() {
             case "move":
                 switch (msg.moveType) {
                     case "report":
+                    case "reportHE":
                         if (msg.user == nickname) {
                             var box = document.getElementById("s" + msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
-                                notification({ type: "enemyAttackHit" });
+                                if(msg.moveType == "report")
+                                    notification({ type: "enemyAttackHit" });
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
-                                notification({ type: "enemyAttackMiss" });
+                                if(msg.moveType == "report")
+                                    notification({ type: "enemyAttackMiss" });
                             } else if (msg.hit == "block") {
                                 box.classList.remove("forcefield");
-                                notification({ type: "attackBlock" });
+                                notification({ type: "enemyAttackBlock" });
+                            }
+
+                            if((msg.attackType == "attack" || msg.attackType == "endMortar" || msg.attackType == "highexplosive") && !turn){
+                                turn = true;
+                                document.getElementById("info1").style = "background-color: yellow;"
+                                document.getElementById("info2").style = "background-color: white;"
+                                activateAttack();
+                                activatePowerups();
+                                notification({ type: "turn" });
                             }
                         } else {
                             var box = document.getElementById(msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
-                                notification({ type: "attackHit" });
+                                if(msg.moveType == "report")
+                                    notification({ type: "attackHit" });
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
-                                notification({ type: "attackMiss" });
+                                if(msg.moveType == "report")
+                                    notification({ type: "attackMiss" });
                             } else if (msg.hit == "block") {
                                 notification({ type: "attackBlock" });
                                 usedSquares.splice(usedSquares.indexOf(msg.box), 1);
                             }
+
+                            if((msg.attackType == "attack" || msg.attackType == "endMortar" || msg.attackType == "highexplosive") && turn){
+                                turn = false;
+                                document.getElementById("info1").style = "background-color: white;"
+                                document.getElementById("info2").style = "background-color: yellow;"
+                                removeAttack();
+                                deactivatePowerups();
+                                notification({ type: "enemyTurn" });
+                            }
                         }
                         break;
                     case "attack":
-                    case "highexplosive":
-                    case "endMortar":
-                        if (turn) {
-                            turn = false;
-                            document.getElementById("info1").style = "background-color: white;"
-                            document.getElementById("info2").style = "background-color: yellow;"
-                            removeAttack();
-                            deactivatePowerups();
-                        } else {
-                            turn = true;
-                            document.getElementById("info1").style = "background-color: yellow;"
-                            document.getElementById("info2").style = "background-color: white;"
-                            activateAttack();
-                            activatePowerups();
-                        }
                     case "double":
                     case "mortar":
+                    case "endMortar":
+                    case "highexplosive":
                         if (msg.target == nickname) {
                             var box = document.getElementById("s" + msg.box);
                             notification({ type: "enemyAttack", box: msg.box });
@@ -99,6 +109,7 @@ function ready() {
                                 var move = {
                                     type: "move",
                                     moveType: "report",
+                                    attackType: msg.moveType,
                                     gameId: gameId,
                                     user: nickname,
                                     target: opponent,
@@ -111,6 +122,7 @@ function ready() {
                                     var move = {
                                         type: "move",
                                         moveType: "report",
+                                        attackType: msg.moveType,
                                         gameId: gameId,
                                         user: nickname,
                                         target: opponent,
@@ -118,7 +130,6 @@ function ready() {
                                         hit: true
                                     };
                                     ws.send(JSON.stringify(move));
-                                    console.log(msg.moveType)
                                     if (msg.moveType == "highexplosive") {
                                         highExplosiveHit(msg.box);
                                     }
@@ -137,6 +148,7 @@ function ready() {
                                     var move = {
                                         type: "move",
                                         moveType: "report",
+                                        attackType: msg.moveType,
                                         gameId: gameId,
                                         user: nickname,
                                         target: opponent,
@@ -157,11 +169,6 @@ function ready() {
                                     ws.send(JSON.stringify(msg1));
                                     box.classList.remove("trap");
                                 }
-                            }
-
-                            if (msg.moveType == "attack" || msg.moveType == "endMortar") {
-                                turn = true;
-                                activateAttack();
                             }
                         }
                         break;
@@ -255,34 +262,33 @@ function ready() {
 
 function highExplosiveHit(box) {
     var boxRow = box.substring(0, 1);
+    console.log(box)
     console.log(boxRow)
     var boxCol = parseInt(box.substring(1));
-    let checkBox = [];
-    checkBox.push("s" + boxRow + (boxCol - 1), "s" + boxRow + (boxCol + 1), "s" + (boxRow.charCodeAt() - 65 - 1) + boxCol, "s" + (boxRow.charCodeAt() - 65 + 1) + boxCol);
-    for (let i = 0; i < checkBox.length; i++) {
+    let clickedBox = [];
+    clickedBox.push("s" + boxRow + (boxCol - 1), "s" + boxRow + (boxCol + 1), "s" + rows[(boxRow.charCodeAt() - 65) - 1] + boxCol, "s" + (rows[(boxRow.charCodeAt() - 65) + 1] + boxCol));
+    for (let i = 0; i < clickedBox.length; i++) {
         try {
-            console.log(checkBox[i])
-            let checkedBox = document.getElementById(checkBox[i]);
-            console.log(checkedBox)
-            console.log(checkedBox.classList.contains("ship"))
-            console.log(!checkedBox.classList.contains("hit"))
-            if (checkedBox.classList.contains("ship") && checkBox.classList.contains("hit") == false){
-                console.log("HIT!")
+            console.log(clickedBox[i])
+            let checkedBox = document.getElementById(clickedBox[i]);
+            if (checkedBox.classList.contains("ship") && !checkedBox.classList.contains("hit")){
                 checkedBox.classList.add("hit");
+                checkedBox.classList.remove("forcefield");
+                checkedBox.classList.remove("trap");
                 hp--;
                 let msg = {
                     type: "move",
-                    moveType: "report",
+                    moveType: "reportHE",
                     gameId: gameId,
                     user: nickname,
                     target: opponent,
-                    box: checkBox[i].substring(1),
+                    box: clickedBox[i].substring(1),
                     hit: true
                 };
                 ws.send(JSON.stringify(msg));
-                highExplosiveHit(checkBox[i].substring(1));
+                highExplosiveHit(clickedBox[i].substring(1));
             }
-        } catch (e) { }
+        } catch (e) {}
     }
 }
 
