@@ -22,7 +22,7 @@ function ready() {
                 square.classList.add("self");
                 square.id = columns[j] + i;
                 document.getElementById("placegrid").appendChild(square);
-                if (code[i * 10 + j - 1] == 1) {
+                if (code[(i - 1) * 10 + j] == 1) {
                     square.classList.add("ship");
                 }
             }
