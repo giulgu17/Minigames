@@ -6,24 +6,85 @@ block content
             div#info1.info
                 div#inick1
                     a= username
-            div.sideinfo
-                input(type="button" id="double" value="Double Shot" class="btn powers")
-                input(type="button" id="mortar" value="Mortar" class="btn powers")
-                input(type="button" id="forcefield" value="Force Field" class="btn powers")
-                input(type="button" id="trap" value="Spot Trap" class="btn powers")
-                input(type="button" id="he" value="HE Shell" class="btn powers")
-                input(type="button" id="spy" value="Spy" class="btn powers")
-                input(type="button" id="sonar" value="Sonar" class="btn powers")
-                input(type="button" id="jammer" value="Jammer" class="btn powers")
+                    div(id="infoMoney")
+                        p|Coins: 
+                            span(id="money")
+            div#powerList.sideinfo
+                div(class="tooltip" data-tip="Allows you to attack twice in one turn.")
+                    input(type="button" id="double" value="Double Shot | Cost: 150" class="btn btn-outline powers btn-disabled")
+                div(class="tooltip" data-tip="Shoots 4 random squares in a 3x3 area and ends your turn.")
+                    input(type="button" id="mortar" value="Mortar | Cost: 300" class="btn btn-outline powers btn-disabled")
+                div(class="tooltip" data-tip="Place a hidden forcefield on your grid to protect a square. The forcefield breaks after being shot once.")
+                    input(type="button" id="forcefield" value="Force Field | Cost: 150" class="btn btn-outline powers btn-disabled")
+                div(class="tooltip" data-tip="Place a hidden trap on a square on your grid. When the enemy shoots that square, the trap triggers and a random ship square gets marked on your map.")
+                    input(type="button" id="trap" value="Spot Trap | Cost: 200" class="btn btn-outline powers btn-disabled")
+                div(class="tooltip" data-tip="Equips a special shell designed to instantly sink a ship.")
+                    input(type="button" id="he" value="HE Shell | Cost: 250" class="btn btn-outline powers btn-disabled")
+                div(class="tooltip" data-tip="Allows you to see the enemy's coins and every move they make. Lasts for 5 turns and has a cooldown of 8 upon use.")
+                    input(type="button" id="spy" value="Spy | Cost: 450" class="btn btn-outline powers btn-disabled")
+                div(class="tooltip" data-tip="Allows you to scan a 5x5 area and see how many ships are present. Doesn't end the turn.")
+                    input(type="button" id="sonar" value="Sonar | Cost: 100" class="btn btn-outline powers btn-disabled")
+                div(class="tooltip" data-tip="Temporarily disables the enemy's target grid. Lasts for 3 turns and has a cooldown of 6 turns upon use.")
+                    input(type="button" id="jammer" value="Jammer | Cost: 250" class="btn btn-outline powers btn-disabled")
 
         section#board
-            section#selfGrid.grid
+            section#fullSeldGrid.fullGrids
+                div#columns
+                    div#1.numbers|1
+                    div#2.numbers|2
+                    div#3.numbers|3
+                    div#4.numbers|4
+                    div#5.numbers|5
+                    div#6.numbers|6
+                    div#7.numbers|7
+                    div#8.numbers|8
+                    div#9.numbers|9
+                    div#10.numbers|10
+                div#rows
+                    div#a.letters|A
+                    div#b.letters|B
+                    div#c.letters|C
+                    div#d.letters|D
+                    div#e.letters|E
+                    div#f.letters|F
+                    div#g.letters|G
+                    div#h.letters|H
+                    div#i.letters|I
+                    div#j.letters|J
+                section#selfGrid.grid
             section(class="divider divider-horizontal divider-neutral" id="divider")
-            section#enemyGrid.grid
+            section#fullEnemyGrid.fullGrids
+                div#columns
+                    div#1.numbers|1
+                    div#2.numbers|2
+                    div#3.numbers|3
+                    div#4.numbers|4
+                    div#5.numbers|5
+                    div#6.numbers|6
+                    div#7.numbers|7
+                    div#8.numbers|8
+                    div#9.numbers|9
+                    div#10.numbers|10
+                div#rows
+                    div#a.letters|A
+                    div#b.letters|B
+                    div#c.letters|C
+                    div#d.letters|D
+                    div#e.letters|E
+                    div#f.letters|F
+                    div#g.letters|G
+                    div#h.letters|H
+                    div#i.letters|I
+                    div#j.letters|J
+                section#enemyGrid.grid
 
         section#right.side
             div#info2.info
                 div#inick2
+                div(id="enemyMoney")
+                    p
+                        span(id="money1")
+                        span(id="money2")
             section#chat.sideinfo
 
         section#notif

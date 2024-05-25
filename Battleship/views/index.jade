@@ -8,13 +8,36 @@ block content
         form(action="/login2" id="form" method="post")
             input(type="text" name="username" id="inputnick" placeholder="Nickname" class="w-1/4 input input-bordered input-sm w-full max-w-xs" required)
             input(type="button" id="join" value="Join Game" cursor="not-allowed" class="btn btn-primary btn-sm" disabled)
-        
+
         section#homegrid
-            section#unplaced.grids
+            section#unplaced
                 section#carriers
                 section#battleships
                 section#other
-            section#placegrid.grids
-            input(type="button" id="clear" value="Clear Grid")
-    
+            section#fullplacegrid.fullGrids
+                div#columns
+                    div#1.numbers|1
+                    div#2.numbers|2
+                    div#3.numbers|3
+                    div#4.numbers|4
+                    div#5.numbers|5
+                    div#6.numbers|6
+                    div#7.numbers|7
+                    div#8.numbers|8
+                    div#9.numbers|9
+                    div#10.numbers|10
+                div#rows
+                    div#a.letters|A
+                    div#b.letters|B
+                    div#c.letters|C
+                    div#d.letters|D
+                    div#e.letters|E
+                    div#f.letters|F
+                    div#g.letters|G
+                    div#h.letters|H
+                    div#i.letters|I
+                    div#j.letters|J
+                section#placegrid.grid
+            input(type="button" class="btn btn-outline" id="clear" value="Clear Grid")
+
     script(src="/javascripts/home.js")

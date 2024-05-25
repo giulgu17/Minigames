@@ -27,7 +27,7 @@ router.use(session({
     saveUninitialized: true
 }));
 
-connectedClients = 0;       //TODO: playercounter?
+connectedClients = 0;
 queue = [];
 const database = client.db("minigames");
 const collection = database.collection("tictactoe");
@@ -48,18 +48,25 @@ socketServer.on("connection", ws => {
                 break;
             //ON JOIN
             case "join":
-                var found = false;
+                var valid = true;
+                if(msg.nick == "" || msg.nick == null){
+                    console.log("Invalid username");
+                    valid = false;
+                    break;
+                }
                 for (let i = 0; i < queue.length; i++) {
                     if (queue[i] == msg.nick) {
                         console.log(msg.nick + " is already connected");
-                        found = true;
+                        valid = false;
                         break;
                     }
                 }
-                if (!found) {
+
+                if (valid) {
                     ws.username = msg.nick;
                     console.log(msg.nick + " has joined the queue for TicTacToe");
                     queue.push(msg.nick);
+                    console.log(queue);
                     matchmaking();
                 }
                 break;

@@ -1,56 +1,87 @@
-/*Powerups:
-SPOT TRAP:
-Places a hidden trap on a square. When the enemy shoots it, the trap explodes and a random ship square gets marked on your map.
-The enemy doesn't get notified of the trap.
-On activation:
-    "{Enemy} has activated a trap. A random ship square has been marked on your map."
-    "Looks like {Enemy} has fallen into the trap, now you can see where one of their ships is."
+const doubleCost = 150,
+    mortarCost = 300,
+    forcefieldCost = 150,
+    trapCost = 200,
+    heCost = 250,
+    spyCost = 450,
+    sonarCost = 100,
+    jammerCost = 250;
 
-SPY:
-Allows you to see the enemy's inventory and you get notified of every move they make. Lasts for 5 turns.
-On activation:
-    "You sent a spy to check on {Enemy}'s activies..."
-    "{Enemy} is now under surveillance, let's see what they're up to..."
-On enemy's move:
-    "{Enemy} has placed a {Object} on {square}"
-    "The spy reports that {Enemy} put down a {Object} on {square}"
-On deactivation:
-    "The spy is retreating before {Enemy} notices them."
-    "The spy is back. {Enemy} is no longer under surveillance."
+const doubleSetCooldown = 0,
+    mortarSetCooldown = 0,
+    forcefieldSetCooldown = 0,
+    trapSetCooldown = 0,
+    heSetCooldown = 0,
+    spySetCooldown = 8,
+    sonarSetCooldown = 0,
+    jammerSetCooldown = 6;
 
-
+let doubleCooldown = 0, mortarCooldown = 0, forcefieldCooldown = 0, trapCooldown = 0, heCooldown = 0, spyCooldown = 0, sonarCooldown = 0, jammerCooldown = 0;
 
 
-SONAR:
-Allows you to scan a 5x5 area to see how many ships are present.
-On activation:
-    "You activated the sonar. Scanning the area..."
-    "The sonar is scanning the area..."
-On success:
-    "{Number} of squares in the area are occupied by ships."
-    "The sonar detected {Number} of ships in the area."
-On failure:
-    "The sonar didn't detect any ships in the area."
-    "Looks like there are no ships in the area."
-
-
-    
-JAMMER:
-Temporarily disables the enemy's vision. Lasts for 3 turns.
-On activation:
-    "You activated the jammer. The enemy's vision is now disabled."
-    "The jammer is now active. Now the enemy can't see your board."
-*/
 
 function activatePowerups() {
-    document.getElementById("double").addEventListener("click", activateDouble);
-    document.getElementById("mortar").addEventListener("click", activateMortar);
-    document.getElementById("forcefield").addEventListener("click", activateForcefield);
-    document.getElementById("trap").addEventListener("click", activateSpotTrap);
-    document.getElementById("he").addEventListener("click", activateHE);
-    document.getElementById("spy").addEventListener("click", activateSpy);
-    document.getElementById("sonar").addEventListener("click", activateSonar);
-    document.getElementById("jammer").addEventListener("click", activateJammer);
+    var buttons = Array.from(document.getElementsByClassName("powers"));
+    buttons.forEach(button => {
+        switch(button.id) {
+            case "double":
+                if(money >= doubleCost) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateDouble);
+                }
+                break;
+            case "mortar":
+                if(money >= mortarCost) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateMortar);
+                }
+                break;
+            case "forcefield":
+                if(money >= forcefieldCost) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateForcefield);
+                }
+                break;
+            case "trap":
+                if(money >= trapCost) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateSpotTrap);
+                }
+                break;
+            case "he":
+                if(money >= heCost) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateHE);
+                }
+                break;
+            case "spy":
+                if(money >= spyCost && spyCooldown == 0) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateSpy);
+                }
+                break;
+            case "sonar":
+                if(money >= sonarCost) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateSonar);
+                }
+                break;
+            case "jammer":
+                if(money >= jammerCost) {
+                    button.style.cursor = "pointer";
+                    button.classList.remove("btn-disabled");
+                    button.addEventListener("click", activateJammer);
+                }
+                break;
+        }
+    });
 }
 
 function deactivatePowerups() {
@@ -62,46 +93,46 @@ function deactivatePowerups() {
     document.getElementById("spy").removeEventListener("click", activateSpy);
     document.getElementById("sonar").removeEventListener("click", activateSonar);
     document.getElementById("jammer").removeEventListener("click", activateJammer);
-    var buttons = document.getElementsByClassName("powerup");
-    for (var i = 0; i < buttons.length; i++) {
-        buttons[i].style.cursor = "not-allowed";
-        buttons[i].disabled = true;
-    }
+    var buttons = Array.from(document.getElementsByClassName("powers"));
+    buttons.forEach(button => {
+        button.style.cursor = "not-allowed";
+        button.classList.add("btn-disabled");
+    });
     resetAttack();
 }
 
 function resetAttack() {
     attackType = "attack";
-    var squares = document.getElementsByClassName("box");
-        for (var i = 0; i < squares.length; i++) {
-            squares[i].removeEventListener("mouseout", resetHover);
-            squares[i].removeEventListener("click", mortarFunction);
-            squares[i].removeEventListener("mouseover", mortarHoverFunction);
-            squares[i].removeEventListener("click", activateForcefieldFunction);
-            squares[i].removeEventListener("click", placeForcefield);
-            squares[i].removeEventListener("click", activateTrapFunction);
-            squares[i].removeEventListener("click", placeTrapFunction);
-            squares[i].removeEventListener("click", activateSonar);
-            squares[i].removeEventListener("mouseover", sonarHoverFunction);
-        }
+    var squares = Array.from(document.getElementsByClassName("box"));
+    squares.forEach(square => {
+        square.removeEventListener("mouseout", resetHover);
+        square.removeEventListener("click", mortarFunction);
+        square.removeEventListener("mouseover", mortarHoverFunction);
+        square.removeEventListener("click", activateForcefieldFunction);
+        square.removeEventListener("click", placeForcefield);
+        square.removeEventListener("click", activateTrapFunction);
+        square.removeEventListener("click", placeTrapFunction);
+        square.removeEventListener("click", activateSonar);
+        square.removeEventListener("mouseover", sonarHoverFunction);
+    });
 
-    var squares = document.getElementsByClassName("self");
-    for (var i = 0; i < squares.length; i++) {
-        squares[i].style.cursor = "not-allowed";
-        squares[i].classList.remove("previewForcefield");
-        squares[i].classList.remove("previewTrap");
-    }
+    var squares = Array.from(document.getElementsByClassName("self"));
+    squares.forEach(square => {
+        square.style.cursor = "not-allowed";
+        square.classList.remove("previewForcefield");
+        square.classList.remove("previewTrap");
+    });
 
-    var squares = document.getElementsByClassName("enemy");
-    for (var i = 0; i < squares.length; i++) {
-        if(!usedSquares.includes(squares[i].id)){
-            squares[i].classList.remove("previewHE");
-            squares[i].addEventListener("click", clicked);
-            squares[i].style.cursor = "pointer";
+    var squares = Array.from(document.getElementsByClassName("enemy"));
+    squares.forEach(square => {
+        if (!usedSquares.includes(square.id)) {
+            square.classList.remove("previewHE");
+            square.addEventListener("click", clicked);
+            square.style.cursor = "pointer";
         } else {
-            squares[i].style.cursor = "not-allowed";
+            square.style.cursor = "not-allowed";
         }
-    }
+    });
 }
 
 function resetHover() {
@@ -115,46 +146,51 @@ function resetHover() {
 }
 
 function activateDouble() {
-    if(attackType != "double"){
-        resetAttack();
-        notification({ type: "activateDouble" });
-        attackType = "double";
-    } else {
-        notification({ type: "resetAttack" })
-        resetAttack();
+    if (money >= doubleCost) {
+        if (attackType != "double") {
+            deactivatePowerups();
+            activatePowerups();
+            notification({ type: "activateDouble" });
+            attackType = "double";
+        } else {
+            notification({ type: "resetAttack" })
+            activatePowerups();
+        }
     }
 }
 
 function activateMortar() {
-    var squares = document.getElementsByClassName("enemy");
-    if (attackType != "mortar") {
-        resetAttack();
-        notification({ type: "activateMortar" });
-        attackType = "mortar";
-        for (var i = 0; i < squares.length; i++) {
-            squares[i].removeEventListener("click", clicked);
-            squares[i].addEventListener("click", mortarFunction);
-            squares[i].addEventListener("mouseover", mortarHoverFunction);
-            squares[i].addEventListener("mouseout", resetHover);
-            squares[i].style.cursor = "pointer";
+    if (money >= mortarCost) {
+        var squares = document.getElementsByClassName("enemy");
+        if (attackType != "mortar") {
+            activatePowerups();
+            notification({ type: "activateMortar" });
+            attackType = "mortar";
+            for (var i = 0; i < squares.length; i++) {
+                squares[i].removeEventListener("click", clicked);
+                squares[i].addEventListener("click", mortarFunction);
+                squares[i].addEventListener("mouseover", mortarHoverFunction);
+                squares[i].addEventListener("mouseout", resetHover);
+                squares[i].style.cursor = "pointer";
+            }
+        } else {
+            notification({ type: "resetAttack" })
+            activatePowerups();
+            activateAttack();
         }
-    } else {
-        notification({ type: "resetAttack" })
-        resetAttack();
-        activateAttack();
     }
-}   
+}
 
-var mortarFunction = function(e){ mortar(e.target) }
+var mortarFunction = function (e) { mortar(e.target) }
 var mortarHoverFunction = function (e) { mortarHover(e.target) }
 
 function mortarHover(box) {
-    var hoveredRow = box.id.substring(0, 1);
-    var hoveredColumn = parseInt(box.id.substring(1));
+    var hoveredColumn = box.id.substring(0, 1);
+    var hoveredRow = parseInt(box.id.substring(1));
     for (var i = -1; i <= 1; i++) {
         for (var j = -1; j <= 1; j++) {
             try {
-                square = document.getElementById((rows[hoveredRow.charCodeAt() - 65 + i]) + (hoveredColumn + j));
+                square = document.getElementById((columns[hoveredColumn.charCodeAt() - 65 + i]) + (hoveredRow + j));
                 square.classList.add("previewMortar");
             } catch (e) { }
         }
@@ -162,11 +198,12 @@ function mortarHover(box) {
 }
 
 function mortar(box) {
+    money -= mortarCost;
     var selSquares = [];
     for (var i = -1; i <= 1; i++) {
         for (var j = -1; j <= 1; j++) {
-            var square = document.getElementById((rows[box.id.substring(0, 1).charCodeAt() - 65 + i]) + (parseInt(box.id.substring(1)) + j));
-            if(square.classList.contains("enemy") && !usedSquares.includes(square.id)){
+            var square = document.getElementById((columns[box.id.substring(0, 1).charCodeAt() - 65 + i]) + (parseInt(box.id.substring(1)) + j));
+            if (square.classList.contains("enemy") && !usedSquares.includes(square.id)) {
                 selSquares.push(square);
             }
         }
@@ -175,7 +212,7 @@ function mortar(box) {
     notification({ type: "startMortar" });
     for (var i = 0; i < 4; i++) {
         var random = Math.floor(Math.random() * selSquares.length);
-        if(i != 3 && selSquares.length != 1){
+        if (i != 3 && selSquares.length != 1) {
             notification({ type: "shotMortar", box: selSquares[random].id });
         } else {
             notification({ type: "endMortar", box: selSquares[random].id });
@@ -183,161 +220,180 @@ function mortar(box) {
         }
         attack(selSquares[random]);
         selSquares.splice(random, 1);
-        if(selSquares.length == 0){
+        if (selSquares.length == 0) {
             break;
         }
     }
-    resetAttack();
+    activatePowerups();
     resetHover();
 }
 
 function activateForcefield() {
-    var squares = document.getElementsByClassName("self");
-    if (attackType != "forcefield") {
-        resetAttack();
-        notification({ type: "activateForcefield" });
-        attackType = "forcefield";
-        for (var i = 0; i < squares.length; i++) {
-            if (!squares[i].classList.contains("hit") && !squares[i].classList.contains("miss") && !squares[i].classList.contains("forcefield")) {
-                squares[i].addEventListener("click", activateForcefieldFunction);
-                squares[i].style.cursor = "pointer";
-                squares[i].classList.add("usable");
-                squares[i].classList.add("previewForcefield");
+    if (money >= forcefieldCost && forcefieldCooldown == 0) {
+        var squares = document.getElementsByClassName("self");
+        if (attackType != "forcefield") {
+            activatePowerups();
+            notification({ type: "activateForcefield" });
+            attackType = "forcefield";
+            for (var i = 0; i < squares.length; i++) {
+                if (!squares[i].classList.contains("hit") && !squares[i].classList.contains("miss") && !squares[i].classList.contains("forcefield")) {
+                    squares[i].addEventListener("click", activateForcefieldFunction);
+                    squares[i].style.cursor = "pointer";
+                    squares[i].classList.add("usable");
+                    squares[i].classList.add("previewForcefield");
+                }
             }
+            removeAttack();
+        } else {
+            notification({ type: "resetAttack" })
+            activatePowerups();
+            activateAttack();
         }
-        removeAttack();
-    } else {
-        notification({ type: "resetAttack" })
-        resetAttack();
-        activateAttack();
     }
 }
 
-var activateForcefieldFunction = function(e){ placeForcefield(e.target) };
+var activateForcefieldFunction = function (e) { placeForcefield(e.target) };
 
 function placeForcefield(box) {
+    money -= forcefieldCost;
     if (spiedOn != 0) {
         var msg1 = {
             type: "move",
             moveType: "spyReport",
             news: "forcefield",
+            money: money,
             gameId: gameId,
             user: nickname,
             target: opponent,
-            box: box.id
+            box: box.id.substring(1)
         };
         ws.send(JSON.stringify(msg1));
     }
     box.classList.add("forcefield");
-    notification({ type: "placeForcefield", box: box.id });
+    notification({ type: "placeForcefield", box: box.id.substring(1) });
 
-    resetAttack();
+    activatePowerups();
     activateAttack();
 }
 
 function activateSpotTrap() {
-    var squares = document.getElementsByClassName("self");
-    if (attackType != "trap") {
-        resetAttack();
-        notification({ type: "activateTrap" });
-        attackType = "trap";
-        for (var i = 0; i < squares.length; i++) {
-            if (!squares[i].classList.contains("hit") && !squares[i].classList.contains("miss") && !squares[i].classList.contains("trap")) {
-                squares[i].addEventListener("click", activateTrapFunction);
-                squares[i].style.cursor = "pointer";
-                squares[i].classList.add("usable");
-                squares[i].classList.add("previewTrap");
+    if (money >= trapCost && trapCooldown == 0) {
+        var squares = document.getElementsByClassName("self");
+        if (attackType != "trap") {
+            activatePowerups();
+            notification({ type: "activateTrap" });
+            attackType = "trap";
+            for (var i = 0; i < squares.length; i++) {
+                if (!squares[i].classList.contains("hit") && !squares[i].classList.contains("miss") && !squares[i].classList.contains("trap")) {
+                    squares[i].addEventListener("click", activateTrapFunction);
+                    squares[i].style.cursor = "pointer";
+                    squares[i].classList.add("usable");
+                    squares[i].classList.add("previewTrap");
+                }
             }
+            removeAttack();
+        } else {
+            notification({ type: "resetAttack" })
+            activatePowerups();
+            activateAttack();
         }
-        removeAttack();
-    } else {
-        notification({ type: "resetAttack" })
-        resetAttack();
-        activateAttack();
     }
 }
 
-var activateTrapFunction = function(e){ placeTrap(e.target) };
+var activateTrapFunction = function (e) { placeTrap(e.target) };
 
 function placeTrap(box) {
+    money -= trapCost;
     if (spiedOn != 0) {
         var msg1 = {
             type: "move",
             moveType: "spyReport",
             news: "trap",
+            money: money,
             gameId: gameId,
             user: nickname,
             target: opponent,
-            box: box.id
+            box: box.id.substring(1)
         };
         ws.send(JSON.stringify(msg1));
     }
     box.classList.add("trap");
-    notification({ type: "placeTrap", box: box.id });
+    notification({ type: "placeTrap", box: box.id.substring(1) });
 
-    resetAttack();
+    deactivatePowerups();
+    activatePowerups();
     activateAttack();
 }
 
-var placeTrapFunction = function(e){ placeTrap(e.target) };
+var placeTrapFunction = function (e) { placeTrap(e.target) };
 
 function activateHE() {
-    activateAttack();
-    if (attackType != "highexplosive") {
-        resetAttack();
-        notification({ type: "activateHE" });
-        attackType = "highexplosive";
-        let squares = Array.from(document.getElementsByClassName("enemy"));
-        squares.forEach(square => {
-            square.classList.add("previewHE");
-        });
-    } else {
-        notification({ type: "resetAttack" })
-        resetAttack();
+    if (money >= heCost) {
+        activateAttack();
+        if (attackType != "highexplosive") {
+            activatePowerups();
+            notification({ type: "activateHE" });
+            attackType = "highexplosive";
+            let squares = Array.from(document.getElementsByClassName("enemy"));
+            squares.forEach(square => {
+                square.classList.add("previewHE");
+            });
+        } else {
+            notification({ type: "resetAttack" })
+            activatePowerups();
+        }
     }
 }
 
 function activateSpy() {
-    var move = {
-        type: "move",
-        moveType: "spy",
-        gameId: gameId,
-        user: nickname,
-        target: opponent
-    };
-    ws.send(JSON.stringify(move));
-}
-
-function activateSonar() {
-    var squares = document.getElementsByClassName("enemy");
-    if (attackType != "sonar") {
-        resetAttack();
-        notification({ type: "activateSonar" });
-        attackType = "sonar";
-        for (var i = 0; i < squares.length; i++) {
-            squares[i].removeEventListener("click", clicked);
-            squares[i].addEventListener("click", sonarFunction);
-            squares[i].addEventListener("mouseover", sonarHoverFunction);
-            squares[i].addEventListener("mouseout", resetHover);
-            squares[i].style.cursor = "pointer";
-        }
-    } else {
-        notification({ type: "resetAttack" })
-        resetAttack();
-        activateAttack();
+    if (money >= spyCost && spyCooldown == 0) {
+        money -= spyCost;
+        spyCooldown = spySetCooldown;
+        document.getElementById("spy").classList.add("btn-disabled");
+        notification({ type: "activateSpy" });
+        var move = {
+            type: "move",
+            moveType: "spy",
+            gameId: gameId,
+            user: nickname,
+            target: opponent
+        };
+        ws.send(JSON.stringify(move));
     }
 }
 
-var sonarFunction = function(e){ scanArea(e.target) }
+function activateSonar() {
+    if (money >= sonarCost) {
+        var squares = document.getElementsByClassName("enemy");
+        if (attackType != "sonar") {
+            activatePowerups();
+            notification({ type: "activateSonar" });
+            attackType = "sonar";
+            for (var i = 0; i < squares.length; i++) {
+                squares[i].removeEventListener("click", clicked);
+                squares[i].addEventListener("click", sonarFunction);
+                squares[i].addEventListener("mouseover", sonarHoverFunction);
+                squares[i].addEventListener("mouseout", resetHover);
+                squares[i].style.cursor = "pointer";
+            }
+        } else {
+            notification({ type: "resetAttack" })
+            activatePowerups();
+            activateAttack();
+        }
+    }
+}
+
+var sonarFunction = function (e) { scanArea(e.target) }
 var sonarHoverFunction = function (e) { sonarHover(e.target) }
 
 function sonarHover(box) {
-    var hoveredRow = box.id.substring(0, 1);
-    var hoveredColumn = parseInt(box.id.substring(1));
+    var hoveredColumn = box.id.substring(0, 1);
+    var hoveredRow = parseInt(box.id.substring(1));
     for (var i = -2; i <= 2; i++) {
         for (var j = -2; j <= 2; j++) {
             try {
-                square = document.getElementById((rows[hoveredRow.charCodeAt() - 65 + i]) + (hoveredColumn + j));
+                square = document.getElementById((columns[hoveredColumn.charCodeAt() - 65 + i]) + (hoveredRow + j));
                 square.classList.add("previewSonar");
             } catch (e) { }
         }
@@ -345,6 +401,7 @@ function sonarHover(box) {
 }
 
 function scanArea(box) {
+    money -= sonarCost;
     var move = {
         type: "move",
         moveType: "sonar",
@@ -357,13 +414,18 @@ function scanArea(box) {
 }
 
 function activateJammer() {
-    var move = {
-        type: "move",
-        moveType: "jammer",
-        gameId: gameId,
-        user: nickname,
-        target: opponent
-    };
-    ws.send(JSON.stringify(move));
-    notification({ type: "activateJammer" });
+    if (money >= jammerCost) {
+        money -= jammerCost;
+        jammerCooldown = jammerSetCooldown;
+        document.getElementById("jammer").classList.add("btn-disabled");
+        var move = {
+            type: "move",
+            moveType: "jammer",
+            gameId: gameId,
+            user: nickname,
+            target: opponent
+        };
+        ws.send(JSON.stringify(move));
+        notification({ type: "activateJammer" });
+    }
 }

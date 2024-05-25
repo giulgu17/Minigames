@@ -1,4 +1,4 @@
-var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+var columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var usedSquares = [];
 var code;
 var attackType;
@@ -12,7 +12,7 @@ function joinQueue() {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("self");
-            square.id = "s" + rows[i] + j;
+            square.id = "s" + columns[i] + j;
             document.getElementById("selfGrid").appendChild(square);
             if (code[i * 10 + j - 1] == 1) {
                 square.classList.add("ship");
@@ -25,18 +25,20 @@ function joinQueue() {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("enemy");
-            square.id = rows[i] + j;
+            square.id = columns[i] + j;
             document.getElementById("enemyGrid").appendChild(square);
         }
     }
 
     nickname = document.getElementById("username").value;
+    document.getElementById("money").innerHTML = money;
     var msg = {
         type: "join",
         nick: nickname
     }
     console.log("Joined the queue for Battleship");
     ws.send(JSON.stringify(msg));
+    document.getElementById("inick2").innerHTML = "Waiting for an opponent...";
 }
 
 function startGame() {
@@ -45,14 +47,15 @@ function startGame() {
     if (turn) {
         document.getElementById("info1").style = "background-color: yellow;";
         document.getElementById("info2").style = "background-color: white;";
-        activateAttack();
+        deactivatePowerups();
         activatePowerups();
+        activateAttack();
         notification({ type: "turn" });
     } else {
         document.getElementById("info1").style = "background-color: white;";
         document.getElementById("info2").style = "background-color: yellow;";
-        removeAttack();
         deactivatePowerups();
+        removeAttack();
         notification({ type: "enemyTurn" });
     }
 }
@@ -96,12 +99,16 @@ function attack(box) {
         };
         ws.send(JSON.stringify(move));
         if (attackType == "double") {
-            attackType = "attack";
+            attackType = "endDouble";
+            money -= doubleCost;
             deactivatePowerups();
         }
         if (attackType != "mortar" && attackType != "endMortar") {
             notification({ type: "attack", box: box.id });
         }
+
+        box.classList.remove("markedForcefield");
+        box.classList.remove("markedTrap");
     }
 }
 
@@ -216,7 +223,7 @@ function notification(msg) {
                 notifbox.innerHTML += "Trap placed in " + msg.box + ".<br>";
                 break;
             case "trapTriggered":
-                notifbox.innerHTML += "The opponent triggered a trap!";
+                notifbox.innerHTML += "The opponent triggered a trap!<br>";
                 break;
             case "trapReport":
                 notifbox.innerHTML += "An enemy ship in " + msg.box + " has been spotted!<br>";
@@ -245,6 +252,18 @@ function notification(msg) {
                 break;
             case "activateSpy":
                 notifbox.innerHTML += "You sent a spy to check on " + opponent + "'s actions...<br>You will now be able to see their moves for 5 turns.<br>";
+                break;
+            case "spyReportForcefield":
+                notifbox.innerHTML += "The opponent placed a forcefield in " + msg.box + ".<br>";
+                break;
+            case "spyReportTrap":
+                notifbox.innerHTML += "The opponent placed a trap in " + msg.box + ".<br>";
+                break;
+            case "spyReportScan":
+                notifbox.innerHTML += "The opponent scanned the area around " + msg.box + ".<br>";
+                break;
+            case "spyEnd":
+                notifbox.innerHTML += "The spy is retreating.<br>";
                 break;
 
 
@@ -278,7 +297,10 @@ function notification(msg) {
                 notifbox.innerHTML += "The opponent is tampering with your connection...<br>You may not be able to see some information for a while.<br>";
                 break;
             case "enemyJammerEnd":
-                notifbox.innerHTML += "Connection reestabilished.<br>";
+                notifbox.innerHTML += "Connection reestablished.<br>";
+                break;
+            case "enemySpyEnd":
+                notifbox.innerHTML += "There were rumors of a spy being active in your lines, but it seems like they're gone now...<br>";
                 break;
 
 

@@ -1,6 +1,6 @@
 const nrows = 10;
 const ncols = 10;
-var rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+var columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 var selected;
 var selectMode = false;
 var placedShips = 0;
@@ -15,12 +15,12 @@ function ready() {
     }
     let code = getCookie("code");
     if (code != "") {
-        for (var i = 0; i < 10; i++) {
-            for (var j = 1; j <= 10; j++) {
+        for (var i = 1; i <= 10; i++) {
+            for (var j = 0; j < 10; j++) {
                 var square = document.createElement("div");
                 square.className = "box";
                 square.classList.add("self");
-                square.id = rows[i] + j;
+                square.id = columns[j] + i;
                 document.getElementById("placegrid").appendChild(square);
                 if (code[i * 10 + j - 1] == 1) {
                     square.classList.add("ship");
@@ -53,13 +53,13 @@ function ready() {
             }
         }
 
-        for (var i = 0; i < 10; i++) {
-            for (var j = 1; j <= 10; j++) {
+        for (var i = 1; i <= 10; i++) {
+            for (var j = 0; j < 10; j++) {
                 var square = document.createElement("div");
                 square.className = "box";
                 square.classList.add("self");
                 square.style.cursor = "pointer";
-                square.id = rows[i] + j;
+                square.id = columns[j] + i
                 document.getElementById("placegrid").appendChild(square);
             }
         }
@@ -85,9 +85,9 @@ function select() {
     selected.classList.toggle("selected");
 
     selected.style.backgroundColor = "lime";
-    for (var i = 0; i < nrows; i++) {
-        for (var j = 1; j <= ncols; j++) {
-            var square = document.getElementById(rows[i] + j);
+    for (var i = 1; i <= nrows; i++) {
+        for (var j = 0; j < ncols; j++) {
+            var square = document.getElementById(columns[j] + i);
             square.style.cursor = "pointer";
             square.addEventListener("click", place);
             square.addEventListener("mouseover", function (e) { preview(e.target) });
@@ -109,7 +109,9 @@ document.addEventListener('keydown', function (e) {
                 selected.style.height = "30px";
             }
             var lastHovered = document.getElementsByClassName("hovered");
-            localStorage.setItem("lastHovered", lastHovered[0].id);
+            try {
+                localStorage.setItem("lastHovered", lastHovered[0].id);
+            } catch (e) {}
             resetPreview();
             preview(document.getElementById(localStorage.getItem("lastHovered")));
             break;
@@ -119,9 +121,11 @@ document.addEventListener('keydown', function (e) {
 });
 
 function place() {
+    localStorage.clear();
     var clicked = this;
-    var clickedRow = clicked.id.substring(0, 1);
-    var clickedColumn = parseInt(clicked.id.substring(1));
+    var clickedColumn = clicked.id.substring(0, 1);
+    var clickedRow = parseInt(clicked.id.substring(1));
+
     var shipLength = parseInt(selected.id.substring(1, 2));
     var direction = selected.classList.contains("ver") ? "vertical" : "horizontal";
 
@@ -130,12 +134,12 @@ function place() {
             try {
                 for (var i = 0; i < shipLength; i++) {
                     if (direction == "vertical") {
-                        var checkedSquare = document.getElementById(rows[clickedRow.charCodeAt() - 65 + i] + clickedColumn);
+                        var checkedSquare = document.getElementById(columns[clickedColumn.charCodeAt() - 65] + (clickedRow + i));
                         if (checkedSquare.classList.contains("unavailable")) {
                             return false;
                         }
                     } else {
-                        var checkedSquare = document.getElementById(rows[clickedRow.charCodeAt() - 65] + (clickedColumn + i));
+                        var checkedSquare = document.getElementById(columns[clickedColumn.charCodeAt() - 65 + i] + (clickedRow));
                         if (checkedSquare.classList.contains("unavailable")) {
                             return false;
                         }
@@ -152,12 +156,12 @@ function place() {
     if (confirm) {
         selectMode = false;
         if (direction == "vertical") {
-            for (var i = 0; i < shipLength + 2; i++) {
-                for (var j = clickedColumn - 1; j <= clickedColumn + 1; j++) {
+            for (var j = clickedColumn.charCodeAt() - 66; j <= clickedColumn.charCodeAt() - 64; j++) {
+                for (var i = clickedRow - 1; i <= clickedRow + shipLength; i++) {
                     try {
-                        var checkedSquare = document.getElementById(rows[clickedRow.charCodeAt() - 66 + i] + j);
+                        var checkedSquare = document.getElementById(columns[j] + i);
                         checkedSquare.classList.add("unavailable");
-                        if (j == clickedColumn && i != 0 && i != shipLength + 1) {
+                        if (j == clickedColumn.charCodeAt() - 65 && i != clickedRow - 1 && i != clickedRow + shipLength) {
                             checkedSquare.classList.add("ship");
                         }
                     } catch (e) {
@@ -166,12 +170,12 @@ function place() {
                 }
             }
         } else {
-            for (var j = clickedRow.charCodeAt() - 66; j <= clickedRow.charCodeAt() - 64; j++) {
-                for (var i = clickedColumn - 1; i <= clickedColumn + shipLength; i++) {
+            for (var j = clickedRow - 1; j <= clickedRow + 1; j++) {
+                for (var i = clickedColumn.charCodeAt() - 66; i <= clickedColumn.charCodeAt() - 65 + shipLength; i++) {
                     try {
-                        var checkedSquare = document.getElementById(rows[j] + i);
+                        var checkedSquare = document.getElementById(columns[i] + j);
                         checkedSquare.classList.add("unavailable");
-                        if (j == clickedRow.charCodeAt() - 65 && i != clickedColumn - 1 && i != clickedColumn + shipLength) {
+                        if (j == clickedRow && i != clickedColumn.charCodeAt() - 66 && i != clickedColumn.charCodeAt() - 65 + shipLength) {
                             checkedSquare.classList.add("ship");
                         }
                     } catch (e) {
@@ -196,9 +200,13 @@ function place() {
 
 
 function preview(hovered) {
-    hovered.classList.add("hovered");
-    var hoveredRow = hovered.id.substring(0, 1);
-    var hoveredColumn = parseInt(hovered.id.substring(1));
+    try{
+        hovered.classList.add("hovered");
+    } catch (e) {
+        return;
+    }
+    var hoveredColumn = hovered.id.substring(0, 1);
+    var hoveredRow = parseInt(hovered.id.substring(1));
     var shipLength = parseInt(selected.id.substring(1, 2));
     var direction = selected.classList.contains("ver") ? "vertical" : "horizontal";
 
@@ -207,8 +215,8 @@ function preview(hovered) {
             if (direction == "vertical") {
                 for (var i = 0; i < shipLength; i++) {
                     try {
-                        var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65 + i] + (hoveredColumn));
-                        if (hoveredRow.charCodeAt() - 65 <= ncols - shipLength) {
+                        var checkHovSquare = document.getElementById(columns[hoveredColumn.charCodeAt() - 65] + (hoveredRow + i));
+                        if (hoveredRow <= ncols - shipLength + 1) {
                             checkHovSquare.style.backgroundColor = checkHovSquare.classList.contains("unavailable") ? "#ff000085" : "#00ff0085";
                         } else {
                             checkHovSquare.style.backgroundColor = "#ff000085";
@@ -218,8 +226,8 @@ function preview(hovered) {
             } else {
                 for (var i = 0; i < shipLength; i++) {
                     try {
-                        var checkHovSquare = document.getElementById(rows[hoveredRow.charCodeAt() - 65] + (hoveredColumn + i));
-                        if (hoveredColumn <= ncols - shipLength + 1) {
+                        var checkHovSquare = document.getElementById(columns[hoveredColumn.charCodeAt() - 65 + i] + (hoveredRow));
+                        if (hoveredColumn.charCodeAt() - 65 <= ncols - shipLength) {
                             checkHovSquare.style.backgroundColor = checkHovSquare.classList.contains("unavailable") ? "#ff000085" : "#00ff0085";
                         } else {
                             checkHovSquare.style.backgroundColor = "#ff000085";
@@ -233,9 +241,9 @@ function preview(hovered) {
 }
 
 function resetPreview() {
-    for (var i = 0; i < 10; i++) {
-        for (var j = 1; j <= 10; j++) {
-            var square = document.getElementById(rows[i] + j);
+    for (var i = 1; i <= 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            var square = document.getElementById(columns[j] + i);
             if (square.classList.contains("ship")) {
                 square.style.backgroundColor = "blue";
             } else {
@@ -243,9 +251,9 @@ function resetPreview() {
             }
         }
     }
-    for (var i = 0; i < 10; i++) {
-        for (var j = 1; j <= 10; j++) {
-            var square = document.getElementById(rows[i] + j);
+    for (var i = 1; i <= 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            var square = document.getElementById(columns[j] + i);
             if (square.classList.contains("hovered")) {
                 square.classList.remove("hovered");
             }
@@ -256,7 +264,7 @@ function resetPreview() {
 function clear() {
     /*for (var i = 0; i < 10; i++) {
         for (var j = 1; j <= 10; j++) {
-            var square = document.getElementById(rows[i] + j);
+            var square = document.getElementById(columns[j] + i);
             square.classList.remove("unavailable");
             square.classList.remove("ship");
             square.style.backgroundColor = "white";
@@ -307,9 +315,9 @@ function join() {
         if(code != "") {
             document.cookie = 'username=; code=; Max-Age=0; path=/; domain=' + location.hostname;
         }
-        for (var i = 0; i < 10; i++) {
-            for (var j = 1; j <= 10; j++) {
-                var square = document.getElementById(rows[i] + j);
+        for (var i = 1; i <= 10; i++) {
+            for (var j = 0; j < 10; j++) {
+                var square = document.getElementById(columns[j] + i);
                 code = square.classList.contains("ship") ? 1 : 0;
                 hidden.value += code;
             }
