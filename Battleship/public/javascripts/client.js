@@ -344,6 +344,7 @@ function ready() {
                         if (msg.target == nickname) {
                             document.getElementById("money1").innerHTML = "";
                             document.getElementById("money2").innerHTML = "";
+                            notification({ type: "spyEnd" });
                         }
                         break;
                 }
@@ -403,8 +404,20 @@ function highExplosiveHit(box) {
 }
 
 function cycle() {
-    if (spiedOn > 0)
+    if (spiedOn > 0){
         spiedOn--;
+        if(spiedOn == 0){
+            var report = {
+                type: "move",
+                moveType: "spyEnd",
+                gameId: gameId,
+                user: nickname,
+                target: opponent
+            };
+            ws.send(JSON.stringify(report));
+            notification({ type: "enemySpyEnd" });
+        }
+    }
     if (jammed > 0) {
         jammed--;
         if (jammed == 0) {

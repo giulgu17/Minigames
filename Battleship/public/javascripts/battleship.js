@@ -7,12 +7,12 @@ var attackType;
 function joinQueue() {
     var code = document.getElementById("code").value;
     console.log(code);
-    for (var i = 0; i < 10; i++) {
-        for (var j = 1; j <= 10; j++) {
+    for (var i = 1; i <= 10; i++) {
+        for (var j = 0; j < 10; j++) {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("self");
-            square.id = "s" + columns[i] + j;
+            square.id = "s" + columns[j] + i;
             document.getElementById("selfGrid").appendChild(square);
             if (code[i * 10 + j - 1] == 1) {
                 square.classList.add("ship");
@@ -20,12 +20,12 @@ function joinQueue() {
         }
     }
 
-    for (var i = 0; i < 10; i++) {
-        for (var j = 1; j <= 10; j++) {
+    for (var i = 1; i <= 10; i++) {
+        for (var j = 0; j < 10; j++) {
             var square = document.createElement("div");
             square.className = "box";
             square.classList.add("enemy");
-            square.id = columns[i] + j;
+            square.id = columns[j] + i;
             document.getElementById("enemyGrid").appendChild(square);
         }
     }
