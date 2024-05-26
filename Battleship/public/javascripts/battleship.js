@@ -6,7 +6,6 @@ var attackType;
 //Player joins the queue
 function joinQueue() {
     var code = document.getElementById("code").value;
-    console.log(code);
     for (var i = 1; i <= 10; i++) {
         for (var j = 0; j < 10; j++) {
             var square = document.createElement("div");
@@ -112,6 +111,7 @@ function attack(box) {
 }
 
 function notification(msg) {
+    document.getElementById("money").innerHTML = money;
     var notifbox = document.getElementById("notif");
     if (jammed == 0) {
         switch (msg.type) {
@@ -236,7 +236,7 @@ function notification(msg) {
             case "activateSonar":
                 notifbox.innerHTML += "Equipping Sonar!<br>";
                 break;
-            case "scanning":
+            case "scan":
                 notifbox.innerHTML += "Scanning the area around " + msg.box + "...<br>";
                 break;
             case "scanReport":

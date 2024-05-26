@@ -123,11 +123,9 @@ function checkWin() {
         count=0;
         for (var i = 0; i < 3; i++) {
             if (grid[i][2-i] == check_symbol) {
-                console.log(grid[i][2-i])
                 count++;
                 if (count == 3) {
                     win = check_symbol;
-                    console.log("B")
                     break;
                 }
             } else {

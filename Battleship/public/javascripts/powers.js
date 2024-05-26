@@ -114,6 +114,7 @@ function resetAttack() {
         square.removeEventListener("click", placeTrapFunction);
         square.removeEventListener("click", activateSonar);
         square.removeEventListener("mouseover", sonarHoverFunction);
+        square.removeEventListener("click", sonarFunction);
     });
 
     var squares = Array.from(document.getElementsByClassName("self"));
@@ -126,7 +127,9 @@ function resetAttack() {
     var squares = Array.from(document.getElementsByClassName("enemy"));
     squares.forEach(square => {
         if (!usedSquares.includes(square.id)) {
+            square.classList.remove("previewMortar");
             square.classList.remove("previewHE");
+            square.classList.remove("previewSonar");
             square.addEventListener("click", clicked);
             square.style.cursor = "pointer";
         } else {
@@ -199,6 +202,7 @@ function mortarHover(box) {
 
 function mortar(box) {
     money -= mortarCost;
+    document.getElementById("money").innerHTML = money;
     var selSquares = [];
     for (var i = -1; i <= 1; i++) {
         for (var j = -1; j <= 1; j++) {
@@ -256,6 +260,7 @@ var activateForcefieldFunction = function (e) { placeForcefield(e.target) };
 
 function placeForcefield(box) {
     money -= forcefieldCost;
+    document.getElementById("money").innerHTML = money;
     if (spiedOn != 0) {
         var msg1 = {
             type: "move",
@@ -271,6 +276,7 @@ function placeForcefield(box) {
     box.classList.add("forcefield");
     notification({ type: "placeForcefield", box: box.id.substring(1) });
 
+    deactivatePowerups();
     activatePowerups();
     activateAttack();
 }
@@ -303,6 +309,7 @@ var activateTrapFunction = function (e) { placeTrap(e.target) };
 
 function placeTrap(box) {
     money -= trapCost;
+    document.getElementById("money").innerHTML = money;
     if (spiedOn != 0) {
         var msg1 = {
             type: "move",
@@ -346,6 +353,7 @@ function activateHE() {
 function activateSpy() {
     if (money >= spyCost && spyCooldown == 0) {
         money -= spyCost;
+        document.getElementById("money").innerHTML = money;
         spyCooldown = spySetCooldown;
         document.getElementById("spy").classList.add("btn-disabled");
         notification({ type: "activateSpy" });
@@ -399,6 +407,7 @@ function sonarHover(box) {
 
 function scanArea(box) {
     money -= sonarCost;
+    document.getElementById("money").innerHTML = money;
     var move = {
         type: "move",
         moveType: "sonar",
@@ -407,11 +416,16 @@ function scanArea(box) {
         box: box.id
     };
     ws.send(JSON.stringify(move));
+    notification({ type: "scan", box: box.id });
+    deactivatePowerups();
+    activatePowerups();
+    activateAttack();
 }
 
 function activateJammer() {
     if (money >= jammerCost) {
         money -= jammerCost;
+        document.getElementById("money").innerHTML = money;
         jammerCooldown = jammerSetCooldown;
         document.getElementById("jammer").classList.add("btn-disabled");
         var move = {

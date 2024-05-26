@@ -6,7 +6,6 @@ var money = 650, opponentMoney, hp = 20, spiedOn = 0, jammed = 0;
 var text = document.getElementById("text");*/
 
 function ready() {
-    console.log(sessionStorage.getItem("is_connected"));
     if ((document.getElementById("login").value == "" || document.getElementById("login").value == null) || sessionStorage.getItem("is_connected") == "true") {
         sessionStorage.clear();
         window.location.href = "/"
@@ -35,7 +34,6 @@ function ready() {
                 turn = msg.turn;
                 document.getElementById("inick2").innerHTML = "<a>" + opponent + "</a>";
                 sessionStorage.setItem("is_connected", "true");
-                console.log(sessionStorage.getItem("is_connected"));
                 startGame();
                 break;
             case "end":
