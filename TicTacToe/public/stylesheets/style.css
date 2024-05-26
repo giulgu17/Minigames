@@ -1,4 +1,4 @@
-#home {
+/*#home {
     background-color: aqua;
     border: 2px solid black;
     width: 200px;
@@ -14,6 +14,24 @@
 
 #buttonnick {
     margin-top: 50px;
+}*/
+
+#title {
+    margin: auto;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    text-align: center;
+}
+
+#home {
+    margin: auto;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    text-align: center;
+}
+
+#inputnick {
+    margin-right: 1vw;
 }
 
 
@@ -55,6 +73,6 @@
     border: 3px solid rgb(0, 0, 0);
 }
 
-#info1{
+#info1 {
     margin-top: -8%;
 }

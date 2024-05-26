@@ -1,12 +1,14 @@
 var ws, nickname, opponent, game = true;
 var lastSender;
-var turn, gameId, win;
+var turn, win;
 var money = 650, opponentMoney, hp = 20, spiedOn = 0, jammed = 0;
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
 
 function ready() {
-    if (document.getElementById("login").value == "" || document.getElementById("login").value == null) {
+    console.log(sessionStorage.getItem("is_connected"));
+    if ((document.getElementById("login").value == "" || document.getElementById("login").value == null) || sessionStorage.getItem("is_connected") == "true") {
+        sessionStorage.clear();
         window.location.href = "/"
     }
     var hostname = window.location.hostname;
@@ -29,10 +31,11 @@ function ready() {
                 break;
             //Start a game against another player
             case "game":
-                gameId = msg.gameId;
                 opponent = msg.opponent;
                 turn = msg.turn;
                 document.getElementById("inick2").innerHTML = "<a>" + opponent + "</a>";
+                sessionStorage.setItem("is_connected", "true");
+                console.log(sessionStorage.getItem("is_connected"));
                 startGame();
                 break;
             case "end":
@@ -50,6 +53,7 @@ function ready() {
                     game = false;
                 }
                 window.location.href = "/";
+                sessionStorage.clear();
                 break;
             //A player makes a move
             case "move":
@@ -133,7 +137,6 @@ function ready() {
                                 moveType: "spyReport",
                                 news: "money",
                                 money: money,
-                                gameId: gameId,
                                 user: nickname,
                                 target: opponent,
                                 box: msg.box
@@ -153,7 +156,6 @@ function ready() {
                                 moveType: "spyReport",
                                 news: "money",
                                 money: money,
-                                gameId: gameId,
                                 user: nickname,
                                 target: opponent,
                                 box: msg.box
@@ -168,7 +170,6 @@ function ready() {
                                     type: "move",
                                     moveType: "report",
                                     attackType: msg.moveType,
-                                    gameId: gameId,
                                     user: nickname,
                                     target: opponent,
                                     box: msg.box,
@@ -181,7 +182,6 @@ function ready() {
                                         type: "move",
                                         moveType: "report",
                                         attackType: msg.moveType,
-                                        gameId: gameId,
                                         user: nickname,
                                         target: opponent,
                                         box: msg.box,
@@ -196,7 +196,6 @@ function ready() {
                                     if (hp == 0) {
                                         var endmsg = {
                                             type: "end",
-                                            gameId: gameId,
                                             user: nickname,
                                             target: opponent,
                                             winner: opponent
@@ -208,7 +207,6 @@ function ready() {
                                         type: "move",
                                         moveType: "report",
                                         attackType: msg.moveType,
-                                        gameId: gameId,
                                         user: nickname,
                                         target: opponent,
                                         box: msg.box,
@@ -221,7 +219,6 @@ function ready() {
                                     var msg1 = {
                                         type: "move",
                                         moveType: "trapTriggered",
-                                        gameId: gameId,
                                         user: nickname,
                                         target: opponent,
                                     };
@@ -245,7 +242,6 @@ function ready() {
                             var msg = {
                                 type: "move",
                                 moveType: "trapReport",
-                                gameId: gameId,
                                 user: nickname,
                                 target: opponent,
                                 box: box.id.substring(1)
@@ -278,7 +274,6 @@ function ready() {
                             var move = {
                                 type: "move",
                                 moveType: "sonarReport",
-                                gameId: gameId,
                                 user: nickname,
                                 target: opponent,
                                 number: countedShips
@@ -313,7 +308,6 @@ function ready() {
                                 moveType: "spyReport",
                                 news: "money",
                                 money: money,
-                                gameId: gameId,
                                 user: nickname,
                                 target: opponent,
                                 box: msg.box
@@ -390,7 +384,6 @@ function highExplosiveHit(box) {
                 let msg = {
                     type: "move",
                     moveType: "reportHE",
-                    gameId: gameId,
                     user: nickname,
                     target: opponent,
                     box: clickedBox[i].substring(1),
@@ -410,7 +403,6 @@ function cycle() {
             var report = {
                 type: "move",
                 moveType: "spyEnd",
-                gameId: gameId,
                 user: nickname,
                 target: opponent
             };

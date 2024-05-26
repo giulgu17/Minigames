@@ -262,7 +262,6 @@ function placeForcefield(box) {
             moveType: "spyReport",
             news: "forcefield",
             money: money,
-            gameId: gameId,
             user: nickname,
             target: opponent,
             box: box.id.substring(1)
@@ -310,7 +309,6 @@ function placeTrap(box) {
             moveType: "spyReport",
             news: "trap",
             money: money,
-            gameId: gameId,
             user: nickname,
             target: opponent,
             box: box.id.substring(1)
@@ -354,7 +352,6 @@ function activateSpy() {
         var move = {
             type: "move",
             moveType: "spy",
-            gameId: gameId,
             user: nickname,
             target: opponent
         };
@@ -405,7 +402,6 @@ function scanArea(box) {
     var move = {
         type: "move",
         moveType: "sonar",
-        gameId: gameId,
         user: nickname,
         target: opponent,
         box: box.id
@@ -421,7 +417,6 @@ function activateJammer() {
         var move = {
             type: "move",
             moveType: "jammer",
-            gameId: gameId,
             user: nickname,
             target: opponent
         };

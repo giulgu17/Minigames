@@ -92,7 +92,6 @@ function attack(box) {
         var move = {
             type: "move",
             moveType: attackType,
-            gameId: gameId,
             user: nickname,
             target: opponent,
             box: box.id

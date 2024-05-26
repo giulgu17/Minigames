@@ -1,8 +1,10 @@
 extends layout
 
 block content
-    h1= Tris
+    section#title
+        h1(class="text-4xl font-bold")|TicTacToe
+        h5= "Enter your nickname to join the game."
     section#home
-        form(action="/login2" method="post")
-            input(type="text" name="username" id="inputnick" placeholder="Nickname")
-            input(type="submit" id="buttonnick" value="Join Game")
+        form(action="/login2" id="form" method="post")
+            input(type="text" name="username" id="inputnick" placeholder="Nickname" class="w-1/4 input input-bordered input-sm w-full max-w-xs" required)
+            input(type="button" id="join" value="Join Game" cursor="not-allowed" class="btn btn-primary btn-sm" disabled)

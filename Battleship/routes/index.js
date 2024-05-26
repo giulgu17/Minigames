@@ -49,7 +49,7 @@ socketServer.on("connection", ws => {
             //ON JOIN
             case "join":
                 var valid = true;
-                if(msg.nick == "" || msg.nick == null){
+                if (msg.nick == "" || msg.nick == null) {
                     console.log("Invalid username");
                     valid = false;
                     break;
@@ -79,11 +79,6 @@ socketServer.on("connection", ws => {
                 })
                 break;
             case "end":
-                async function run() {
-                    await client.connect();
-                    await collection.findOneAndDelete({ gameId: msg.gameId });
-                }
-                run();
                 socketServer.clients.forEach(function (client) {
                     if (client.username == msg.user || client.username == msg.target) {
                         client.send(JSON.stringify(msg));
@@ -93,7 +88,7 @@ socketServer.on("connection", ws => {
         }
     });
 
-    async function matchmaking() {
+    function matchmaking() {
         if (queue.length >= 2) {
             newGame = [queue[0], queue[1]];
             queue.splice(0, 2);
@@ -108,19 +103,13 @@ socketServer.on("connection", ws => {
                 var turn1 = true;
             }
 
-            await client.connect()
-            let n_games = await collection.countDocuments();
-            var gameId = n_games + 1;
-            console.log("Created game n: " + (gameId));
-
-            const document = { gameId: gameId, player1: newGame[0], player2: newGame[1] }
-            collection.insertOne(document);
-
             socketServer.clients.forEach(function (client) {
                 if (client.username == newGame[0]) {
-                    client.send(JSON.stringify({ type: "game", gameId: gameId, opponent: newGame[1], turn: turn0 }));
+                    client.send(JSON.stringify({ type: "game", opponent: newGame[1], turn: turn0 }));
+                    ws.opponent = newGame[1];
                 } else if (client.username == newGame[1]) {
-                    client.send(JSON.stringify({ type: "game", gameId: gameId, opponent: newGame[0], turn: turn1 }));
+                    client.send(JSON.stringify({ type: "game", opponent: newGame[0], turn: turn1 }));
+                    ws.opponent = newGame[0];
                 }
             });
         }
@@ -132,28 +121,11 @@ socketServer.on("connection", ws => {
         if (queue.includes(ws.username)) {
             queue.splice(queue.indexOf(ws.username), 1);
         }
-        async function run() {
-            await client.connect();
-            var doc = await collection.findOneAndDelete({ $or: [{ player1: ws.username }, { player2: ws.username }] });
-            try {
-                if (doc.player1 == ws.username) {
-                    var player = doc.player2;
-                } else {
-                    var player = doc.player1;
-                }
-            } catch (error) {
-                console.error(error);
+        socketServer.clients.forEach(function (client) {
+            if (client.username == ws.opponent) {
+                client.send(JSON.stringify({ type: "disconnect" }));
             }
-
-            if (doc != null) {
-                socketServer.clients.forEach(function (client) {
-                    if (client.username == player) {
-                        client.send(JSON.stringify({ type: "disconnect" }));
-                    }
-                })
-            }
-        }
-        run();
+        });
     });
     ws.onerror = function () {
         console.error("Some weird error occurred");
