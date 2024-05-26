@@ -11,7 +11,7 @@ Once you have installed Node.js, you can install npm by running the following co
 ## How to run
 Once you have cloned the repository, open one command prompt per section (Home, TicTacToe, Battleship) and navigate to their respective folders. Then, run the following command in each of them:
 ```npm start```.
-To connect to the server, open a browser and navigate to ```localhost:3000```. Other people in your network can connect to your server by using your IP address and the port 3000.
+To connect to the server, open a browser and navigate to ```localhost:3000```. Other people can then connect to your server by using your IP address and the port 3000.
 
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
