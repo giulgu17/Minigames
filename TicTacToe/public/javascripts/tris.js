@@ -52,7 +52,6 @@ function place() {
         let box = this;
         var move = {
             type: "move",
-            gameId: gameId,
             user: nickname,
             target: opponent,
             box: box.id,
@@ -146,7 +145,6 @@ function checkWin() {
         }
         var msg = {
             type: "end",
-            gameId: gameId,
             winner: winner,
             user: nickname,
             target: opponent

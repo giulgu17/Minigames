@@ -1,6 +1,6 @@
 var ws, nickname, opponent, game=true;
 var lastSender;
-var turn, gameId, win;
+var turn, win;
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
 
@@ -27,7 +27,6 @@ function ready() {
                 break;
             //Start a game against another player
             case "game":
-                gameId = msg.gameId;
                 opponent = msg.opponent;
                 turn = msg.turn;
                 document.getElementById("inick2").innerHTML = "<a>"+opponent+"</a>";
