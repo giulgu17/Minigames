@@ -1,4 +1,4 @@
-extends layout
+extends layouthome
 
 block content
     section#title
@@ -7,4 +7,4 @@ block content
     section#home
         form(action="/login2" id="form" method="post")
             input(type="text" name="username" id="inputnick" placeholder="Nickname" class="w-1/4 input input-bordered input-sm w-full max-w-xs" required)
-            input(type="button" id="join" value="Join Game" cursor="not-allowed" class="btn btn-primary btn-sm" disabled)
+            input(type="submit" id="join" value="Join Game" cursor="not-allowed" class="btn btn-primary btn-sm")
