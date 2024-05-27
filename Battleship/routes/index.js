@@ -37,8 +37,8 @@ socketServer.on("connection", ws => {
 
     ws.on("message", data => {
         msg = JSON.parse(data);
-        /*console.log("Message: ")
-        console.log(msg);*/
+        /*console.log("Message: ")*/
+        console.log(msg);
         switch (msg.type) {
             //ON CHAT MESSAGE
             case "chat":

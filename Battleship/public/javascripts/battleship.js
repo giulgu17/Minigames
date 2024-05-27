@@ -6,6 +6,7 @@ var attackType;
 //Player joins the queue
 function joinQueue() {
     var code = document.getElementById("code").value;
+    //console.log(code)
     for (var i = 1; i <= 10; i++) {
         for (var j = 0; j < 10; j++) {
             var square = document.createElement("div");
@@ -13,7 +14,7 @@ function joinQueue() {
             square.classList.add("self");
             square.id = "s" + columns[j] + i;
             document.getElementById("selfGrid").appendChild(square);
-            if (code[i * 10 + j - 1] == 1) {
+            if (code[(i-1) * 10 + j] == 1) {
                 square.classList.add("ship");
             }
         }

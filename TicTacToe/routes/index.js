@@ -24,8 +24,6 @@ router.use(session({
 
 connectedClients = 0;
 queue = [];
-const database = client.db("minigames");
-const collection = database.collection("tictactoe");
 socketServer.on("connection", ws => {
     connectedClients++;
     console.log("A client has connected");

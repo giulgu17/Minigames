@@ -64,7 +64,7 @@ function ready() {
                                 box.classList.add("hit")
                                 if (msg.moveType == "report")
                                     notification({ type: "enemyAttackHit" });
-                                money += 25;
+                                money += 35;
                                 document.getElementById("money").innerHTML = money;
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
@@ -93,7 +93,7 @@ function ready() {
                                     notification({ type: "attackHit" });
 
                                 if (msg.attackType == "attack")
-                                    money += 50;
+                                    money += 75;
                                 else if (msg.attackType == "double" || msg.attackType == "endDouble")
                                     money += 20;
                                 else if (msg.attackType == "mortar" || msg.attackType == "endMortar")
