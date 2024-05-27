@@ -126,7 +126,6 @@ socketServer.on("connection", ws => {
 });
 
 router.get('/', function (req, res, next) {
-    //TODO: if login = true -> redirect to homepage
     res.render('index', { title: 'Home' });
 });
 router.post('/login2', function (req, res, next) {
@@ -135,20 +134,6 @@ router.post('/login2', function (req, res, next) {
     req.session.username = username;
     console.log(req.session)
 
-    //TODO: Login?
-    /*client.connect()
-        .then(() => {
-            const database = client.db("minigames");
-            const collection = database.collection("users");
-            collection.countDocuments()
-                .then(users => {
-                    const document = { id: users, username: username }
-                    collection.insertOne(document);
-                })
-        })
-        .catch(error => {
-            console.error("Errore durante l'inserimento del documento:", error);
-        });*/
     res.redirect("/tictactoe")
 });
 

@@ -133,7 +133,6 @@ socketServer.on("connection", ws => {
 });
 
 router.get('/', function (req, res, next) {
-    //TODO: if login = true -> redirect to homepage
     res.render('index', { title: 'Home' });
 });
 router.post('/login2', function (req, res, next) {

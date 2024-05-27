@@ -64,7 +64,7 @@ function ready() {
                                 box.classList.add("hit")
                                 if (msg.moveType == "report")
                                     notification({ type: "enemyAttackHit" });
-                                money += 35;
+                                money += damageEarnings;
                                 document.getElementById("money").innerHTML = money;
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
@@ -93,13 +93,13 @@ function ready() {
                                     notification({ type: "attackHit" });
 
                                 if (msg.attackType == "attack")
-                                    money += 75;
+                                    money += attackEarnings;
                                 else if (msg.attackType == "double" || msg.attackType == "endDouble")
-                                    money += 20;
+                                    money += doubleEarnings;
                                 else if (msg.attackType == "mortar" || msg.attackType == "endMortar")
-                                    money += 25;
+                                    money += mortarEarnings;
                                 else if (msg.attackType == "highexplosive")
-                                    money += 10;
+                                    money += heEarnings;
 
                                 document.getElementById("money").innerHTML = money;
                             } else if (msg.hit == false) {
@@ -107,7 +107,7 @@ function ready() {
                                 if (msg.moveType == "report")
                                     notification({ type: "attackMiss" });
                                 if (msg.attackType == "attack")
-                                    money += 25;
+                                    money += missAttackEarnings;
                                 document.getElementById("money").innerHTML = money;
                             } else if (msg.hit == "block") {
                                 notification({ type: "attackBlock" });

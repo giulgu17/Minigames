@@ -16,6 +16,13 @@ const doubleSetCooldown = 0,
     sonarSetCooldown = 0,
     jammerSetCooldown = 6;
 
+const attackEarnings = 75,
+    doubleEarnings = 20,
+    mortarEarnings = 30,
+    heEarnings = 15,
+    missAttackEarnings = 25,
+    damageEarnings = 35;
+
 let doubleCooldown = 0, mortarCooldown = 0, forcefieldCooldown = 0, trapCooldown = 0, heCooldown = 0, spyCooldown = 0, sonarCooldown = 0, jammerCooldown = 0;
 
 
