@@ -189,8 +189,10 @@ function ready() {
                                     if (msg.moveType == "highexplosive") {
                                         notification({ type: "highExplosiveHit" });
                                         highExplosiveHit(msg.box);
+                                    } else {
+                                        hp--;
                                     }
-                                    hp--;
+                                    console.log(hp)
                                     if (hp == 0) {
                                         var endmsg = {
                                             type: "end",
@@ -229,14 +231,19 @@ function ready() {
                     case "trapTriggered":
                         if (msg.target == nickname) {
                             var ships = Array.from(document.getElementsByClassName("ship"));
+                            console.log(ships);
                             ships.forEach((ship) => {
+                                console.log(ship);
+                                console.log(ship.classList.contains("hit"));
                                 if (ship.classList.contains("hit")) {
+                                    console.log("hit");
                                     ships.splice(ships.indexOf(ship), 1);
                                 }
                             });
                             var randomShip = Math.floor(Math.random() * ships.length);
                             var box = ships[randomShip];
                             ships.splice(randomShip, 1);
+                            console.log(ships[randomShip]);
                             var msg = {
                                 type: "move",
                                 moveType: "trapReport",
@@ -248,7 +255,7 @@ function ready() {
                         }
                         break;
                     case "trapReport":
-                        if (msg.user == nickname) {
+                        if (msg.target == nickname) {
                             var box = document.getElementById(msg.box);
                             box.classList.add("spotted");
                             notification({ type: "trapTriggered", box: msg.box });
