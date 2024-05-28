@@ -2,6 +2,7 @@ var ws, nickname, opponent, game = true;
 var lastSender;
 var turn, win;
 var money = 650, opponentMoney, hp = 20, spiedOn = 0, jammed = 0;
+var spotted = [];
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
 
@@ -33,7 +34,7 @@ function ready() {
                 opponent = msg.opponent;
                 turn = msg.turn;
                 document.getElementById("inick2").innerHTML = "<a>" + opponent + "</a>";
-                sessionStorage.setItem("is_connected", "true");
+                //sessionStorage.setItem("is_connected", "true");
                 startGame();
                 break;
             case "end":
@@ -230,7 +231,7 @@ function ready() {
                         break;
                     case "trapTriggered":
                         if (msg.target == nickname) {
-                            var ships = Array.from(document.getElementsByClassName("ship"));
+                            /*var ships = Array.from(document.getElementsByClassName("ship"));
                             console.log(ships);
                             ships.forEach((ship) => {
                                 console.log(ship);
@@ -239,19 +240,31 @@ function ready() {
                                     console.log("hit");
                                     ships.splice(ships.indexOf(ship), 1);
                                 }
-                            });
+                            });*/
+                            var boxes = Array.from(document.getElementsByClassName("box"));
+                            var ships = boxes.filter((box) => box.classList.contains("ship") && !box.classList.contains("hit"));
                             var randomShip = Math.floor(Math.random() * ships.length);
-                            var box = ships[randomShip];
+                            var selShip = ships[randomShip];
                             ships.splice(randomShip, 1);
-                            console.log(ships[randomShip]);
+
                             var msg = {
                                 type: "move",
                                 moveType: "trapReport",
                                 user: nickname,
                                 target: opponent,
-                                box: box.id.substring(1)
+                                box: selShip.id.substring(1)
                             };
                             ws.send(JSON.stringify(msg));
+                            if(spiedOn > 0){
+                                var report = {
+                                    type: "move",
+                                    moveType: "spyReport",
+                                    news: "trapTriggered",
+                                    user: nickname,
+                                    target: opponent
+                                };
+                                ws.send(JSON.stringify(report));
+                            }
                         }
                         break;
                     case "trapReport":
@@ -335,7 +348,12 @@ function ready() {
                                     notification({ type: "spyReportTrap", box: msg.box });
                                     document.getElementById(msg.box).classList.add("markedTrap");
                                     break;
-
+                                case "trapTriggered":
+                                    notification({ type: "spyReportTrapTriggered" });
+                                    break;
+                                case "scan":
+                                    notification({ type: "spyReportScan", box: msg.box });
+                                    break;
                             }
                         }
                         break;

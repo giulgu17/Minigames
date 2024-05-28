@@ -32,6 +32,16 @@ function joinQueue() {
 
     nickname = document.getElementById("username").value;
     document.getElementById("money").innerHTML = money;
+
+    document.getElementById("double").value += doubleCost;
+    document.getElementById("mortar").value += mortarCost;
+    document.getElementById("forcefield").value += forcefieldCost;
+    document.getElementById("trap").value += trapCost;
+    document.getElementById("he").value += heCost;
+    document.getElementById("sonar").value += sonarCost;
+    document.getElementById("spy").value += spyCost;
+    document.getElementById("jammer").value += jammerCost;
+
     var msg = {
         type: "join",
         nick: nickname
@@ -258,6 +268,9 @@ function notification(msg) {
                 break;
             case "spyReportTrap":
                 notifbox.innerHTML += "The opponent placed a trap in " + msg.box + ".<br>";
+                break;
+            case "spyReportTrapTriggered":
+                notifbox.innerHTML += "The spy reports that you have just triggered a trap!.<br>";
                 break;
             case "spyReportScan":
                 notifbox.innerHTML += "The opponent scanned the area around " + msg.box + ".<br>";

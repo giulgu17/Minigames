@@ -1,23 +1,26 @@
-const doubleCost = 150,
-    mortarCost = 300,
+const doubleCost = 125,
+    mortarCost = 275,
     forcefieldCost = 150,
     trapCost = 200,
     heCost = 250,
-    spyCost = 450,
-    sonarCost = 100,
-    jammerCost = 250;
+    spyCost = 350,
+    sonarCost = 150,
+    jammerCost = 300;
 
 const doubleSetCooldown = 0,
     mortarSetCooldown = 0,
     forcefieldSetCooldown = 0,
     trapSetCooldown = 0,
     heSetCooldown = 0,
-    spySetCooldown = 8,
+    spySetCooldown = 12,
     sonarSetCooldown = 0,
-    jammerSetCooldown = 6;
+    jammerSetCooldown = 7;
+
+const spyDuration = 7,
+    jammerDuration = 3;
 
 const attackEarnings = 75,
-    doubleEarnings = 20,
+    doubleEarnings = 40,
     mortarEarnings = 30,
     heEarnings = 15,
     missAttackEarnings = 25,
@@ -32,35 +35,35 @@ function activatePowerups() {
     buttons.forEach(button => {
         switch(button.id) {
             case "double":
-                if(money >= doubleCost) {
+                if(money >= doubleCost && doubleCooldown == 0) {
                     button.style.cursor = "pointer";
                     button.classList.remove("btn-disabled");
                     button.addEventListener("click", activateDouble);
                 }
                 break;
             case "mortar":
-                if(money >= mortarCost) {
+                if(money >= mortarCost && mortarCooldown == 0) {
                     button.style.cursor = "pointer";
                     button.classList.remove("btn-disabled");
                     button.addEventListener("click", activateMortar);
                 }
                 break;
             case "forcefield":
-                if(money >= forcefieldCost) {
+                if(money >= forcefieldCost && forcefieldCooldown == 0) {
                     button.style.cursor = "pointer";
                     button.classList.remove("btn-disabled");
                     button.addEventListener("click", activateForcefield);
                 }
                 break;
             case "trap":
-                if(money >= trapCost) {
+                if(money >= trapCost && trapCooldown == 0) {
                     button.style.cursor = "pointer";
                     button.classList.remove("btn-disabled");
                     button.addEventListener("click", activateSpotTrap);
                 }
                 break;
             case "he":
-                if(money >= heCost) {
+                if(money >= heCost && heCooldown == 0) {
                     button.style.cursor = "pointer";
                     button.classList.remove("btn-disabled");
                     button.addEventListener("click", activateHE);
@@ -74,14 +77,14 @@ function activatePowerups() {
                 }
                 break;
             case "sonar":
-                if(money >= sonarCost) {
+                if(money >= sonarCost && sonarCooldown == 0) {
                     button.style.cursor = "pointer";
                     button.classList.remove("btn-disabled");
                     button.addEventListener("click", activateSonar);
                 }
                 break;
             case "jammer":
-                if(money >= jammerCost) {
+                if(money >= jammerCost && jammerCooldown == 0) {
                     button.style.cursor = "pointer";
                     button.classList.remove("btn-disabled");
                     button.addEventListener("click", activateJammer);
@@ -424,6 +427,20 @@ function scanArea(box) {
     };
     ws.send(JSON.stringify(move));
     notification({ type: "scan", box: box.id });
+
+    if(spiedOn > 0) {
+        var msg1 = {
+            type: "move",
+            moveType: "spyReport",
+            news: "sonar",
+            money: money,
+            user: nickname,
+            target: opponent,
+            box: box.id
+        };
+        ws.send(JSON.stringify(msg1));
+    }
+
     deactivatePowerups();
     activatePowerups();
     activateAttack();
