@@ -227,7 +227,7 @@ function ready() {
                         }
                         break;
                     case "trapTriggered":
-                        if (msg.user == nickname) {
+                        if (msg.target == nickname) {
                             var ships = Array.from(document.getElementsByClassName("ship"));
                             ships.forEach((ship) => {
                                 if (ship.classList.contains("hit")) {
