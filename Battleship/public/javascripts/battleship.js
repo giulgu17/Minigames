@@ -261,7 +261,7 @@ function notification(msg) {
                 notifbox.innerHTML += "Looks like there are no ships in the area.<br>";
                 break;
             case "activateSpy":
-                notifbox.innerHTML += "You sent a spy to check on " + opponent + "'s actions...<br>You will now be able to see their moves for 5 turns.<br>";
+                notifbox.innerHTML += "You sent a spy to check on " + opponent + "'s actions...<br>You will now be able to see their moves for " + spyDuration + " turns.<br>";
                 break;
             case "spyReportForcefield":
                 notifbox.innerHTML += "The opponent placed a forcefield in " + msg.box + ".<br>";
@@ -271,6 +271,9 @@ function notification(msg) {
                 break;
             case "spyReportTrapTriggered":
                 notifbox.innerHTML += "The spy reports that you have just triggered a trap!.<br>";
+                break;
+            case "spyReportSpy":
+                notifbox.innerHTML += "The opponent sent a spy to check on your actions, be careful...<br>";
                 break;
             case "spyReportScan":
                 notifbox.innerHTML += "The opponent scanned the area around " + msg.box + ".<br>";

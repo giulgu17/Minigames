@@ -241,20 +241,22 @@ function ready() {
                                     ships.splice(ships.indexOf(ship), 1);
                                 }
                             });*/
-                            var boxes = Array.from(document.getElementsByClassName("box"));
-                            var ships = boxes.filter((box) => box.classList.contains("ship") && !box.classList.contains("hit"));
-                            var randomShip = Math.floor(Math.random() * ships.length);
-                            var selShip = ships[randomShip];
-                            ships.splice(randomShip, 1);
+                            try{
+                                var boxes = Array.from(document.getElementsByClassName("box"));
+                                var ships = boxes.filter((box) => box.classList.contains("ship") && !box.classList.contains("hit"));
+                                var randomShip = Math.floor(Math.random() * ships.length);
+                                var selShip = ships[randomShip];
+                                ships.splice(randomShip, 1);
 
-                            var msg = {
-                                type: "move",
-                                moveType: "trapReport",
-                                user: nickname,
-                                target: opponent,
-                                box: selShip.id.substring(1)
-                            };
-                            ws.send(JSON.stringify(msg));
+                                var msg = {
+                                    type: "move",
+                                    moveType: "trapReport",
+                                    user: nickname,
+                                    target: opponent,
+                                    box: selShip.id.substring(1)
+                                };
+                                ws.send(JSON.stringify(msg));
+                            } catch(e){}
                             if(spiedOn > 0){
                                 var report = {
                                     type: "move",
@@ -350,6 +352,9 @@ function ready() {
                                     break;
                                 case "trapTriggered":
                                     notification({ type: "spyReportTrapTriggered" });
+                                    break;
+                                case "spy":
+                                    notification({ type: "spyReportSpy", box: msg.box });
                                     break;
                                 case "scan":
                                     notification({ type: "spyReportScan", box: msg.box });

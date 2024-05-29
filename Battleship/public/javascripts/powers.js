@@ -22,7 +22,7 @@ const spyDuration = 7,
 const attackEarnings = 75,
     doubleEarnings = 40,
     mortarEarnings = 30,
-    heEarnings = 15,
+    heEarnings = 25,
     missAttackEarnings = 25,
     damageEarnings = 35;
 
@@ -374,6 +374,18 @@ function activateSpy() {
             target: opponent
         };
         ws.send(JSON.stringify(move));
+
+        if(spiedOn > 0) {
+            var msg1 = {
+                type: "move",
+                moveType: "spyReport",
+                news: "spy",
+                money: money,
+                user: nickname,
+                target: opponent
+            };
+            ws.send(JSON.stringify(msg1));
+        }
     }
 }
 

@@ -27,6 +27,12 @@ router.use(session({
     saveUninitialized: true
 }));
 
+//TODO: jammer disables viewing traps and forcefields (and spotted)
+//TODO: selected powerup turns button yellow
+//TODO: fix bug where you can't attack after deselecting forcefield or trap
+//TODO: colored notifications or make them stand out more from attacks
+//TODO: notify user when jammer ends
+
 connectedClients = 0;
 queue = [];
 const database = client.db("minigames");
@@ -38,7 +44,14 @@ socketServer.on("connection", ws => {
     ws.on("message", data => {
         msg = JSON.parse(data);
         /*console.log("Message: ")*/
-        console.log(msg);
+        if(msg.type == "move"){
+            if(msg.moveType != "report"){
+                console.log(msg);
+            }
+        } else {
+            console.log(msg);
+        }
+
         switch (msg.type) {
             //ON CHAT MESSAGE
             case "chat":
