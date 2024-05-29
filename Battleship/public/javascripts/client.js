@@ -17,7 +17,7 @@ function ready() {
     ws.addEventListener('message', function (event) {
         var msg = JSON.parse(event.data);
         //console.log('Message received: ', msg);
-        document.getElementById("money").innerHTML = money;
+        update();
 
         switch (msg.type) {
             //Chat message received
@@ -66,7 +66,7 @@ function ready() {
                                 if (msg.moveType == "report")
                                     notification({ type: "enemyAttackHit" });
                                 money += damageEarnings;
-                                document.getElementById("money").innerHTML = money;
+                                update();
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
                                 if (msg.moveType == "report")
@@ -102,14 +102,14 @@ function ready() {
                                 else if (msg.attackType == "highexplosive")
                                     money += heEarnings;
 
-                                document.getElementById("money").innerHTML = money;
+                                update();
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
                                 if (msg.moveType == "report")
                                     notification({ type: "attackMiss" });
                                 if (msg.attackType == "attack")
                                     money += missAttackEarnings;
-                                document.getElementById("money").innerHTML = money;
+                                update();
                             } else if (msg.hit == "block") {
                                 notification({ type: "attackBlock" });
                                 usedSquares.splice(usedSquares.indexOf(msg.box), 1);
@@ -320,6 +320,10 @@ function ready() {
                             });
                         }
                         break;
+                    case "jammerEnd":
+                        if (msg.target == nickname) {
+                            notification({ type: "jammerEnd" });
+                        }
                     case "spy":
                         if (msg.target == nickname) {
                             spiedOn = 5;
@@ -446,6 +450,13 @@ function cycle() {
                 square.classList.remove("jammed");
             });
             notification({ type: "enemyJammerEnd" });
+            var msg = {
+                type: "move",
+                moveType: "jammerEnd",
+                user: nickname,
+                target: opponent
+            };
+            ws.send(JSON.stringify(report));
         }
     }
     if (doubleCooldown > 0) {
@@ -488,6 +499,11 @@ function cycle() {
         if (spyCooldown == 0)
             document.getElementById("spy").classList.remove("btn-disabled");
     }
+}
+
+function update(){
+    document.getElementById("money").innerHTML = money;
+    document.getElementById("hp").innerHTML = hp;
 }
 
 //Player sends a chat message

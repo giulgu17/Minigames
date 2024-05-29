@@ -6,9 +6,12 @@ block content
             div#info1.info
                 div#inick1
                     a= username
-                    div(id="infoMoney")
+                    div(id="infoText")
+                        p|Hp: 
+                            span(id="hp")
                         p|Coins: 
                             span(id="money")
+                        
             div#powerList.sideinfo
                 div(class="tooltip" data-tip="Allows you to attack twice in one turn.")
                     input(type="button" id="double" value="Double Shot | Cost: " class="btn btn-outline powers btn-disabled")
@@ -81,10 +84,13 @@ block content
         section#right.side
             div#info2.info
                 div#inick2
-                div(id="enemyMoney")
-                    p
-                        span(id="money1")
-                        span(id="money2")
+                div(id="enemyInfoText")
+                        p|Hp: 
+                            span(id="hp")
+                        div(id="enemyMoney")
+                            p
+                                span(id="money1")
+                                span(id="money2")
             section#chat.sideinfo
 
         section#notif

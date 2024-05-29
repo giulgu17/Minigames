@@ -31,7 +31,7 @@ function joinQueue() {
     }
 
     nickname = document.getElementById("username").value;
-    document.getElementById("money").innerHTML = money;
+    update();
 
     document.getElementById("double").value += doubleCost;
     document.getElementById("mortar").value += mortarCost;
@@ -122,7 +122,7 @@ function attack(box) {
 }
 
 function notification(msg) {
-    document.getElementById("money").innerHTML = money;
+    update();
     var notifbox = document.getElementById("notif");
     if (jammed == 0) {
         switch (msg.type) {
@@ -260,6 +260,12 @@ function notification(msg) {
             case "scanNoShips":
                 notifbox.innerHTML += "Looks like there are no ships in the area.<br>";
                 break;
+            case "activateJammer":
+                notifbox.innerHTML += "Disrupting the enemy's signal!<br>";
+                break;
+            case "jammerEnd":
+                notifbox.innerHTML += "The jammer ran out of power.<br>";
+                break;
             case "activateSpy":
                 notifbox.innerHTML += "You sent a spy to check on " + opponent + "'s actions...<br>You will now be able to see their moves for " + spyDuration + " turns.<br>";
                 break;
@@ -270,7 +276,7 @@ function notification(msg) {
                 notifbox.innerHTML += "The opponent placed a trap in " + msg.box + ".<br>";
                 break;
             case "spyReportTrapTriggered":
-                notifbox.innerHTML += "The spy reports that you have just triggered a trap!.<br>";
+                notifbox.innerHTML += "The spy reports that you just triggered a trap!.<br>";
                 break;
             case "spyReportSpy":
                 notifbox.innerHTML += "The opponent sent a spy to check on your actions, be careful...<br>";

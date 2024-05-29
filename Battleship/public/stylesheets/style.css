@@ -236,6 +236,12 @@ a {
 .jammed {
   background-color: rgb(255, 255, 255) !important;
 }
+.jammed::before {
+  content: '';
+  width: 115%;
+  height: 105%;
+  background-color: rgba(255, 255, 255)
+}
 
 
 

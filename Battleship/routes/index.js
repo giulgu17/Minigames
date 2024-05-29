@@ -4,11 +4,6 @@ var router = express.Router();
 var WebSocket = require('ws');
 const socketServer = new WebSocket.Server({ port: 8080 });
 
-const MongoClient = require('mongodb').MongoClient;
-const ObjectId = require('mongodb').ObjectId;
-const uri = "mongodb://localhost:27017";
-const client = new MongoClient(uri);
-
 const bodyParser = require('body-parser');
 var parsebody = bodyParser.urlencoded({ extended: true });
 
@@ -27,16 +22,14 @@ router.use(session({
     saveUninitialized: true
 }));
 
-//TODO: jammer disables viewing traps and forcefields (and spotted)
+//TODO: jammer disables viewing traps and forcefields (and spotted) for 3 turns         [DONE?]
 //TODO: selected powerup turns button yellow
 //TODO: fix bug where you can't attack after deselecting forcefield or trap
 //TODO: colored notifications or make them stand out more from attacks
-//TODO: notify user when jammer ends
+//TODO: notify user when jammer ends                                                    [DONE?]
 
 connectedClients = 0;
 queue = [];
-const database = client.db("minigames");
-const collection = database.collection("battleship");
 socketServer.on("connection", ws => {
     connectedClients++;
     console.log("A client has connected");
@@ -176,4 +169,5 @@ router.get('/plrcount', function (req, res, next) {
     res.header("Access-Control-Allow-Methods", " GET, POST, PUT, PATCH, POST, DELETE, OPTIONS");
     res.json({ count: connectedClients });
 });
+
 module.exports = router;

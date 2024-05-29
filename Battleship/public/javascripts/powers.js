@@ -212,7 +212,7 @@ function mortarHover(box) {
 
 function mortar(box) {
     money -= mortarCost;
-    document.getElementById("money").innerHTML = money;
+    update();
     var selSquares = [];
     for (var i = -1; i <= 1; i++) {
         for (var j = -1; j <= 1; j++) {
@@ -270,7 +270,7 @@ var activateForcefieldFunction = function (e) { placeForcefield(e.target) };
 
 function placeForcefield(box) {
     money -= forcefieldCost;
-    document.getElementById("money").innerHTML = money;
+    update();
     if (spiedOn != 0) {
         var msg1 = {
             type: "move",
@@ -319,7 +319,7 @@ var activateTrapFunction = function (e) { placeTrap(e.target) };
 
 function placeTrap(box) {
     money -= trapCost;
-    document.getElementById("money").innerHTML = money;
+    update();
     if (spiedOn != 0) {
         var msg1 = {
             type: "move",
@@ -363,7 +363,7 @@ function activateHE() {
 function activateSpy() {
     if (money >= spyCost && spyCooldown == 0) {
         money -= spyCost;
-        document.getElementById("money").innerHTML = money;
+        update();
         spyCooldown = spySetCooldown;
         document.getElementById("spy").classList.add("btn-disabled");
         notification({ type: "activateSpy" });
@@ -429,7 +429,7 @@ function sonarHover(box) {
 
 function scanArea(box) {
     money -= sonarCost;
-    document.getElementById("money").innerHTML = money;
+    update();
     var move = {
         type: "move",
         moveType: "sonar",
@@ -461,7 +461,7 @@ function scanArea(box) {
 function activateJammer() {
     if (money >= jammerCost) {
         money -= jammerCost;
-        document.getElementById("money").innerHTML = money;
+        update();
         jammerCooldown = jammerSetCooldown;
         document.getElementById("jammer").classList.add("btn-disabled");
         var move = {
