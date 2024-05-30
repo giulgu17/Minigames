@@ -282,6 +282,9 @@ a {
 .powers{
   width: 200px;
 }
+.selPower::before, .activePowers::before {     
+  background-color: rgb(0, 240, 240);   
+}
 
 .sideinfo {
   height: 400px;

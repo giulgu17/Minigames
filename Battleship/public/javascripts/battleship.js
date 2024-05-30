@@ -107,11 +107,16 @@ function attack(box) {
             box: box.id
         };
         ws.send(JSON.stringify(move));
+        removeAttack();
         if (attackType == "double") {
             attackType = "endDouble";
             money -= doubleCost;
             deactivatePowerups();
+            activateAttack();
+        } else if (attackType == "attack") {
+            removeAttack();
         }
+        
         if (attackType != "mortar" && attackType != "endMortar") {
             notification({ type: "attack", box: box.id });
         }

@@ -22,11 +22,8 @@ router.use(session({
     saveUninitialized: true
 }));
 
-//TODO: jammer disables viewing traps and forcefields (and spotted) for 3 turns         [DONE?]
-//TODO: selected powerup turns button yellow
 //TODO: fix bug where you can't attack after deselecting forcefield or trap
 //TODO: colored notifications or make them stand out more from attacks
-//TODO: notify user when jammer ends                                                    [DONE?]
 
 connectedClients = 0;
 queue = [];
@@ -35,62 +32,67 @@ socketServer.on("connection", ws => {
     console.log("A client has connected");
 
     ws.on("message", data => {
-        msg = JSON.parse(data);
-        /*console.log("Message: ")*/
-        if(msg.type == "move"){
-            if(msg.moveType != "report"){
+        if (data == undefined || data == null) {
+            msg1 = { type: "move", moveType: "report", user: msg.user, target: msg.target, message: "Invalid move" }
+            console.log(msg1);
+        } else {
+            msg = JSON.parse(data);
+            /*console.log("Message: ")*/
+            if (msg.type == "move") {
+                if (msg.moveType != "report") {
+                    console.log(msg);
+                }
+            } else {
                 console.log(msg);
             }
-        } else {
-            console.log(msg);
-        }
 
-        switch (msg.type) {
-            //ON CHAT MESSAGE
-            case "chat":
-                socketServer.clients.forEach(function (client) {
-                    client.send(JSON.stringify(msg));
-                })
-                break;
-            //ON JOIN
-            case "join":
-                var valid = true;
-                if (msg.nick == "" || msg.nick == null) {
-                    console.log("Invalid username");
-                    valid = false;
+            switch (msg.type) {
+                //ON CHAT MESSAGE
+                case "chat":
+                    socketServer.clients.forEach(function (client) {
+                        client.send(JSON.stringify(msg));
+                    })
                     break;
-                }
-                for (let i = 0; i < queue.length; i++) {
-                    if (queue[i] == msg.nick) {
-                        console.log(msg.nick + " is already connected");
+                //ON JOIN
+                case "join":
+                    var valid = true;
+                    if (msg.nick == "" || msg.nick == null) {
+                        console.log("Invalid username");
                         valid = false;
                         break;
                     }
-                }
+                    for (let i = 0; i < queue.length; i++) {
+                        if (queue[i] == msg.nick) {
+                            console.log(msg.nick + " is already connected");
+                            valid = false;
+                            break;
+                        }
+                    }
 
-                if (valid) {
-                    ws.username = msg.nick;
-                    console.log(msg.nick + " has joined the queue for Battleship");
-                    queue.push(msg.nick);
-                    console.log(queue)
-                    matchmaking();
-                }
-                break;
-            //ON MOVE
-            case "move":
-                socketServer.clients.forEach(function (client) {
-                    if (client.username == msg.user || client.username == msg.target) {
-                        client.send(JSON.stringify(msg));
+                    if (valid) {
+                        ws.username = msg.nick;
+                        console.log(msg.nick + " has joined the queue for Battleship");
+                        queue.push(msg.nick);
+                        console.log(queue)
+                        matchmaking();
                     }
-                })
-                break;
-            case "end":
-                socketServer.clients.forEach(function (client) {
-                    if (client.username == msg.user || client.username == msg.target) {
-                        client.send(JSON.stringify(msg));
-                    }
-                })
-                break;
+                    break;
+                //ON MOVE
+                case "move":
+                    socketServer.clients.forEach(function (client) {
+                        if (client.username == msg.user || client.username == msg.target) {
+                            client.send(JSON.stringify(msg));
+                        }
+                    })
+                    break;
+                case "end":
+                    socketServer.clients.forEach(function (client) {
+                        if (client.username == msg.user || client.username == msg.target) {
+                            client.send(JSON.stringify(msg));
+                        }
+                    })
+                    break;
+            }
         }
     });
 

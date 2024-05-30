@@ -1,7 +1,7 @@
 var ws, nickname, opponent, game = true;
 var lastSender;
 var turn, win;
-var money = 650, opponentMoney, hp = 20, spiedOn = 0, jammed = 0;
+var money = 650, opponentMoney, hp = 20, enemyHp = 20, spiedOn = 0, jammed = 0;
 var spotted = [];
 /*var chat = document.getElementById("chat");
 var text = document.getElementById("text");*/
@@ -59,7 +59,7 @@ function ready() {
                 switch (msg.moveType) {
                     case "report":
                     case "reportHE":
-                        if (msg.user == nickname) {     //The player attacked:
+                        if (msg.user == nickname) {     //User was attacked:
                             var box = document.getElementById("s" + msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
@@ -90,6 +90,7 @@ function ready() {
                             var box = document.getElementById(msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
+                                enemyHp--;
                                 if (msg.moveType == "report")
                                     notification({ type: "attackHit" });
 
@@ -190,6 +191,7 @@ function ready() {
                                     if (msg.moveType == "highexplosive") {
                                         notification({ type: "highExplosiveHit" });
                                         highExplosiveHit(msg.box);
+                                        enemyHp++;
                                     } else {
                                         hp--;
                                     }
@@ -231,16 +233,6 @@ function ready() {
                         break;
                     case "trapTriggered":
                         if (msg.target == nickname) {
-                            /*var ships = Array.from(document.getElementsByClassName("ship"));
-                            console.log(ships);
-                            ships.forEach((ship) => {
-                                console.log(ship);
-                                console.log(ship.classList.contains("hit"));
-                                if (ship.classList.contains("hit")) {
-                                    console.log("hit");
-                                    ships.splice(ships.indexOf(ship), 1);
-                                }
-                            });*/
                             try{
                                 var boxes = Array.from(document.getElementsByClassName("box"));
                                 var ships = boxes.filter((box) => box.classList.contains("ship") && !box.classList.contains("hit"));
@@ -257,6 +249,7 @@ function ready() {
                                 };
                                 ws.send(JSON.stringify(msg));
                             } catch(e){}
+                        } else {
                             if(spiedOn > 0){
                                 var report = {
                                     type: "move",
@@ -322,8 +315,12 @@ function ready() {
                         break;
                     case "jammerEnd":
                         if (msg.target == nickname) {
+                            document.getElementById("jammer").classList.remove("btn-active");
+                            document.getElementById("jammer").classList.remove("btn-info");
+                            document.getElementById("jammer").classList.add("btn-disabled");
                             notification({ type: "jammerEnd" });
                         }
+                        break;
                     case "spy":
                         if (msg.target == nickname) {
                             spiedOn = 5;
@@ -370,6 +367,9 @@ function ready() {
                         if (msg.target == nickname) {
                             document.getElementById("money1").innerHTML = "";
                             document.getElementById("money2").innerHTML = "";
+                            document.getElementById("spy").classList.remove("btn-active");
+                            document.getElementById("spy").classList.remove("btn-info");
+                            document.getElementById("spy").classList.add("btn-disabled");
                             notification({ type: "spyEnd" });
                         }
                         break;
@@ -456,7 +456,7 @@ function cycle() {
                 user: nickname,
                 target: opponent
             };
-            ws.send(JSON.stringify(report));
+            ws.send(JSON.stringify(msg));
         }
     }
     if (doubleCooldown > 0) {
@@ -504,6 +504,7 @@ function cycle() {
 function update(){
     document.getElementById("money").innerHTML = money;
     document.getElementById("hp").innerHTML = hp;
+    document.getElementById("enemyHp").innerHTML = enemyHp;
 }
 
 //Player sends a chat message

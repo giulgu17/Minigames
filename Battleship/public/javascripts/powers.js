@@ -32,66 +32,80 @@ let doubleCooldown = 0, mortarCooldown = 0, forcefieldCooldown = 0, trapCooldown
 
 function activatePowerups() {
     var buttons = Array.from(document.getElementsByClassName("powers"));
-    buttons.forEach(button => {
-        switch(button.id) {
-            case "double":
-                if(money >= doubleCost && doubleCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateDouble);
-                }
-                break;
-            case "mortar":
-                if(money >= mortarCost && mortarCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateMortar);
-                }
-                break;
-            case "forcefield":
-                if(money >= forcefieldCost && forcefieldCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateForcefield);
-                }
-                break;
-            case "trap":
-                if(money >= trapCost && trapCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateSpotTrap);
-                }
-                break;
-            case "he":
-                if(money >= heCost && heCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateHE);
-                }
-                break;
-            case "spy":
-                if(money >= spyCost && spyCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateSpy);
-                }
-                break;
-            case "sonar":
-                if(money >= sonarCost && sonarCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateSonar);
-                }
-                break;
-            case "jammer":
-                if(money >= jammerCost && jammerCooldown == 0) {
-                    button.style.cursor = "pointer";
-                    button.classList.remove("btn-disabled");
-                    button.addEventListener("click", activateJammer);
-                }
-                break;
-        }
-    });
+    if (turn) {
+        buttons.forEach(button => {
+            switch (button.id) {
+                case "double":
+                    if (money >= doubleCost && doubleCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.classList.remove("btn-warning");
+                        button.classList.remove("btn-active");
+                        button.addEventListener("click", activateDouble);
+                    }
+                    break;
+                case "mortar":
+                    if (money >= mortarCost && mortarCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.classList.remove("btn-warning");
+                        button.classList.remove("btn-active");
+                        button.addEventListener("click", activateMortar);
+                    }
+                    break;
+                case "forcefield":
+                    if (money >= forcefieldCost && forcefieldCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.classList.remove("btn-warning");
+                        button.classList.remove("btn-active");
+                        button.addEventListener("click", activateForcefield);
+                    }
+                    break;
+                case "trap":
+                    if (money >= trapCost && trapCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.classList.remove("btn-warning");4
+                        button.classList.remove("btn-active");
+                        button.addEventListener("click", activateSpotTrap);
+                    }
+                    break;
+                case "he":
+                    if (money >= heCost && heCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.classList.remove("btn-warning");
+                        button.classList.remove("btn-active");
+                        button.addEventListener("click", activateHE);
+                    }
+                    break;
+                case "spy":
+                    if (money >= spyCost && spyCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.addEventListener("click", activateSpy);
+                    }
+                    break;
+                case "sonar":
+                    if (money >= sonarCost && sonarCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.classList.remove("btn-warning");
+                        button.classList.remove("btn-active");
+                        button.addEventListener("click", activateSonar);
+                    }
+                    break;
+                case "jammer":
+                    if (money >= jammerCost && jammerCooldown == 0) {
+                        button.style.cursor = "pointer";
+                        button.classList.remove("btn-disabled");
+                        button.addEventListener("click", activateJammer);
+                    }
+                    break;
+            }
+        });
+    }
 }
 
 function deactivatePowerups() {
@@ -105,8 +119,10 @@ function deactivatePowerups() {
     document.getElementById("jammer").removeEventListener("click", activateJammer);
     var buttons = Array.from(document.getElementsByClassName("powers"));
     buttons.forEach(button => {
+        if(!button.classList.contains("btn-active") && !button.classList.contains("btn-info")) {
+            button.classList.add("btn-disabled");
+        }
         button.style.cursor = "not-allowed";
-        button.classList.add("btn-disabled");
     });
     resetAttack();
 }
@@ -146,6 +162,14 @@ function resetAttack() {
             square.style.cursor = "not-allowed";
         }
     });
+
+    var buttons = Array.from(document.getElementsByClassName("powers"));
+    buttons.forEach(button => {
+        button.classList.remove("btn-warning");
+        if(!button.classList.contains("btn-info")){
+            button.classList.remove("btn-active");
+        }
+    });
 }
 
 function resetHover() {
@@ -163,11 +187,17 @@ function activateDouble() {
         if (attackType != "double") {
             deactivatePowerups();
             activatePowerups();
-            notification({ type: "activateDouble" });
+
+            document.getElementById("double").classList.add("btn-warning");
+            document.getElementById("double").classList.add("btn-active");
             attackType = "double";
+            notification({ type: "activateDouble" });
         } else {
-            notification({ type: "resetAttack" })
+            resetAttack();
             activatePowerups();
+            document.getElementById("double").classList.remove("btn-warning");
+            document.getElementById("double").classList.remove("btn-active");
+            notification({ type: "resetAttack" });
         }
     }
 }
@@ -186,10 +216,15 @@ function activateMortar() {
                 squares[i].addEventListener("mouseout", resetHover);
                 squares[i].style.cursor = "pointer";
             }
+            document.getElementById("mortar").classList.add("btn-warning");
+            document.getElementById("mortar").classList.add("btn-active");
         } else {
-            notification({ type: "resetAttack" })
+            resetAttack();
             activatePowerups();
             activateAttack();
+            notification({ type: "resetAttack" })
+            document.getElementById("mortar").classList.remove("btn-warning");
+            document.getElementById("mortar").classList.remove("btn-active");
         }
     }
 }
@@ -258,10 +293,16 @@ function activateForcefield() {
                 }
             }
             removeAttack();
+            document.getElementById("forcefield").classList.add("btn-warning");
+            document.getElementById("forcefield").classList.add("btn-active");
         } else {
             notification({ type: "resetAttack" })
+            resetAttack();
             activatePowerups();
             activateAttack();
+
+            document.getElementById("forcefield").classList.remove("btn-warning");
+            document.getElementById("forcefield").classList.remove("btn-active");
         }
     }
 }
@@ -307,10 +348,15 @@ function activateSpotTrap() {
                 }
             }
             removeAttack();
+            document.getElementById("trap").classList.add("btn-warning");
+            document.getElementById("trap").classList.add("btn-active");
         } else {
             notification({ type: "resetAttack" })
+            resetAttack();
             activatePowerups();
             activateAttack();
+            document.getElementById("trap").classList.remove("btn-warning");
+            document.getElementById("trap").classList.remove("btn-active");
         }
     }
 }
@@ -353,9 +399,14 @@ function activateHE() {
             squares.forEach(square => {
                 square.classList.add("previewHE");
             });
+            document.getElementById("he").classList.add("btn-warning");
+            document.getElementById("he").classList.add("btn-active");
         } else {
             notification({ type: "resetAttack" })
+            resetAttack();
             activatePowerups();
+            document.getElementById("he").classList.remove("btn-warning");
+            document.getElementById("he").classList.remove("btn-active");
         }
     }
 }
@@ -365,8 +416,10 @@ function activateSpy() {
         money -= spyCost;
         update();
         spyCooldown = spySetCooldown;
-        document.getElementById("spy").classList.add("btn-disabled");
-        notification({ type: "activateSpy" });
+        document.getElementById("spy").classList.add("btn-active");
+        document.getElementById("spy").classList.add("btn-info");
+        document.getElementById("spy").style.cursor = "not-allowed";
+
         var move = {
             type: "move",
             moveType: "spy",
@@ -374,8 +427,9 @@ function activateSpy() {
             target: opponent
         };
         ws.send(JSON.stringify(move));
+        notification({ type: "activateSpy" });
 
-        if(spiedOn > 0) {
+        if (spiedOn > 0) {
             var msg1 = {
                 type: "move",
                 moveType: "spyReport",
@@ -403,10 +457,15 @@ function activateSonar() {
                 squares[i].addEventListener("mouseout", resetHover);
                 squares[i].style.cursor = "pointer";
             }
+            document.getElementById("sonar").classList.add("btn-warning");
+            document.getElementById("sonar").classList.add("btn-active");
         } else {
-            notification({ type: "resetAttack" })
+            notification({ type: "resetAttack" });
+            resetAttack();
             activatePowerups();
             activateAttack();
+            document.getElementById("sonar").classList.remove("btn-warning");
+            document.getElementById("sonar").classList.remove("btn-active");
         }
     }
 }
@@ -440,7 +499,7 @@ function scanArea(box) {
     ws.send(JSON.stringify(move));
     notification({ type: "scan", box: box.id });
 
-    if(spiedOn > 0) {
+    if (spiedOn > 0) {
         var msg1 = {
             type: "move",
             moveType: "spyReport",
@@ -463,7 +522,10 @@ function activateJammer() {
         money -= jammerCost;
         update();
         jammerCooldown = jammerSetCooldown;
-        document.getElementById("jammer").classList.add("btn-disabled");
+        document.getElementById("jammer").classList.add("btn-active");
+        document.getElementById("jammer").classList.add("btn-info");
+        document.getElementById("jammer").style.cursor = "not-allowed";
+
         var move = {
             type: "move",
             moveType: "jammer",
