@@ -507,9 +507,7 @@ function cycle() {
 }
 
 function update() {
-    console.log("updating")
     if (jammed == 0) {
-        console.log("a")
         document.getElementById("money").innerHTML = money;
         document.getElementById("hp").innerHTML = hp;
         document.getElementById("enemyHp").innerHTML = enemyHp;
