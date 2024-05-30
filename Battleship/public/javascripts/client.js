@@ -233,7 +233,7 @@ function ready() {
                         break;
                     case "trapTriggered":
                         if (msg.target == nickname) {
-                            try{
+                            try {
                                 var boxes = Array.from(document.getElementsByClassName("box"));
                                 var ships = boxes.filter((box) => box.classList.contains("ship") && !box.classList.contains("hit"));
                                 var randomShip = Math.floor(Math.random() * ships.length);
@@ -248,9 +248,9 @@ function ready() {
                                     box: selShip.id.substring(1)
                                 };
                                 ws.send(JSON.stringify(msg));
-                            } catch(e){}
+                            } catch (e) { }
                         } else {
-                            if(spiedOn > 0){
+                            if (spiedOn > 0) {
                                 var report = {
                                     type: "move",
                                     moveType: "spyReport",
@@ -311,6 +311,7 @@ function ready() {
                             squares.forEach((square) => {
                                 square.classList.add("jammed");
                             });
+                            update();
                         }
                         break;
                     case "jammerEnd":
@@ -318,6 +319,8 @@ function ready() {
                             document.getElementById("jammer").classList.remove("btn-active");
                             document.getElementById("jammer").classList.remove("btn-info");
                             document.getElementById("jammer").classList.add("btn-disabled");
+
+                            update();
                             notification({ type: "jammerEnd" });
                         }
                         break;
@@ -337,29 +340,31 @@ function ready() {
                         }
                     case "spyReport":
                         if (msg.target == nickname) {
-                            switch (msg.news) {
-                                case "money":
-                                    opponentMoney = msg.money;
-                                    document.getElementById("money1").innerHTML = "Coins: ";
-                                    document.getElementById("money2").innerHTML = opponentMoney;
-                                    break;
-                                case "forcefield":
-                                    notification({ type: "spyReportForcefield", box: msg.box });
-                                    document.getElementById(msg.box).classList.add("markedForcefield");
-                                    break;
-                                case "trap":
-                                    notification({ type: "spyReportTrap", box: msg.box });
-                                    document.getElementById(msg.box).classList.add("markedTrap");
-                                    break;
-                                case "trapTriggered":
-                                    notification({ type: "spyReportTrapTriggered" });
-                                    break;
-                                case "spy":
-                                    notification({ type: "spyReportSpy", box: msg.box });
-                                    break;
-                                case "scan":
-                                    notification({ type: "spyReportScan", box: msg.box });
-                                    break;
+                            if (jammed == 0) {
+                                switch (msg.news) {
+                                    case "money":
+                                        opponentMoney = msg.money;
+                                        document.getElementById("money1").innerHTML = "Coins: ";
+                                        document.getElementById("money2").innerHTML = opponentMoney;
+                                        break;
+                                    case "forcefield":
+                                        notification({ type: "spyReportForcefield", box: msg.box });
+                                        document.getElementById(msg.box).classList.add("markedForcefield");
+                                        break;
+                                    case "trap":
+                                        notification({ type: "spyReportTrap", box: msg.box });
+                                        document.getElementById(msg.box).classList.add("markedTrap");
+                                        break;
+                                    case "trapTriggered":
+                                        notification({ type: "spyReportTrapTriggered" });
+                                        break;
+                                    case "spy":
+                                        notification({ type: "spyReportSpy", box: msg.box });
+                                        break;
+                                    case "scan":
+                                        notification({ type: "spyReportScan", box: msg.box });
+                                        break;
+                                }
                             }
                         }
                         break;
@@ -429,9 +434,9 @@ function highExplosiveHit(box) {
 }
 
 function cycle() {
-    if (spiedOn > 0){
+    if (spiedOn > 0) {
         spiedOn--;
-        if(spiedOn == 0){
+        if (spiedOn == 0) {
             var report = {
                 type: "move",
                 moveType: "spyEnd",
@@ -501,10 +506,20 @@ function cycle() {
     }
 }
 
-function update(){
-    document.getElementById("money").innerHTML = money;
-    document.getElementById("hp").innerHTML = hp;
-    document.getElementById("enemyHp").innerHTML = enemyHp;
+function update() {
+    console.log("updating")
+    if (jammed == 0) {
+        console.log("a")
+        document.getElementById("money").innerHTML = money;
+        document.getElementById("hp").innerHTML = hp;
+        document.getElementById("enemyHp").innerHTML = enemyHp;
+    } else {
+        document.getElementById("money").innerHTML = "[ERROR]";
+        document.getElementById("hp").innerHTML = "[ERROR]";
+        document.getElementById("enemyHp").innerHTML = "[ERROR]";
+        if(document.getElementById("money1").innerHTML != "")
+            document.getElementById("money2").innerHTML = "[ERROR]";
+    }
 }
 
 //Player sends a chat message
