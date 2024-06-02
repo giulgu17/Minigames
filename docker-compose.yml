@@ -3,7 +3,7 @@ services:
     build: ./Home
     ports:
       - "3000:3000"
-  ticTacToe:
+  tictactoe:
     build: ./TicTacToe
     ports:
       - "3100:3100"
