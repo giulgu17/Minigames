@@ -1,13 +1,13 @@
 services:
   home:
-    build: ./home
+    build: ./Home
     ports:
       - "3000:3000"
-  TicTacToe:
-    build: ./ticTacToe
+  ticTacToe:
+    build: ./TicTacToe
     ports:
       - "3100:3100"
-  Battleship:
-    build: ./battleship
+  battleship:
+    build: ./Battleship
     ports:
       - "3200:3200"
