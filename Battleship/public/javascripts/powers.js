@@ -31,6 +31,7 @@ let doubleCooldown = 0, mortarCooldown = 0, forcefieldCooldown = 0, trapCooldown
 
 
 function activatePowerups() {
+    resetAttack();
     var buttons = Array.from(document.getElementsByClassName("powers"));
     if (turn) {
         buttons.forEach(button => {
@@ -187,13 +188,13 @@ function activateDouble() {
         if (attackType != "double") {
             deactivatePowerups();
             activatePowerups();
+            activateAttack();
 
             document.getElementById("double").classList.add("btn-warning");
             document.getElementById("double").classList.add("btn-active");
             attackType = "double";
             notification({ type: "activateDouble" });
         } else {
-            resetAttack();
             activatePowerups();
             document.getElementById("double").classList.remove("btn-warning");
             document.getElementById("double").classList.remove("btn-active");
@@ -219,7 +220,6 @@ function activateMortar() {
             document.getElementById("mortar").classList.add("btn-warning");
             document.getElementById("mortar").classList.add("btn-active");
         } else {
-            resetAttack();
             activatePowerups();
             activateAttack();
             notification({ type: "resetAttack" })
@@ -297,7 +297,6 @@ function activateForcefield() {
             document.getElementById("forcefield").classList.add("btn-active");
         } else {
             notification({ type: "resetAttack" })
-            resetAttack();
             activatePowerups();
             activateAttack();
 
@@ -352,7 +351,6 @@ function activateSpotTrap() {
             document.getElementById("trap").classList.add("btn-active");
         } else {
             notification({ type: "resetAttack" })
-            resetAttack();
             activatePowerups();
             activateAttack();
             document.getElementById("trap").classList.remove("btn-warning");
@@ -403,7 +401,6 @@ function activateHE() {
             document.getElementById("he").classList.add("btn-active");
         } else {
             notification({ type: "resetAttack" })
-            resetAttack();
             activatePowerups();
             document.getElementById("he").classList.remove("btn-warning");
             document.getElementById("he").classList.remove("btn-active");
@@ -461,7 +458,6 @@ function activateSonar() {
             document.getElementById("sonar").classList.add("btn-active");
         } else {
             notification({ type: "resetAttack" });
-            resetAttack();
             activatePowerups();
             activateAttack();
             document.getElementById("sonar").classList.remove("btn-warning");

@@ -108,6 +108,7 @@ function attack(box) {
         };
         ws.send(JSON.stringify(move));
         removeAttack();
+        
         if (attackType == "double") {
             attackType = "endDouble";
             money -= doubleCost;

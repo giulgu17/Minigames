@@ -66,7 +66,6 @@ function ready() {
                                 if (msg.moveType == "report")
                                     notification({ type: "enemyAttackHit" });
                                 money += damageEarnings;
-                                update();
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
                                 if (msg.moveType == "report")
@@ -103,14 +102,12 @@ function ready() {
                                 else if (msg.attackType == "highexplosive")
                                     money += heEarnings;
 
-                                update();
                             } else if (msg.hit == false) {
                                 box.classList.add("miss")
                                 if (msg.moveType == "report")
                                     notification({ type: "attackMiss" });
                                 if (msg.attackType == "attack")
                                     money += missAttackEarnings;
-                                update();
                             } else if (msg.hit == "block") {
                                 notification({ type: "attackBlock" });
                                 usedSquares.splice(usedSquares.indexOf(msg.box), 1);
@@ -311,7 +308,6 @@ function ready() {
                             squares.forEach((square) => {
                                 square.classList.add("jammed");
                             });
-                            update();
                         }
                         break;
                     case "jammerEnd":
@@ -320,7 +316,6 @@ function ready() {
                             document.getElementById("jammer").classList.remove("btn-info");
                             document.getElementById("jammer").classList.add("btn-disabled");
 
-                            update();
                             notification({ type: "jammerEnd" });
                         }
                         break;
@@ -398,6 +393,7 @@ function ready() {
                 window.location.href = "/";
                 break;
         }
+        update();
     });
     ws.addEventListener("open", () => {
         console.log("Connected to the server");
