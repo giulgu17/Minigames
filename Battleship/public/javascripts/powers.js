@@ -69,7 +69,7 @@ function activatePowerups() {
                         button.classList.remove("btn-disabled");
                         button.classList.remove("btn-warning");4
                         button.classList.remove("btn-active");
-                        button.addEventListener("click", activateSpotTrap);
+                        button.addEventListener("click", activateTrap);
                     }
                     break;
                 case "he":
@@ -113,7 +113,7 @@ function deactivatePowerups() {
     document.getElementById("double").removeEventListener("click", activateDouble);
     document.getElementById("mortar").removeEventListener("click", activateMortar);
     document.getElementById("forcefield").removeEventListener("click", activateForcefield);
-    document.getElementById("trap").removeEventListener("click", activateSpotTrap);
+    document.getElementById("trap").removeEventListener("click", activateTrap);
     document.getElementById("he").removeEventListener("click", activateHE);
     document.getElementById("spy").removeEventListener("click", activateSpy);
     document.getElementById("sonar").removeEventListener("click", activateSonar);
@@ -331,7 +331,7 @@ function placeForcefield(box) {
     activateAttack();
 }
 
-function activateSpotTrap() {
+function activateTrap() {
     if (money >= trapCost && trapCooldown == 0) {
         var squares = document.getElementsByClassName("self");
         if (attackType != "trap") {

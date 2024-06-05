@@ -59,7 +59,7 @@ function ready() {
                 switch (msg.moveType) {
                     case "report":
                     case "reportHE":
-                        if (msg.user == nickname) {     //User was attacked:
+                        if (msg.user == nickname) {     //User was attacked and sent report:
                             var box = document.getElementById("s" + msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
@@ -85,11 +85,13 @@ function ready() {
                                 activatePowerups();
                                 notification({ type: "turn" });
                             }
-                        } else {
+                        } else {        //User attacked opponent and received report:
                             var box = document.getElementById(msg.box);
                             if (msg.hit == true) {
                                 box.classList.add("hit")
+                                //FIXME: enemyHp decreasing one too many times when highexplosivehit function is called
                                 enemyHp--;
+
                                 if (msg.moveType == "report")
                                     notification({ type: "attackHit" });
 
@@ -141,6 +143,7 @@ function ready() {
                             ws.send(JSON.stringify(report));
                         }
                         break;
+                    //Attack:
                     case "attack":
                     case "double":
                     case "endDouble":
@@ -159,7 +162,8 @@ function ready() {
                             };
                             ws.send(JSON.stringify(report));
                         }
-                        if (msg.target == nickname) {
+                        //User was attacked:
+                        if (msg.target == nickname) {   
                             var box = document.getElementById("s" + msg.box);
                             notification({ type: "enemyAttack", box: msg.box });
                             if (box.classList.contains("forcefield")) {
@@ -188,10 +192,8 @@ function ready() {
                                     if (msg.moveType == "highexplosive") {
                                         notification({ type: "highExplosiveHit" });
                                         highExplosiveHit(msg.box);
-                                        enemyHp++;
-                                    } else {
-                                        hp--;
                                     }
+                                    hp--;
                                     console.log(hp)
                                     if (hp == 0) {
                                         var endmsg = {
@@ -402,6 +404,7 @@ function ready() {
 }
 
 function highExplosiveHit(box) {
+    hp++;   //TODO: temporary solution: make a better one when refactoring
     var boxRow = box.substring(0, 1);
     var boxCol = parseInt(box.substring(1));
     let clickedBox = [];
@@ -424,6 +427,7 @@ function highExplosiveHit(box) {
                 };
                 ws.send(JSON.stringify(msg));
                 highExplosiveHit(clickedBox[i].substring(1));
+                hp--;
             }
         } catch (e) { }
     }
