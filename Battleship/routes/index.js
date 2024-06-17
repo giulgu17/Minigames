@@ -33,18 +33,11 @@ socketServer.on("connection", ws => {
 
     ws.on("message", data => {
         if (data == undefined || data == null) {
-            msg1 = { type: "move", moveType: "report", user: msg.user, target: msg.target, message: "Invalid move" }
-            console.log(msg1);
+            console.log("Empty message received");
         } else {
             msg = JSON.parse(data);
             /*console.log("Message: ")*/
-            if (msg.type == "move") {
-                if (msg.moveType != "report") {
-                    console.log(msg);
-                }
-            } else {
-                console.log(msg);
-            }
+            console.log(msg);
 
             switch (msg.type) {
                 //ON CHAT MESSAGE
@@ -79,6 +72,13 @@ socketServer.on("connection", ws => {
                     break;
                 //ON MOVE
                 case "move":
+                    socketServer.clients.forEach(function (client) {
+                        if (client.username == msg.target) {
+                            client.send(JSON.stringify(msg));
+                        }
+                    })
+                    break;
+                case "report":
                     socketServer.clients.forEach(function (client) {
                         if (client.username == msg.user || client.username == msg.target) {
                             client.send(JSON.stringify(msg));

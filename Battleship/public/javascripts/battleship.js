@@ -14,7 +14,7 @@ function joinQueue() {
             square.classList.add("self");
             square.id = "s" + columns[j] + i;
             document.getElementById("selfGrid").appendChild(square);
-            if (code[(i-1) * 10 + j] == 1) {
+            if (code[(i - 1) * 10 + j] == 1) {
                 square.classList.add("ship");
             }
         }
@@ -42,12 +42,8 @@ function joinQueue() {
     document.getElementById("spy").value += spyCost;
     document.getElementById("jammer").value += jammerCost;
 
-    var msg = {
-        type: "join",
-        nick: nickname
-    }
+    ws.send(JSON.stringify({ type: "join", nick: nickname }));
     console.log("Joined the queue for Battleship");
-    ws.send(JSON.stringify(msg));
     document.getElementById("inick2").innerHTML = "Waiting for an opponent...";
 }
 
@@ -108,7 +104,7 @@ function attack(box) {
         };
         ws.send(JSON.stringify(move));
         removeAttack();
-        
+
         if (attackType == "double") {
             attackType = "endDouble";
             money -= doubleCost;
@@ -117,7 +113,7 @@ function attack(box) {
         } else if (attackType == "attack") {
             removeAttack();
         }
-        
+
         if (attackType != "mortar" && attackType != "endMortar") {
             notification({ type: "attack", box: box.id });
         }
@@ -127,219 +123,138 @@ function attack(box) {
     }
 }
 
-function notification(msg) {
-    update();
-    var notifbox = document.getElementById("notif");
-    if (jammed == 0) {
-        switch (msg.type) {
-            case "start":
-                notifbox.innerHTML += "<b>You are now playing against " + opponent + ".</b><br>";
-                break;
-            case "turn":
-                var random = Math.floor(Math.random() * 3);
-                switch (random) {
-                    case 0:
-                        notifbox.innerHTML += "<b>It is now your turn.</b><br>";
-                        break;
-                    case 1:
-                        notifbox.innerHTML += "<b>It's your turn.</b><br>";
-                        break;
-                    case 2:
-                        notifbox.innerHTML += "<b>It's your turn to move.</b><br>";
-                        break;
-                }
-                break;
+function highExplosiveHit(box) {
+    hp++;   //TODO: temporary solution: make a better one when refactoring
+    var boxRow = box.substring(0, 1);
+    var boxCol = parseInt(box.substring(1));
+    let clickedBox = [];
+    clickedBox.push("s" + boxRow + (boxCol - 1), "s" + boxRow + (boxCol + 1), "s" + columns[(boxRow.charCodeAt() - 65) - 1] + boxCol, "s" + (columns[(boxRow.charCodeAt() - 65) + 1] + boxCol));
+    for (let i = 0; i < clickedBox.length; i++) {
+        try {
+            let checkedBox = document.getElementById(clickedBox[i]);
+            if (checkedBox.classList.contains("ship") && !checkedBox.classList.contains("hit")) {
+                checkedBox.classList.add("hit");
+                checkedBox.classList.remove("forcefield");
+                checkedBox.classList.remove("trap");
+                hp--;
+                let msg = {
+                    type: "reportHE",
+                    user: nickname,
+                    target: opponent,
+                    box: clickedBox[i].substring(1),
+                    hit: true
+                };
+                ws.send(JSON.stringify(msg));
+                highExplosiveHit(clickedBox[i].substring(1));
+                hp--;
+            }
+        } catch (e) { }
+    }
+}
 
-            case "attack":
-                var random = Math.floor(Math.random() * 3);
-                switch (random) {
-                    case 0:
-                        notifbox.innerHTML += "You try shooting in " + msg.box + "...<br>";
-                        break;
-                    case 1:
-                        notifbox.innerHTML += "You aim at " + msg.box + ".<br>";
-                        break;
-                    case 2:
-                        notifbox.innerHTML += "Shooting in " + msg.box + ".<br>";
-                        break;
-                }
-                break;
-            case "attackHit":
-                var random = Math.floor(Math.random() * 3);
-                switch (random) {
-                    case 0:
-                        notifbox.innerHTML += "You hit a ship!<br>";
-                        break;
-                    case 1:
-                        notifbox.innerHTML += "A ship has been hit!<br>";
-                        break;
-                    case 2:
-                        notifbox.innerHTML += "It's a hit!<br>";
-                        break;
-                }
-                break;
-            case "attackMiss":
-                var random = Math.floor(Math.random() * 3);
-                switch (random) {
-                    case 0:
-                        notifbox.innerHTML += "You missed.<br>";
-                        break;
-                    case 1:
-                        notifbox.innerHTML += "No ship has been hit.<br>";
-                        break;
-                    case 2:
-                        notifbox.innerHTML += "It's a miss.<br>";
-                        break;
-                }
-                break;
-            case "attackBlock":
-                var random = Math.floor(Math.random() * 3);
-                switch (random) {
-                    case 0:
-                        notifbox.innerHTML += "You hit a forcefield!<br>";
-                        break;
-                    case 1:
-                        notifbox.innerHTML += "There was a forcefield! Your shell did nothing.<br>";
-                        break;
-                    case 2:
-                        notifbox.innerHTML += "You hit and broke a forcefield.<br>";
-                        break;
-                }
-                break;
-
-
-            case "resetAttack":
-                notifbox.innerHTML += "Unequipping power.<br>";
-                break;
-            case "activateDouble":
-                notifbox.innerHTML += "Equipping Double Shot!<br>";
-                break;
-            case "activateMortar":
-                notifbox.innerHTML += "Equipping Mortar!<br>";
-                break;
-            case "startMortar":
-                notifbox.innerHTML += "Shooting Mortar...<br>The mortar shot in ";
-                break;
-            case "shotMortar":
-                notifbox.innerHTML += msg.box + ", ";
-                break;
-            case "endMortar":
-                notifbox.innerHTML += "and " + msg.box + ".<br>";
-                break;
-            case "activateForcefield":
-                notifbox.innerHTML += "Equipping Forcefield!<br>";
-                break;
-            case "placeForcefield":
-                notifbox.innerHTML += "Forcefield placed in " + msg.box + ".<br>";
-                break;
-            case "activateTrap":
-                notifbox.innerHTML += "Equipping Trap!<br>";
-                break;
-            case "placeTrap":
-                notifbox.innerHTML += "Trap placed in " + msg.box + ".<br>";
-                break;
-            case "trapTriggered":
-                notifbox.innerHTML += "The opponent triggered a trap!<br>";
-                break;
-            case "trapReport":
-                notifbox.innerHTML += "An enemy ship in " + msg.box + " has been spotted!<br>";
-                break;
-            case "activateHE":
-                notifbox.innerHTML += "Equipping High Explosive!<br>";
-                break;
-            case "highExplosiveHit":
-                notifbox.innerHTML += "It was a high explosive shell, it instantly sunk the ship!.<br>";
-                break;
-            case "activateSonar":
-                notifbox.innerHTML += "Equipping Sonar!<br>";
-                break;
-            case "scan":
-                notifbox.innerHTML += "Scanning the area around " + msg.box + "...<br>";
-                break;
-            case "scanReport":
-                if (msg.number == 1) {
-                    notifbox.innerHTML += msg.number + " square in the area is occupied by a ship.<br>";
-                } else {
-                    notifbox.innerHTML += msg.number + " squares in the area are occupied by ships.<br>";
-                }
-                break;
-            case "scanNoShips":
-                notifbox.innerHTML += "Looks like there are no ships in the area.<br>";
-                break;
-            case "activateJammer":
-                notifbox.innerHTML += "Disrupting the enemy's signal!<br>";
-                break;
-            case "jammerEnd":
-                notifbox.innerHTML += "The jammer ran out of power.<br>";
-                break;
-            case "activateSpy":
-                notifbox.innerHTML += "You sent a spy to check on " + opponent + "'s actions...<br>You will now be able to see their moves for " + spyDuration + " turns.<br>";
-                break;
-            case "spyReportForcefield":
-                notifbox.innerHTML += "The opponent placed a forcefield in " + msg.box + ".<br>";
-                break;
-            case "spyReportTrap":
-                notifbox.innerHTML += "The opponent placed a trap in " + msg.box + ".<br>";
-                break;
-            case "spyReportTrapTriggered":
-                notifbox.innerHTML += "The spy reports that you just triggered a trap!.<br>";
-                break;
-            case "spyReportSpy":
-                notifbox.innerHTML += "The opponent sent a spy to check on your actions, be careful...<br>";
-                break;
-            case "spyReportScan":
-                notifbox.innerHTML += "The opponent scanned the area around " + msg.box + ".<br>";
-                break;
-            case "spyEnd":
-                notifbox.innerHTML += "The spy is retreating.<br>";
-                break;
-
-
-            case "enemyTurn":
-                var random = Math.floor(Math.random() * 3);
-                switch (random) {
-                    case 0:
-                        notifbox.innerHTML += "<b>It's your opponent's turn.</b><br>";
-                        break;
-                    case 1:
-                        notifbox.innerHTML += "<b>It's your opponent's turn.</b><br>";
-                        break;
-                    case 2:
-                        notifbox.innerHTML += "<b>It's your opponent's turn.</b><br>";
-                        break;
-                }
-                break;
-            case "enemyAttack":
-                notifbox.innerHTML += opponent + " shot in " + msg.box + ".<br>";
-                break;
-            case "enemyAttackHit":
-                notifbox.innerHTML += "They hit a ship!<br>";
-                break;
-            case "enemyAttackMiss":
-                notifbox.innerHTML += "They missed.<br>";
-                break;
-            case "enemyAttackBlock":
-                notifbox.innerHTML += "They hit a forcefield!<br>";
-                break;
-            case "enemyJammer":
-                notifbox.innerHTML += "The opponent is tampering with your connection...<br>You may not be able to see some information for a while.<br>";
-                break;
-            case "enemyJammerEnd":
-                notifbox.innerHTML += "Connection reestablished.<br>";
-                break;
-            case "enemySpyEnd":
-                notifbox.innerHTML += "There were rumors of a spy being active in your lines, but it seems like they're gone now...<br>";
-                break;
-
-
-
-            case "win":
-                notifbox.innerHTML += "You won!<br>";
-                break;
-            case "lose":
-                notifbox.innerHTML += "You lost!<br>";
-                break;
+function cycle() {
+    if (spiedOn > 0) {
+        spiedOn--;
+        if (spiedOn == 0) {
+            var report = {
+                type: "move",
+                moveType: "spyEnd",
+                user: nickname,
+                target: opponent
+            };
+            ws.send(JSON.stringify(report));
+            notification({ type: "enemySpyEnd" });
         }
     }
-    notifbox.scrollTop = notifbox.scrollHeight;
+    if (jammed > 0) {
+        jammed--;
+        if (jammed == 0) {
+            var squares = Array.from(document.getElementsByClassName("box"));
+            squares.forEach(square => {
+                square.classList.remove("jammed");
+            });
+            notification({ type: "enemyJammerEnd" });
+            var msg = {
+                type: "move",
+                moveType: "jammerEnd",
+                user: nickname,
+                target: opponent
+            };
+            ws.send(JSON.stringify(msg));
+        }
+    }
+    if (doubleCooldown > 0) {
+        doubleCooldown--;
+        if (doubleCooldown == 0 && money >= doubleCost)
+            document.getElementById("double").classList.remove("btn-disabled");
+    }
+    if (mortarCooldown > 0) {
+        mortarCooldown--;
+        if (mortarCooldown == 0 && money >= mortarCost)
+            document.getElementById("mortar").classList.remove("btn-disabled");
+    }
+    if (forcefieldCooldown > 0) {
+        forcefieldCooldown--;
+        if (forcefieldCooldown == 0 && money >= forcefieldCost)
+            document.getElementById("forcefield").classList.remove("btn-disabled");
+    }
+    if (trapCooldown > 0) {
+        trapCooldown--;
+        if (trapCooldown == 0 && money >= trapCost)
+            document.getElementById("trap").classList.remove("btn-disabled");
+    }
+    if (heCooldown > 0) {
+        highExplosiveCooldown--;
+        if (heCooldown == 0 && money >= heCost)
+            document.getElementById("he").classList.remove("btn-disabled");
+    }
+    if (sonarCooldown > 0) {
+        sonarCooldown--;
+        if (sonarCooldown == 0 && money >= sonarCost)
+            document.getElementById("sonar").classList.remove("btn-disabled");
+    }
+    if (jammerCooldown > 0) {
+        jammerCooldown--;
+        if (jammerCooldown == 0 && money >= jammerCost)
+            document.getElementById("jammer").classList.remove("btn-disabled");
+    }
+    if (spyCooldown > 0) {
+        spyCooldown--;
+        if (spyCooldown == 0 && money >= spyCost)
+            document.getElementById("spy").classList.remove("btn-disabled");
+    }
+}
+
+function update() {
+    if (jammed == 0) {
+        document.getElementById("money").innerHTML = money;
+        document.getElementById("hp").innerHTML = hp;
+        document.getElementById("enemyHp").innerHTML = enemyHp;
+    } else {
+        document.getElementById("money").innerHTML = "[ERROR]";
+        document.getElementById("money").color = "red";
+        document.getElementById("hp").innerHTML = "[ERROR]";
+        document.getElementById("hp").color = "red";
+        document.getElementById("enemyHp").innerHTML = "[ERROR]";
+        document.getElementById("enemyHp").color = "red";
+        if (document.getElementById("money1").innerHTML != "")
+            document.getElementById("money2").innerHTML = "[ERROR]";
+            document.getElementById("money2").color = "red";
+    }
+}
+
+function spyMoney() {
+    //If the player is spied on this function activates and says how much money the player has
+    if (spiedOn > 0) {
+        var report = {
+            type: "move",
+            moveType: "spyReport",
+            news: "money",
+            money: money,
+            user: nickname,
+            target: opponent,
+            box: msg.box
+        };
+        ws.send(JSON.stringify(report));
+    }
 }

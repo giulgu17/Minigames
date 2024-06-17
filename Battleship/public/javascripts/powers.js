@@ -16,7 +16,8 @@ const doubleSetCooldown = 0,
     sonarSetCooldown = 0,
     jammerSetCooldown = 7;
 
-const spyDuration = 7,
+const mortarDuration = 4,
+    spyDuration = 7,
     jammerDuration = 3;
 
 const attackEarnings = 75,
@@ -210,13 +211,14 @@ function activateMortar() {
             activatePowerups();
             notification({ type: "activateMortar" });
             attackType = "mortar";
-            for (var i = 0; i < squares.length; i++) {
-                squares[i].removeEventListener("click", clicked);
-                squares[i].addEventListener("click", mortarFunction);
-                squares[i].addEventListener("mouseover", mortarHoverFunction);
-                squares[i].addEventListener("mouseout", resetHover);
-                squares[i].style.cursor = "pointer";
-            }
+            squares.forEach((square) => {
+                square.removeEventListener("click", clicked);
+                square.addEventListener("click", mortarFunction);
+                square.addEventListener("mouseover", mortarHoverFunction);
+                square.addEventListener("mouseout", resetHover);
+                square.style.cursor = "pointer";
+            });
+
             document.getElementById("mortar").classList.add("btn-warning");
             document.getElementById("mortar").classList.add("btn-active");
         } else {
@@ -259,9 +261,9 @@ function mortar(box) {
     }
 
     notification({ type: "startMortar" });
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < mortarDuration; i++) {
         var random = Math.floor(Math.random() * selSquares.length);
-        if (i != 3 && selSquares.length != 1) {
+        if (i != mortarDuration-1 && selSquares.length != 1) {
             notification({ type: "shotMortar", box: selSquares[random].id });
         } else {
             notification({ type: "endMortar", box: selSquares[random].id });
