@@ -2,8 +2,9 @@ extends layout
 
 block content
     section#title
-        h1(class="text-4xl font-bold")|Battleship+
-        h5= "Click a ship from outside the grid to select it, then click again on the grid to place it. Press 'R' to rotate the selected ship."
+        form(action="/login2" id="form" method="post" onsubmit="return validateForm()") 
+            h1(class="text-4xl font-bold")|Battleship+
+            h5= "Click a ship from outside the grid to select it, then click again on the grid to place it. Press 'R' to rotate the selected ship."
     section#home
         form(action="/login2" id="form" method="post")
             input(type="text" name="username" id="inputnick" placeholder="Nickname" class="w-1/4 input input-bordered input-sm w-full max-w-xs" required)

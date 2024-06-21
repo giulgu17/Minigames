@@ -8,7 +8,7 @@ localStorage.clear();
 
 function ready() {
     let username = getCookie("username");
-    if(username != ""){
+    if (username != "") {
         document.getElementById("inputnick").value = username;
     } else {
         document.getElementById("inputnick").value = "";
@@ -111,14 +111,18 @@ document.addEventListener('keydown', function (e) {
             var lastHovered = document.getElementsByClassName("hovered");
             try {
                 localStorage.setItem("lastHovered", lastHovered[0].id);
-            } catch (e) {}
+            } catch (e) { }
             resetPreview();
             preview(document.getElementById(localStorage.getItem("lastHovered")));
             break;
-        case "enter":
-            join();
     }
 });
+
+function validateForm() {
+    if (placedShips == 8 && document.getElementById("inputnick").value != "") {
+        return false;
+    }
+}
 
 function place() {
     localStorage.clear();
@@ -200,7 +204,7 @@ function place() {
 
 
 function preview(hovered) {
-    try{
+    try {
         hovered.classList.add("hovered");
     } catch (e) {
         return;
@@ -301,31 +305,36 @@ function getCookie(cname) {
     return "";
 }
 
+function saveFormation() {
+    var hidden = document.createElement("input");
+    hidden.type = "hidden";
+    hidden.name = "code";
+    document.getElementById("form").appendChild(hidden);
+    
+    var code = getCookie("code");
+    if (code != "") {
+        document.cookie = 'username=; code=; Max-Age=0; path=/; domain=' + location.hostname;
+    }
+
+    for (var i = 1; i <= 10; i++) {
+        for (var j = 0; j < 10; j++) {
+            var square = document.getElementById(columns[j] + i);
+            code = square.classList.contains("ship") ? 1 : 0;
+            hidden.value += code;
+        }
+    }
+}
+
 
 function join() {
     document.getElementById("inputnick").value = document.getElementById("inputnick").value.trim()
     document.getElementById("inputnick").value = document.getElementById("inputnick").value.replace(/\s/g, '');
-    if(document.getElementById("inputnick").value != ""){
-        var hidden = document.createElement("input");
-        hidden.type = "hidden";
-        hidden.name = "code";
-        document.getElementById("form").appendChild(hidden);
-
-        var code = getCookie("code");
-        if(code != "") {
-            document.cookie = 'username=; code=; Max-Age=0; path=/; domain=' + location.hostname;
-        }
-        for (var i = 1; i <= 10; i++) {
-            for (var j = 0; j < 10; j++) {
-                var square = document.getElementById(columns[j] + i);
-                code = square.classList.contains("ship") ? 1 : 0;
-                hidden.value += code;
-            }
-        }
+    if (document.getElementById("inputnick").value != "") {
+        saveFormation();
         document.cookie = "username=" + document.getElementById("inputnick").value;
         document.cookie = "code=" + hidden.value;
 
-        document.getElementById("form").submit();
+        window.location.href = "/battleship";
     }
 }
 

@@ -128,7 +128,10 @@ function highExplosiveHit(box) {
     var boxRow = box.substring(0, 1);
     var boxCol = parseInt(box.substring(1));
     let clickedBox = [];
-    clickedBox.push("s" + boxRow + (boxCol - 1), "s" + boxRow + (boxCol + 1), "s" + columns[(boxRow.charCodeAt() - 65) - 1] + boxCol, "s" + (columns[(boxRow.charCodeAt() - 65) + 1] + boxCol));
+    clickedBox.push("s" + boxRow + (boxCol - 1),
+    "s" + boxRow + (boxCol + 1),
+    "s" + columns[(boxRow.charCodeAt() - 65) - 1] + boxCol,
+    "s" + (columns[(boxRow.charCodeAt() - 65) + 1] + boxCol));
     for (let i = 0; i < clickedBox.length; i++) {
         try {
             let checkedBox = document.getElementById(clickedBox[i]);
@@ -253,7 +256,6 @@ function spyMoney() {
             money: money,
             user: nickname,
             target: opponent,
-            box: msg.box
         };
         ws.send(JSON.stringify(report));
     }

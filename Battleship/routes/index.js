@@ -64,6 +64,7 @@ socketServer.on("connection", ws => {
 
                     if (valid) {
                         ws.username = msg.nick;
+                        ws.code = msg.code;
                         console.log(msg.nick + " has joined the queue for Battleship");
                         queue.push(msg.nick);
                         console.log(queue)

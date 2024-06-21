@@ -204,18 +204,10 @@ function ready() {
                                 box: selShip.id.substring(1)
                             };
                             ws.send(JSON.stringify(msg));
+                            if(spiedOn > 0) {
+                                notification({ type: "spyReportTrapTriggered" });
+                            }
                         } catch (e) { }
-                        //FIXME: put this somewhere else
-                        /*if (spiedOn > 0) {
-                            var report = {
-                                type: "move",
-                                moveType: "spyReport",
-                                news: "trapTriggered",
-                                user: nickname,
-                                target: opponent
-                            };
-                            ws.send(JSON.stringify(report));
-                        }*/
                         break;
                     case "trapReport":
                         var box = document.getElementById(msg.box);
@@ -261,6 +253,7 @@ function ready() {
                         });
                         break;
                     case "jammerEnd":
+                        //TODO: contare jammer e spia entrambi client-side
                         document.getElementById("jammer").classList.remove("btn-active");
                         document.getElementById("jammer").classList.remove("btn-info");
                         document.getElementById("jammer").classList.add("btn-disabled");
