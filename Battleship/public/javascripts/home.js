@@ -27,10 +27,10 @@ function ready() {
                 }
             }
         }
-        placedShips = 8;
+
         var joinbtn = document.getElementById("join");
         joinbtn.cursor = "pointer";
-        joinbtn.disabled = false;
+        joinbtn.classList.remove("btn-disabled");
         joinbtn.addEventListener("click", join);
     } else {
         grid = document.getElementById("placegrid");
@@ -118,11 +118,7 @@ document.addEventListener('keydown', function (e) {
     }
 });
 
-function validateForm() {
-    if (placedShips == 8 && document.getElementById("inputnick").value != "") {
-        return false;
-    }
-}
+
 
 function place() {
     localStorage.clear();
@@ -196,7 +192,7 @@ function place() {
         if (placedShips == 8) {
             var joinbtn = document.getElementById("join");
             joinbtn.cursor = "pointer";
-            joinbtn.disabled = false;
+            joinbtn.classList.remove("btn-disabled");
             joinbtn.addEventListener("click", join);
         }
     }
@@ -305,36 +301,32 @@ function getCookie(cname) {
     return "";
 }
 
-function saveFormation() {
-    var hidden = document.createElement("input");
-    hidden.type = "hidden";
-    hidden.name = "code";
-    document.getElementById("form").appendChild(hidden);
-    
-    var code = getCookie("code");
-    if (code != "") {
-        document.cookie = 'username=; code=; Max-Age=0; path=/; domain=' + location.hostname;
-    }
-
-    for (var i = 1; i <= 10; i++) {
-        for (var j = 0; j < 10; j++) {
-            var square = document.getElementById(columns[j] + i);
-            code = square.classList.contains("ship") ? 1 : 0;
-            hidden.value += code;
-        }
-    }
-}
 
 
 function join() {
     document.getElementById("inputnick").value = document.getElementById("inputnick").value.trim()
     document.getElementById("inputnick").value = document.getElementById("inputnick").value.replace(/\s/g, '');
     if (document.getElementById("inputnick").value != "") {
-        saveFormation();
-        document.cookie = "username=" + document.getElementById("inputnick").value;
-        document.cookie = "code=" + hidden.value;
 
-        window.location.href = "/battleship";
+        var hidden = document.createElement("input");
+        hidden.type = "hidden";
+        hidden.name = "code";
+        document.getElementById("form").appendChild(hidden);
+
+        var code = getCookie("code");
+        if (code != "") {
+            document.cookie = 'username=; code=; Max-Age=0; path=/; domain=' + location.hostname;
+        }
+
+        for (var i = 1; i <= 10; i++) {
+            for (var j = 0; j < 10; j++) {
+                var square = document.getElementById(columns[j] + i);
+                code = square.classList.contains("ship") ? 1 : 0;
+                hidden.value += code;
+                document.cookie = "code=" + hidden.value;
+            }
+        }
+        document.cookie = "username=" + document.getElementById("inputnick").value;
     }
 }
 

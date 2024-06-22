@@ -2,13 +2,12 @@ extends layout
 
 block content
     section#title
-        form(action="/login2" id="form" method="post" onsubmit="return validateForm()") 
-            h1(class="text-4xl font-bold")|Battleship+
-            h5= "Click a ship from outside the grid to select it, then click again on the grid to place it. Press 'R' to rotate the selected ship."
+        h1(class="text-4xl font-bold")|Battleship+
+        h5= "Click a ship from outside the grid to select it, then click again on the grid to place it. Press 'R' to rotate the selected ship."
     section#home
-        form(action="/login2" id="form" method="post")
+        form(action="/login2" id="form" method="post" onsubmit="return check()") 
             input(type="text" name="username" id="inputnick" placeholder="Nickname" class="w-1/4 input input-bordered input-sm w-full max-w-xs" required)
-            input(type="button" id="join" value="Join Game" cursor="not-allowed" class="btn btn-primary btn-sm" disabled)
+            input(type="submit" id="join" value="Join Game" cursor="not-allowed" class="btn btn-primary btn-sm btn-disabled")
 
         section#homegrid
             section#unplaced
@@ -41,4 +40,12 @@ block content
                 section#placegrid.grid
             input(type="button" class="btn btn-outline" id="clear" value="Clear Grid")
 
+    script.
+        function check(){
+            if (placedShips != 8 || document.getElementById("inputnick").value == "") {
+                return false;
+            } else {
+                join();
+            }
+        }
     script(src="/javascripts/home.js")
